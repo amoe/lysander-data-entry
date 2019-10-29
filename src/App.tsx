@@ -1,7 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
 
+interface MyState {
+    counter: number;
+}
+
+
+function mapStateToProps(state: MyState) {
+    return {
+        counter: state.counter
+    };
+}
+
+const mapDispatchToProps = {
+}
 
 
 const App: React.FC = () => {
@@ -9,9 +23,9 @@ const App: React.FC = () => {
         <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+
+                <p>Something</p>
+
                 <a
                     className="App-link"
                     href="https://reactjs.org"
@@ -25,4 +39,6 @@ const App: React.FC = () => {
     );
 }
 
-export default App;
+export default connect(
+    mapStateToProps, mapDispatchToProps
+)(App);
