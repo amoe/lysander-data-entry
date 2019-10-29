@@ -17,18 +17,23 @@ function mapStateToProps(state: MyState) {
 const mapDispatchToProps = {
 }
 
+// Explicitly typing the counter that is returned by the mapper.
 interface AppProps {
+    counter: number;
 }
 
 
-class App2 extends React.Component {
+class App2 extends React.Component<AppProps> {
     render() {
+        // Destructure the props which are now typed by the <T> above.
+        const { counter } = this.props;
+
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
 
-                    <p>Something 2</p>
+                    <p>Counter value: {counter}</p>
 
                     <a
                         className="App-link"
