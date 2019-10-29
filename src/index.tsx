@@ -7,14 +7,8 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-interface MyState {
-    counter: number;
-}
+import { MyState, IncrementAction, INCREMENT } from './stuff';
 
-export const INCREMENT = 'INCREMENT';
-
-interface IncrementAction {
-}
 
 // This could be a sum type
 type MyActionTypes = IncrementAction;
@@ -25,11 +19,17 @@ type MyActionTypes = IncrementAction;
 // In the case of the tutorial, they use a too-clever-by-half thing to infer
 // the type correctly.
 function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
+    console.log("Reducer being called.");
     if (state === undefined) {
         return { counter: 0 };
     }
 
-    return state;
+    switch (action.type) {
+        case INCREMENT:
+            return Object.assign({}, state, { counter: state.counter + 1 });
+        default:
+            return state;
+    }
 }
 
 
