@@ -26,7 +26,7 @@ const mapDispatchToProps = {
 // Explicitly typing the counter that is returned by the mapper.
 interface AppProps {
     counter: number;
-    increment: any;
+    increment: () => void;
 }
 
 

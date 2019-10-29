@@ -32,9 +32,6 @@ function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
     }
 }
 
-
-
-
 // the root reducer must be treated specially...
 const store = createStore(myReducer);
 
