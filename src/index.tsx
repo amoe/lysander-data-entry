@@ -51,24 +51,27 @@ const reducers = combineReducers({
 // The spread is totally required here, for whatever reason. 
 // We don't use any other middlewares.  Kepler's enhanceReduxMiddleware() is
 // going to add the react-palm 'taskMiddleware' implicitly.
-//, applyMiddleware(...enhanceReduxMiddleware([]))
-const store = createStore(reducers, INITIAL_STATE);
+
+const store = createStore(
+    reducers, INITIAL_STATE,
+    applyMiddleware(...enhanceReduxMiddleware([]))
+);
 
 
 /*
-const Map = (props: any) => (
-    <KeplerGl id="foo" width={width} mapboxApiAccessToken={token} height={height} />
-);
-*/
+   const Map = (props: any) => (
+   <KeplerGl id="foo" width={width} mapboxApiAccessToken={token} height={height} />
+   );
+ */
 
 /*
-ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('root')
-);
-*/
+   ReactDOM.render(
+   <Provider store={store}>
+   <App />
+   </Provider>,
+   document.getElementById('root')
+   );
+ */
 
 ReactDOM.render(
     <Provider store={store}>
