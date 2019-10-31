@@ -5,9 +5,18 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import {
+    createStore, applyMiddleware, combineReducers
+} from 'redux';
 
-import { MyState, IncrementAction, INCREMENT } from './stuff';
+import { MyState, IncrementAction, INCREMENT, FullStateTree } from './stuff';
+
+
+
+import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
+
+
+console.log(enhanceReduxMiddleware);
 
 
 // This could be a sum type
@@ -15,9 +24,12 @@ type MyActionTypes = IncrementAction;
 
 // Don't modify the state
 
-// The type of the state should be T | undefined.
-// In the case of the tutorial, they use a too-clever-by-half thing to infer
-// the type correctly.
+const INITIAL_STATE: FullStateTree = {
+    app: {
+        counter: 0
+    }
+};
+
 function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
     console.log("Reducer being called.");
     if (state === undefined) {
@@ -32,8 +44,17 @@ function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
     }
 }
 
-// the root reducer must be treated specially...
-const store = createStore(myReducer);
+
+const reducers = combineReducers({
+    app: myReducer
+});
+
+
+// The spread is totally required here, for whatever reason. 
+// We don't use any other middlewares.  Kepler's enhanceReduxMiddleware() is
+// going to add the react-palm 'taskMiddleware' implicitly.
+//, applyMiddleware(...enhanceReduxMiddleware([]))
+const store = createStore(reducers, INITIAL_STATE);
 
 
 ReactDOM.render(

@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
 import { connect, ConnectedProps } from 'react-redux';
-import { MyState, IncrementAction, INCREMENT } from './stuff';
+import { FullStateTree, IncrementAction, INCREMENT } from './stuff';
 
-function mapStateToProps(state: MyState) {
+function mapStateToProps(state: FullStateTree) {
     return {
-        counter: state.counter
+        counter: state.app.counter
     };
 }
 
