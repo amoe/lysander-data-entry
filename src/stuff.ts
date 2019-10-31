@@ -4,6 +4,7 @@ export interface MyState {
 
 export interface FullStateTree {
     app: MyState;
+    keplerGl?: any;
 }
 
 export const INCREMENT = 'INCREMENT';

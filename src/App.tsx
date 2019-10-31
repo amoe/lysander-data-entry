@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction, INCREMENT } from './stuff';
+import KeplerGl from 'kepler.gl';
+
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -23,11 +25,22 @@ const mapDispatchToProps = {
 };
 
 
-interface OtherProps {
+
+// Combined props from mapState & mapDispatch
+interface AppProps {
+    counter: number;
+    increment: () => IncrementAction;
 }
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type AppProps = ConnectedProps<typeof connector> & OtherProps;
+/*
+
+   <KeplerGl id="foo"
+   mapboxApiAccessToken="pk.eyJ1IjoiYW0wZSIsImEiOiJjamd0N2FqaDMwNG9lMndvN3ppMG92bnEwIn0.FKOnniCcTHaq-aRa5eXXFg"
+   width="640"
+   height="480" />
+
+
+ */
 
 class App2 extends React.Component<AppProps> {
     render() {
@@ -41,6 +54,8 @@ class App2 extends React.Component<AppProps> {
                     <p>Counter value: {counter}</p>
 
                     <button onClick={increment}>Increment</button>
+
+
                 </header>
             </div>
         );
@@ -48,4 +63,5 @@ class App2 extends React.Component<AppProps> {
 }
 
 
-export default connector(App2);
+export default connect(mapStateToProps, mapDispatchToProps)(App2);
+

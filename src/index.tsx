@@ -4,19 +4,16 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// Redux crap
 import { Provider } from 'react-redux';
 import {
     createStore, applyMiddleware, combineReducers
 } from 'redux';
-
 import { MyState, IncrementAction, INCREMENT, FullStateTree } from './stuff';
 
-
-
+// KeplerGL crap
+import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
-
-
-console.log(enhanceReduxMiddleware);
 
 
 // This could be a sum type
@@ -46,7 +43,8 @@ function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
 
 
 const reducers = combineReducers({
-    app: myReducer
+    app: myReducer,
+    keplerGl: keplerGlReducer
 });
 
 
@@ -56,6 +54,21 @@ const reducers = combineReducers({
 //, applyMiddleware(...enhanceReduxMiddleware([]))
 const store = createStore(reducers, INITIAL_STATE);
 
+
+/*
+const Map = (props: any) => (
+    <KeplerGl id="foo" width={width} mapboxApiAccessToken={token} height={height} />
+);
+*/
+
+/*
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
+);
+*/
 
 ReactDOM.render(
     <Provider store={store}>
