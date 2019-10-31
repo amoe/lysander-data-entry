@@ -32,15 +32,8 @@ interface AppProps {
     increment: () => IncrementAction;
 }
 
-/*
-
-   <KeplerGl id="foo"
-   mapboxApiAccessToken="pk.eyJ1IjoiYW0wZSIsImEiOiJjamd0N2FqaDMwNG9lMndvN3ppMG92bnEwIn0.FKOnniCcTHaq-aRa5eXXFg"
-   width="640"
-   height="480" />
 
 
- */
 
 class App2 extends React.Component<AppProps> {
     render() {
@@ -48,12 +41,22 @@ class App2 extends React.Component<AppProps> {
         // increment should now dispatch an increment action
         const { counter, increment } = this.props;
 
+        const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
+        console.log("token is %o", token);
+
         return (
             <div className="App">
                 <header className="App-header">
                     <p>Counter value: {counter}</p>
 
                     <button onClick={increment}>Increment</button>
+
+                    {token}
+
+                    <KeplerGl id="foo"
+                        mapboxApiAccessToken={token}
+                        width="640"
+                        height="480" />
 
 
                 </header>
