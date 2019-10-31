@@ -10,6 +10,8 @@ import {
     createStore, applyMiddleware, combineReducers
 } from 'redux';
 import { MyState, IncrementAction, INCREMENT, FullStateTree } from './stuff';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 
 // KeplerGL crap
 import { keplerGlReducer } from 'kepler.gl/reducers';
@@ -54,8 +56,11 @@ const reducers = combineReducers({
 
 const store = createStore(
     reducers, INITIAL_STATE,
-    applyMiddleware(...enhanceReduxMiddleware([]))
+    composeWithDevTools(
+        applyMiddleware(...enhanceReduxMiddleware([]))
+    )
 );
+
 
 
 /*
