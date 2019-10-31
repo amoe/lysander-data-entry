@@ -86,7 +86,10 @@ class App2 extends React.Component<AppProps> {
     render() {
         // Destructure the props which are now typed by the <T> above.
         // increment should now dispatch an increment action
-        const { counter, increment } = this.props;
+
+        // MAKE SURE YOU USE THE VERSION FROM PROPS!
+        // if you just call the action creator, then stuff will just silently die.
+        const { counter, increment, addDataToMap } = this.props;
 
         const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
         console.log("token is %o", token);
