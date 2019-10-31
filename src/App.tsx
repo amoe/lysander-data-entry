@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { MyState, IncrementAction, INCREMENT } from './stuff';
 
 function mapStateToProps(state: MyState) {
@@ -23,12 +23,12 @@ const mapDispatchToProps = {
     increment: incrementActionCreator
 };
 
-// Explicitly typing the counter that is returned by the mapper.
-interface AppProps {
-    counter: number;
-    increment: () => void;
+
+interface OtherProps {
 }
 
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type AppProps = ConnectedProps<typeof connector> & OtherProps;
 
 class App2 extends React.Component<AppProps> {
     render() {
@@ -65,6 +65,4 @@ class App2 extends React.Component<AppProps> {
 }
 
 
-export default connect(
-    mapStateToProps, mapDispatchToProps
-)(App2);
+export default connector(App2);
