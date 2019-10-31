@@ -55,8 +55,8 @@ class App2 extends React.Component<AppProps> {
 
                     <KeplerGl id="foo"
                         mapboxApiAccessToken={token}
-                        width="640"
-                        height="480" />
+                        width="800"
+                        height="800" />
 
 
                 </header>
