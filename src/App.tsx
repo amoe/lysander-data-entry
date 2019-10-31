@@ -35,11 +35,6 @@ class App2 extends React.Component<AppProps> {
         // increment should now dispatch an increment action
         const { counter, increment } = this.props;
 
-        const incrementPrime = (e: any) => {
-            console.log("increment event handler was called");
-        };
-
-
         return (
             <div className="App">
                 <header className="App-header">
