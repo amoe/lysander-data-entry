@@ -18,6 +18,16 @@ import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
 
+// Custom state to disable the add data modal dialog.
+// See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
+const customKeplerReducer = keplerGlReducer.initialState({
+    uiState: {
+        currentModal: null
+    }
+});
+
+
+
 // This could be a sum type
 type MyActionTypes = IncrementAction;
 
@@ -46,7 +56,7 @@ function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
 
 const reducers = combineReducers({
     app: myReducer,
-    keplerGl: keplerGlReducer
+    keplerGl: customKeplerReducer
 });
 
 
