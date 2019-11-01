@@ -59,64 +59,14 @@ const myArc = {
     "type": "arc",
     "config": {
         "dataId": "test_trip_data",
-        "label": "start -> end arc",
-        "color": [
-            146,
-            38,
-            198
-        ],
+        "label": "DaveArc",
         "columns": {
             "lat0": "start_latitude",
             "lng0": "start_longitude",
             "lat1": "end_latitude",
             "lng1": "end_longitude"
         },
-        "isVisible": false,
-        "visConfig": {
-            "opacity": 0.8,
-            "thickness": 2,
-            "colorRange": {
-                "name": "Global Warming",
-                "type": "sequential",
-                "category": "Uber",
-                "colors": [
-                    "#5A1846",
-                    "#900C3F",
-                    "#C70039",
-                    "#E3611C",
-                    "#F1920E",
-                    "#FFC300"
-                ]
-            },
-            "sizeRange": [
-                0,
-                10
-            ],
-            "targetColor": null
-        },
-        "textLabel": [
-            {
-                "field": null,
-                "color": [
-                    255,
-                    255,
-                    255
-                ],
-                "size": 18,
-                "offset": [
-                    0,
-                    0
-                ],
-                "anchor": "start",
-                "alignment": "center"
-            }
-        ]
-    },
-    "visualChannels": {
-        "colorField": null,
-        "colorScale": "quantile",
-        "sizeField": null,
-        "sizeScale": "linear"
+        "isVisible": true,
     }
 };
 
