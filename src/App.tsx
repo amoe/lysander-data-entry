@@ -35,48 +35,111 @@ interface AppProps {
     addDataToMap: typeof addDataToMap;
 }
 
-
+// If you have two fields like SOMETHING_longitude, SOMETHING_latitude, kepler
+// will combine it into a Point.
 
 const sampleTripData = {
     fields: [
         { name: 'tpep_pickup_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
-        { name: 'pickup_longitude', format: '', type: 'real' },
-        { name: 'pickup_latitude', format: '', type: 'real' }
+        { name: 'start_longitude', format: '', type: 'real' },
+        { name: 'start_latitude', format: '', type: 'real' },
+        { name: 'end_longitude', format: '', type: 'real' },
+        { name: 'end_latitude', format: '', type: 'real' }
     ],
     rows: [
-        ['2015-01-15 19:05:39 +00:00', -73.99389648, 40.75011063],
-        ['2015-01-15 19:05:39 +00:00', -73.97642517, 40.73981094],
-        ['2015-01-15 19:05:40 +00:00', -73.96870422, 40.75424576]
+        ['2019-11-01 08:30:00 +00:00', -0.155861, 50.824926, -0.087816, 50.867578],
     ]
 };
 
 
 
-const sampleConfig = {
-    visState: {
-        filters: [
+
+const myArc = {
+    "id": "zslehy",
+    "type": "arc",
+    "config": {
+        "dataId": "test_trip_data",
+        "label": "start -> end arc",
+        "color": [
+            146,
+            38,
+            198
+        ],
+        "columns": {
+            "lat0": "start_latitude",
+            "lng0": "start_longitude",
+            "lat1": "end_latitude",
+            "lng1": "end_longitude"
+        },
+        "isVisible": false,
+        "visConfig": {
+            "opacity": 0.8,
+            "thickness": 2,
+            "colorRange": {
+                "name": "Global Warming",
+                "type": "sequential",
+                "category": "Uber",
+                "colors": [
+                    "#5A1846",
+                    "#900C3F",
+                    "#C70039",
+                    "#E3611C",
+                    "#F1920E",
+                    "#FFC300"
+                ]
+            },
+            "sizeRange": [
+                0,
+                10
+            ],
+            "targetColor": null
+        },
+        "textLabel": [
             {
-                id: 'me',
-                dataId: 'test_trip_data',
-                name: 'tpep_pickup_datetime',
-                type: 'timeRange',
-                enlarged: true
+                "field": null,
+                "color": [
+                    255,
+                    255,
+                    255
+                ],
+                "size": 18,
+                "offset": [
+                    0,
+                    0
+                ],
+                "anchor": "start",
+                "alignment": "center"
             }
         ]
+    },
+    "visualChannels": {
+        "colorField": null,
+        "colorScale": "quantile",
+        "sizeField": null,
+        "sizeScale": "linear"
     }
 };
 
+const sampleConfig = {
+    visState: {
+        filters: [
+        ],
+        layers: [myArc]
+    }
+};
+
+
 const shite = {
-    datasets: {
+    datasets: [{
         info: {
-            label: 'Sample Taxi Trips in New York City',
+            label: 'Dave Sample Data',
             id: 'test_trip_data'
         },
         data: sampleTripData
-    },
+    }],
     option: {
         centerMap: true,
-        readOnly: false
+        readOnly: true   // hide the left display panel
     },
     config: sampleConfig
 };
