@@ -19,6 +19,8 @@ import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
 
+import Workspace from './Workspace';
+
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
 const customKeplerReducer = keplerGlReducer.initialState({
@@ -73,15 +75,9 @@ const store = createStore(
 );
 
 
-function Home() {
-    return (
-        <h1>HOME!</h1>
-    );
-}
-
 function About() {
     return (
-        <h1>About Ting</h1>
+        <h1>About</h1>
     );
 }
 
@@ -90,13 +86,13 @@ function FooRouter() {
         <HashRouter>
             <div>
                 <ul>
-                    <li> <Link to="/">Home</Link> </li>
+                    <li> <Link to="/">Workspace</Link> </li>
                     <li> <Link to="/about">About</Link> </li>
                     <li> <Link to="/kepler">Kepler</Link> </li>
                 </ul>
                 <hr />
                 <Switch>
-                    <Route exact path="/"> <Home /> </Route>
+                    <Route exact path="/"> <Workspace /> </Route>
                     <Route path="/about"> <About /> </Route>
                     <Route path="/kepler"> <App /> </Route>
                 </Switch>
@@ -104,12 +100,6 @@ function FooRouter() {
         </HashRouter>
     );
 }
-
-/*
-<Provider store={store}>
-  <App />
-</Provider>,
-*/
 
 ReactDOM.render(
     <Provider store={store}>
