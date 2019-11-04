@@ -11,6 +11,7 @@ import {
 } from 'redux';
 import { MyState, IncrementAction, INCREMENT, FullStateTree } from './stuff';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { Link, Switch, HashRouter, Route } from 'react-router-dom';
 
 
 // KeplerGL crap
@@ -72,25 +73,47 @@ const store = createStore(
 );
 
 
+function Home() {
+    return (
+        <h1>HOME!</h1>
+    );
+}
+
+function About() {
+    return (
+        <h1>About Ting</h1>
+    );
+}
+
+function FooRouter() {
+    return (
+        <HashRouter>
+            <div>
+                <ul>
+                    <li> <Link to="/">Home</Link> </li>
+                    <li> <Link to="/about">About</Link> </li>
+                    <li> <Link to="/kepler">Kepler</Link> </li>
+                </ul>
+                <hr />
+                <Switch>
+                    <Route exact path="/"> <Home /> </Route>
+                    <Route path="/about"> <About /> </Route>
+                    <Route path="/kepler"> <App /> </Route>
+                </Switch>
+            </div>
+        </HashRouter>
+    );
+}
 
 /*
-   const Map = (props: any) => (
-   <KeplerGl id="foo" width={width} mapboxApiAccessToken={token} height={height} />
-   );
- */
-
-/*
-   ReactDOM.render(
-   <Provider store={store}>
-   <App />
-   </Provider>,
-   document.getElementById('root')
-   );
- */
+<Provider store={store}>
+  <App />
+</Provider>,
+*/
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <FooRouter />
     </Provider>,
     document.getElementById('root')
 );
