@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import {
     createStore, applyMiddleware, combineReducers
 } from 'redux';
-import { MyState, IncrementAction, INCREMENT, FullStateTree } from './stuff';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Link, Switch, HashRouter, Route } from 'react-router-dom';
 
@@ -18,7 +17,10 @@ import { Link, Switch, HashRouter, Route } from 'react-router-dom';
 import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
+import thunkMiddleware from 'redux-thunk';
 
+
+import { IncrementAction, MyState, FullStateTree, INCREMENT } from './interfaces';
 import Workspace from './Workspace';
 
 // Custom state to disable the add data modal dialog.
@@ -70,7 +72,7 @@ const reducers = combineReducers({
 const store = createStore(
     reducers, INITIAL_STATE,
     composeWithDevTools(
-        applyMiddleware(...enhanceReduxMiddleware([]))
+        applyMiddleware(...enhanceReduxMiddleware([thunkMiddleware]))
     )
 );
 

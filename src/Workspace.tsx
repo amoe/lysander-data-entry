@@ -1,28 +1,37 @@
-import React from 'react';
 import singletons from './singletons';
+import React from 'react';
+import { connect } from 'react-redux';
+import actionCreators from './action-creators';
+import { FullStateTree, IncrementAction } from './interfaces';
 
-interface AppProps {
+
+function mapStateToProps(state: FullStateTree) {
+    return {
+        counter: state.app.counter
+    };
 }
 
-class Workspace extends React.Component<AppProps> {
-    componentDidMount() {
-        console.log("component mounted");
-        singletons.gateway.basicDemo().then(r => {
-            console.log(r.records[0].get('x'));
-        });
-    }
+const mapDispatchToProps = {
+    increment: actionCreators.increment,
+};
 
-    componentWillUnmount() {
-        console.log("component unmounted");
-    }
 
+interface AppProps {
+    counter: number;
+    increment: () => IncrementAction;
+}
+
+class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <p>Counter value: 0</p>
+                <p>Counter value: {this.props.counter}</p>
+                <button onClick={(e) => this.props.increment()}>Increment</button>
             </div>
         );
     }
 }
 
-export default Workspace;
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);
+

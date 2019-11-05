@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { FullStateTree, IncrementAction, INCREMENT } from './stuff';
+import { FullStateTree, IncrementAction, INCREMENT } from './interfaces';
 import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
-
+import actionCreators from './action-creators';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -13,16 +13,9 @@ function mapStateToProps(state: FullStateTree) {
 }
 
 
-function incrementActionCreator(): IncrementAction {
-    return {
-        type: INCREMENT
-    };
-}
-
-
 // This needs an object full of action creators.
 const mapDispatchToProps = {
-    increment: incrementActionCreator,
+    increment: actionCreators.increment,
     addDataToMap
 };
 
