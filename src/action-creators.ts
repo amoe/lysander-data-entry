@@ -1,4 +1,5 @@
 import { IncrementAction, INCREMENT, MyThunkDispatch } from './interfaces';
+import singletons from './singletons';
 
 function increment(): IncrementAction {
     return {
@@ -8,7 +9,10 @@ function increment(): IncrementAction {
 
 function demoQuery() {
     return (dispatch: MyThunkDispatch) => {
-        setTimeout(() => dispatch(increment()), 500);
+        singletons.gateway.basicDemo().then(r => {
+            console.log(r.records[0].get('x'));
+            dispatch(increment());
+        });
     };
 }
 
