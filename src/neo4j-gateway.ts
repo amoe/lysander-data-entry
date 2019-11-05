@@ -81,7 +81,8 @@ export class Neo4jGateway {
         if (this.driver === null) {
             this.driver = neo4j.driver(
                 'bolt://' + this.hostname,
-                neo4j.auth.basic(this.username, this.password)
+                neo4j.auth.basic(this.username, this.password),
+                { disableLosslessIntegers: true }
             );
         }
 
@@ -205,6 +206,11 @@ export class Neo4jGateway {
         });
 
         return txResult;
+    }
+
+    basicDemo(): Result {
+        this.checkInitialized();
+        return this.session!.run("RETURN 42 AS x");
     }
 
 

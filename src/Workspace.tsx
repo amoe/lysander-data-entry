@@ -1,5 +1,5 @@
 import React from 'react';
-import { Neo4jGateway } from './neo4j-gateway';
+import singletons from './singletons';
 
 interface AppProps {
 }
@@ -7,8 +7,9 @@ interface AppProps {
 class Workspace extends React.Component<AppProps> {
     componentDidMount() {
         console.log("component mounted");
-
-        console.log(Neo4jGateway);
+        singletons.gateway.basicDemo().then(r => {
+            console.log(r.records[0].get('x'));
+        });
     }
 
     componentWillUnmount() {
