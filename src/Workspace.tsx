@@ -1,4 +1,3 @@
-import singletons from './singletons';
 import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from './action-creators';
@@ -24,6 +23,10 @@ interface AppProps {
 }
 
 class MyComponent extends React.Component<AppProps> {
+    componentDidMount() {
+        console.log("component mounted");
+    }
+
     render() {
         return (
             <div>

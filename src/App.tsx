@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { FullStateTree, IncrementAction, INCREMENT } from './interfaces';
+import { FullStateTree, IncrementAction } from './interfaces';
 import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from './action-creators';
@@ -95,7 +95,7 @@ class App2 extends React.Component<AppProps> {
 
         // MAKE SURE YOU USE THE VERSION FROM PROPS!
         // if you just call the action creator, then stuff will just silently die.
-        const { counter, increment, addDataToMap } = this.props;
+        const { counter, addDataToMap } = this.props;
 
         const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
         console.log("token is %o", token);

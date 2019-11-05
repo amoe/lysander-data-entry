@@ -21,7 +21,10 @@ import thunkMiddleware from 'redux-thunk';
 
 
 import { IncrementAction, MyState, FullStateTree, INCREMENT } from './interfaces';
+
+
 import Workspace from './Workspace';
+import GraphView from './GraphView';
 
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
@@ -91,12 +94,14 @@ function FooRouter() {
                     <li> <Link to="/">Workspace</Link> </li>
                     <li> <Link to="/about">About</Link> </li>
                     <li> <Link to="/kepler">Kepler</Link> </li>
+                    <li> <Link to="/graph-view">Graph View</Link> </li>
                 </ul>
                 <hr />
                 <Switch>
                     <Route exact path="/"> <Workspace /> </Route>
                     <Route path="/about"> <About /> </Route>
                     <Route path="/kepler"> <App /> </Route>
+                    <Route path="/graph-view"> <GraphView /> </Route>
                 </Switch>
             </div>
         </HashRouter>
