@@ -1,3 +1,7 @@
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
+
+
 // Redux types
 
 export interface MyState {
@@ -16,6 +20,8 @@ export interface IncrementAction {
     type: typeof INCREMENT
 }
 
+type MyExtraArg = undefined;
+export type MyThunkDispatch = ThunkDispatch<MyState, MyExtraArg, Action>
 
 
 

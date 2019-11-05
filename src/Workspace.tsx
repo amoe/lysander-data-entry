@@ -13,12 +13,14 @@ function mapStateToProps(state: FullStateTree) {
 
 const mapDispatchToProps = {
     increment: actionCreators.increment,
+    demoQuery: actionCreators.demoQuery
 };
 
 
 interface AppProps {
     counter: number;
     increment: () => IncrementAction;
+    demoQuery: () => typeof actionCreators.demoQuery;
 }
 
 class MyComponent extends React.Component<AppProps> {
@@ -27,6 +29,7 @@ class MyComponent extends React.Component<AppProps> {
             <div>
                 <p>Counter value: {this.props.counter}</p>
                 <button onClick={(e) => this.props.increment()}>Increment</button>
+                <button onClick={(e) => this.props.demoQuery()}>Async increment</button>
             </div>
         );
     }

@@ -1,4 +1,4 @@
-import { IncrementAction, INCREMENT } from './interfaces';
+import { IncrementAction, INCREMENT, MyThunkDispatch } from './interfaces';
 
 function increment(): IncrementAction {
     return {
@@ -6,4 +6,10 @@ function increment(): IncrementAction {
     };
 }
 
-export default { increment };
+function demoQuery() {
+    return (dispatch: MyThunkDispatch) => {
+        setTimeout(() => dispatch(increment()), 500);
+    };
+}
+
+export default { increment, demoQuery };
