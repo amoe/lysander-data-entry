@@ -27,34 +27,63 @@ interface MyFormFields {
 }
 
 const availableOptions = [
-    { value: 1, label: "item 1" },
-    { value: 2, label: "item 2" },
-    { value: 3, label: "item 3" },
+    { value: "dog", label: "Tyrannosaurus Canis" },
+    { value: "cat", label: "Feline" },
+    { value: "mouse", label: "Rodent" },
 ];
 
-const MyForm = (props: FormikProps<MyFormFields>) => {
-    return (
-        <Form>
-            <Input name="firstName" placeholder="First Name" />
-
-            <Select
-                name="select1"
-                showSearch
-                style={{ width: "100%" }}
-                placeholder="Simple select"
-                onChange={value => {
-                    // select allows adding an on change handler
-                    // most components do not yet support this
-                    console.log("select changed", value);
-                }}
-            >
-                {availableOptions.map(x => <Select.Option value={x.value}>{x.label}</Select.Option>)}
-            </Select>
-
-            <SubmitButton>Stumbit</SubmitButton>
-        </Form>
-    );
+const handleSearch = (value: string) => {
+    console.log("a search was requested");
+    // Here if we wanted to modify stuff we'd need to do some sort of state.
 };
+
+type FormProps = FormikProps<MyFormFields>
+
+interface MyFormState {
+    availableOptions: any;
+}
+
+class MyForm extends React.Component<FormProps, MyFormState> {
+    constructor(props: FormProps) {
+        super(props);
+        this.state = {
+            availableOptions: [
+                { value: "dog", label: "Tyrannosaurus Canis" },
+                { value: "cat", label: "Feline" },
+                { value: "mouse", label: "Rodent" },
+            ]
+        };
+    }
+
+    render() {
+        return (
+            <Form>
+                <Input name="firstName" placeholder="First Name" />
+
+                <Select
+                    name="select1"
+                    showSearch
+                    style={{ width: "100%" }}
+                    placeholder="Simple select"
+                    onSearch={handleSearch}
+                    filterOption={true}
+                    optionFilterProp="children"
+                    onChange={value => {
+                        // select allows adding an on change handler
+                        // most components do not yet support this
+                        console.log("select changed", value);
+                    }}
+                >
+                    {this.state.availableOptions.map(
+                        (x: any) => <Select.Option key={x.value} value={x.value}>{x.label}</Select.Option>
+                    )}
+                </Select>
+
+                <SubmitButton>Stumbit</SubmitButton>
+            </Form>
+        );
+    }
+}
 
 // The codesandbox for formik/antd is available here
 
