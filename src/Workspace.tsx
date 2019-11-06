@@ -31,13 +31,20 @@ interface AppState {
 }
 
 class MyComponent extends React.Component<AppProps, AppState> {
+    timer: any;
+
     constructor(props: AppProps) {
         super(props);
         this.state = { secondsElapsed: 0 };
     }
 
     componentDidMount() {
-        window.setInterval(() => this.setState({ secondsElapsed: this.state.secondsElapsed + 1 }), 1000);
+        const handler = () => this.setState({ secondsElapsed: this.state.secondsElapsed + 1 });
+        this.timer = window.setInterval(handler, 1000);
+    }
+
+    componentWillUnmount() {
+        window.clearInterval(this.timer);
     }
 
     render() {
@@ -51,11 +58,11 @@ class MyComponent extends React.Component<AppProps, AppState> {
                 <DatePicker></DatePicker>
 
                 <Select style={{ width: 300 }}
-                        showSearch
-                        onSearch={handleSearch} >
-                  <Select.Option value="jack">Jack</Select.Option>
-                  <Select.Option value="lucy">Lucy</Select.Option>
-                  <Select.Option value="tom">Tom</Select.Option>
+                    showSearch
+                    onSearch={handleSearch} >
+                    <Select.Option value="jack">Jack</Select.Option>
+                    <Select.Option value="lucy">Lucy</Select.Option>
+                    <Select.Option value="tom">Tom</Select.Option>
                 </Select>
             </div>
         );

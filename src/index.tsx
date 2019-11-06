@@ -87,16 +87,39 @@ function About() {
     );
 }
 
+
+const routes = {
+    "/": [Workspace, "Workspace"],
+    "/about": [About, "About"],
+    "/kepler": [App, "Kepler"],
+    "/graph-view": [GraphView, "Graph View"],
+    "/formik-demo": [FormikDemo, "Formik Demo"]
+};
+
 function FooRouter() {
+    // Munge the list items
+    const listItems = Object.entries(routes).map(
+        ([route, [component, description]]) => {
+            return (
+                <li key={route}><Link to={route}>{description}</Link></li>
+            );
+        }
+    );
+
+    const switchItems = Object.entries(routes).map(
+        ([route, [component, description]]) => {
+            const TheTargetComponent = component;
+            return (
+                <Route path={route}><TheTargetComponent /></Route>
+            );
+        }
+    );
+
     return (
         <HashRouter>
             <div>
                 <ul>
-                    <li> <Link to="/">Workspace</Link> </li>
-                    <li> <Link to="/about">About</Link> </li>
-                    <li> <Link to="/kepler">Kepler</Link> </li>
-                    <li> <Link to="/graph-view">Graph View</Link> </li>
-                    <li> <Link to="/formik-demo">Formik demo</Link> </li>
+                    {listItems}
                 </ul>
                 <hr />
                 <Switch>
