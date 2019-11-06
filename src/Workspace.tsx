@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
+import { DatePicker } from 'antd';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -25,6 +26,9 @@ class MyComponent extends React.Component<AppProps> {
             <div>
                 <p>Counter value: {this.props.counter}</p>
                 <button onClick={(e) => this.props.increment()}>Increment</button>
+
+
+                <DatePicker></DatePicker>
             </div>
         );
     }
