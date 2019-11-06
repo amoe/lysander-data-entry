@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
 import { Formik, Form, Field, FormikProps } from 'formik';
-import { TextField } from 'formik-material-ui';
-import { MenuItem, Button } from '@material-ui/core';
+import { TextField as FMUI_TextField } from 'formik-material-ui';
+import { MenuItem, Button, Select, TextField } from '@material-ui/core';
 
 
 function mapStateToProps(state: FullStateTree) {
@@ -58,7 +58,7 @@ const MyFormComponent = (props: FormikProps<MyFormProps>) => {
                 variant="standard"
                 helperText="Please select Range"
                 margin="normal"
-                component={TextField}
+                component={FMUI_TextField}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -79,6 +79,14 @@ const MyFormComponent = (props: FormikProps<MyFormProps>) => {
     );
 };
 
+const currencies = [
+    { value: 1, label: "Foo bar" },
+    { value: 2, label: "alice" },
+    { value: 3, label: "something else" }
+]
+
+const currency = 2;
+
 
 class MyComponent extends React.Component<AppProps> {
     componentDidMount() {
@@ -94,13 +102,46 @@ class MyComponent extends React.Component<AppProps> {
                     <button onClick={(e) => this.props.demoQuery()}>Async increment</button>
                 </div>
 
-                <Formik initialValues={
-                    { select: 'none' }
-                } onSubmit={(values) => {
-                    console.log("values are %o", values);
-                }} component={MyFormComponent}>
-                </Formik>
+                <div>
+                    <h2>Plain M-UI select</h2>
 
+                    <Select labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={10}
+                        onChange={() => { }}>
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+
+                    <h2>Input with select</h2>
+
+                    <TextField id="standard-select-currency"
+                        select
+                        label="Select"
+                        className="someclassname"
+                        value={currency}
+                        onChange={() => { }}
+                        helperText="Please select your currency"
+                        margin="normal"
+                    >
+                        {currencies.map(option => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <h2>Formik stuff</h2>
+                    <Formik initialValues={
+                        { select: 'none' }
+                    } onSubmit={(values) => {
+                        console.log("values are %o", values);
+                    }} component={MyFormComponent}>
+                    </Formik>
+
+                </div>
             </div>
         );
     }
