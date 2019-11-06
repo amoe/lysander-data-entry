@@ -11,18 +11,16 @@ import {
 } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Link, Switch, HashRouter, Route } from 'react-router-dom';
+import thunkMiddleware from 'redux-thunk';
+import { IncrementAction, MyState, FullStateTree, INCREMENT } from './interfaces';
 
 
 // KeplerGL crap
 import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
-import thunkMiddleware from 'redux-thunk';
 
-
-import { IncrementAction, MyState, FullStateTree, INCREMENT } from './interfaces';
-
-
+// Our components
 import Workspace from './Workspace';
 import GraphView from './GraphView';
 
@@ -33,7 +31,6 @@ const customKeplerReducer = keplerGlReducer.initialState({
         currentModal: null
     }
 });
-
 
 
 // This could be a sum type
