@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import actionCreators from './action-creators';
 import { FullStateTree } from './interfaces';
 import Neovis from 'neovis.js';
 import { makeConfig } from './neovis-support';
@@ -12,6 +11,7 @@ function mapStateToProps(state: FullStateTree) {
     };
 }
 
+// GET YER ACTION CREATORS HERE
 const mapDispatchToProps = {
 };
 

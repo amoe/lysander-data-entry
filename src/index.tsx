@@ -22,6 +22,7 @@ import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
 // Our components
 import Workspace from './Workspace';
+import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
 
 // Custom state to disable the add data modal dialog.
@@ -92,6 +93,7 @@ function FooRouter() {
                     <li> <Link to="/about">About</Link> </li>
                     <li> <Link to="/kepler">Kepler</Link> </li>
                     <li> <Link to="/graph-view">Graph View</Link> </li>
+                    <li> <Link to="/formik-demo">Formik demo</Link> </li>
                 </ul>
                 <hr />
                 <Switch>
@@ -99,6 +101,7 @@ function FooRouter() {
                     <Route path="/about"> <About /> </Route>
                     <Route path="/kepler"> <App /> </Route>
                     <Route path="/graph-view"> <GraphView /> </Route>
+                    <Route path="/formik-demo"> <FormikDemo /> </Route>
                 </Switch>
             </div>
         </HashRouter>
