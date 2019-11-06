@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.6.0",
     "@types/jest": "24.0.20",
     "@types/node": "12.11.7",
     "@types/react": "16.9.11",
@@ -11,6 +12,7 @@
     "@types/react-router-dom": "^5.1.2",
     "@types/uuid": "^3.4.5",
     "formik": "^2.0.3",
+    "formik-material-ui": "^1.0.0",
     "kepler.gl": "^1.1.9",
     "loglevel": "^1.6.4",
     "neo4j-driver": "^1.7.6",
