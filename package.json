@@ -13,6 +13,7 @@
     "@types/uuid": "^3.4.5",
     "antd": "^3.25.0",
     "formik": "^2.0.3",
+    "formik-antd": "^1.6.0",
     "formik-material-ui": "^1.0.0",
     "kepler.gl": "^1.1.9",
     "loglevel": "^1.6.4",

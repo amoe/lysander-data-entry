@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
-import { DatePicker, Select } from 'antd';
+
+import { Formik, FormikProps } from 'formik';
+import { Form, Input, InputNumber, Checkbox, SubmitButton, Select } from "formik-antd";
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -20,50 +22,49 @@ interface AppProps {
     increment: () => IncrementAction;
 }
 
-
-
-function handleSearch(value: string): void {
-    console.log("handling a search for value %o", value);
+interface MyFormFields {
+    firstName: string;
 }
 
-interface AppState {
-    secondsElapsed: number;
-}
+const MyForm = (props: FormikProps<MyFormFields>) => {
+    return (
+        <Form>
+            <Input name="firstName" placeholder="First Name" />
 
-class MyComponent extends React.Component<AppProps, AppState> {
-    timer: any;
+            <Select
+                name="select1"
+                showSearch
+                style={{ width: "100%" }}
+                placeholder="Simple select"
+                onChange={value => {
+                    // select allows adding an on change handler
+                    // most components do not yet support this
+                    console.log("select changed", value);
+                }}
+            >
+                <Select.Option value={1}>item 1</Select.Option>
+                <Select.Option value={2}>item 2</Select.Option>
+                <Select.Option value={3}>item 3</Select.Option>
+            </Select>
 
-    constructor(props: AppProps) {
-        super(props);
-        this.state = { secondsElapsed: 0 };
-    }
+            <SubmitButton />
+        </Form>
+    );
+};
 
-    componentDidMount() {
-        const handler = () => this.setState({ secondsElapsed: this.state.secondsElapsed + 1 });
-        this.timer = window.setInterval(handler, 1000);
-    }
+// The codesandbox for formik/antd is available here
 
-    componentWillUnmount() {
-        window.clearInterval(this.timer);
-    }
-
+class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <p>Counter value: {this.props.counter}</p>
-                <button onClick={(e) => this.props.increment()}>Increment</button>
+                <h2>Formik/Antd demo</h2>
 
-                <p>{this.state.secondsElapsed} seconds have elapsed.</p>
 
-                <DatePicker></DatePicker>
-
-                <Select style={{ width: 300 }}
-                    showSearch
-                    onSearch={handleSearch} >
-                    <Select.Option value="jack">Jack</Select.Option>
-                    <Select.Option value="lucy">Lucy</Select.Option>
-                    <Select.Option value="tom">Tom</Select.Option>
-                </Select>
+                <Formik initialValues={{ firstName: "" }}
+                    onSubmit={(values) => { console.log(values); }}
+                    component={MyForm}
+                />
             </div>
         );
     }
