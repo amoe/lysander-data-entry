@@ -26,6 +26,12 @@ interface MyFormFields {
     firstName: string;
 }
 
+const availableOptions = [
+    { value: 1, label: "item 1" },
+    { value: 2, label: "item 2" },
+    { value: 3, label: "item 3" },
+];
+
 const MyForm = (props: FormikProps<MyFormFields>) => {
     return (
         <Form>
@@ -42,12 +48,10 @@ const MyForm = (props: FormikProps<MyFormFields>) => {
                     console.log("select changed", value);
                 }}
             >
-                <Select.Option value={1}>item 1</Select.Option>
-                <Select.Option value={2}>item 2</Select.Option>
-                <Select.Option value={3}>item 3</Select.Option>
+                {availableOptions.map(x => <Select.Option value={x.value}>{x.label}</Select.Option>)}
             </Select>
 
-            <SubmitButton />
+            <SubmitButton>Stumbit</SubmitButton>
         </Form>
     );
 };
