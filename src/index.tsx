@@ -27,6 +27,7 @@ import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 import Workspace from './Workspace';
 import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
+import AntdComponentDemo from './AntdComponentDemo';
 
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
@@ -93,13 +94,15 @@ const routes = {
     "/about": [About, "About"],
     "/kepler": [App, "Kepler"],
     "/graph-view": [GraphView, "Graph View"],
-    "/formik-demo": [FormikDemo, "Formik Demo"]
+    "/formik-demo": [FormikDemo, "Formik Demo"],
+    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
 function FooRouter() {
     // Munge the list items
     const listItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
+            console.log(route);
             return (
                 <li key={route}><Link to={route}>{description}</Link></li>
             );
@@ -108,12 +111,20 @@ function FooRouter() {
 
     const switchItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
+
+            // The route needs to have the 'exact' prop otherwise it's going to override everything else!
+            const optionalProps: any = {};
+            if (route === '/') {
+                optionalProps.exact = true;
+            }
+
             const TheTargetComponent = component;
             return (
-                <Route path={route}><TheTargetComponent /></Route>
+                <Route key={route} path={route} {...optionalProps}><TheTargetComponent /></Route>
             );
         }
     );
+
 
     return (
         <HashRouter>
@@ -123,11 +134,7 @@ function FooRouter() {
                 </ul>
                 <hr />
                 <Switch>
-                    <Route exact path="/"> <Workspace /> </Route>
-                    <Route path="/about"> <About /> </Route>
-                    <Route path="/kepler"> <App /> </Route>
-                    <Route path="/graph-view"> <GraphView /> </Route>
-                    <Route path="/formik-demo"> <FormikDemo /> </Route>
+                    {switchItems}
                 </Switch>
             </div>
         </HashRouter>
