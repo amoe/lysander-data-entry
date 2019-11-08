@@ -22,6 +22,10 @@ const mapDispatchToProps = {
 
 
 
+const SAMPLE_ROWS = [
+    ['2019-11-01 08:30:00 +00:00', -0.155861, 50.824926, -0.087816, 50.867578]
+];
+
 // Combined props from mapState & mapDispatch
 interface AppProps {
     counter: number;
@@ -32,20 +36,18 @@ interface AppProps {
 // If you have two fields like SOMETHING_longitude, SOMETHING_latitude, kepler
 // will combine it into a Point.
 
-const sampleTripData = {
-    fields: [
-        { name: 'tpep_pickup_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
-        { name: 'start_longitude', format: '', type: 'real' },
-        { name: 'start_latitude', format: '', type: 'real' },
-        { name: 'end_longitude', format: '', type: 'real' },
-        { name: 'end_latitude', format: '', type: 'real' }
-    ],
-    rows: [
-        ['2019-11-01 08:30:00 +00:00', -0.155861, 50.824926, -0.087816, 50.867578],
-    ]
-};
-
-
+function makeData(rows: any) {
+    return {
+        fields: [
+            { name: 'tpep_pickup_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
+            { name: 'start_longitude', format: '', type: 'real' },
+            { name: 'start_latitude', format: '', type: 'real' },
+            { name: 'end_longitude', format: '', type: 'real' },
+            { name: 'end_latitude', format: '', type: 'real' }
+        ],
+        rows: SAMPLE_ROWS
+    };
+}
 
 
 const myArc = {
@@ -73,29 +75,39 @@ const sampleConfig = {
 };
 
 
-const shite = {
-    datasets: [{
-        info: {
-            label: 'Dave Sample Data',
-            id: 'test_trip_data'
+function makeKeplerData(rows: any) {
+    return {
+        datasets: [{
+            info: {
+                label: 'Dave Sample Data',
+                id: 'test_trip_data'
+            },
+            data: makeData(rows)
+        }],
+        option: {
+            centerMap: true,
+            readOnly: true   // hide the left display panel
         },
-        data: sampleTripData
-    }],
-    option: {
-        centerMap: true,
-        readOnly: true   // hide the left display panel
-    },
-    config: sampleConfig
-};
+        config: sampleConfig
+    };
+}
 
 
 class KeplerView extends React.Component<AppProps> {
     activateLasers() {
         singletons.gateway.retrieveLocations().then(r => {
-            r.records.forEach(x => {
-                console.log(x.get("latitude"));
-                console.log(x.get("longitude"));
+
+
+            const newRows = r.records.map(x => {
+                return [
+                    '2019-11-01 08:30:00 +00:00',
+                    x.get('longitude'),
+                    x.get('latitude'),
+                    -0.087816, 50.867578
+                ];
             });
+
+            this.props.addDataToMap(makeKeplerData(newRows));
         });
     }
 
@@ -118,9 +130,9 @@ class KeplerView extends React.Component<AppProps> {
                 <header className="App-header">
                     <p>Counter value: {counter}</p>
 
-                    <button onClick={this.activateLasers}>Activate lasers</button>
+                    <button onClick={() => this.activateLasers()}>Activate lasers</button>
 
-                    <button onClick={(e) => addDataToMap(shite)}>Increment</button>
+                    <button onClick={(e) => addDataToMap(makeKeplerData(SAMPLE_ROWS))}>Increment</button>
 
                     {token}
 
