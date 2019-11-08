@@ -93,13 +93,14 @@ class MyForm extends React.Component<FormProps, MyFormState> {
 function addLocation() {
     console.log("I would add a location");
 
-    //    singletons.gateway.addDummyLocation().then(
-    notification.open({
-        message: 'Notification Title',
-        description: 'This is the content of the notification.',
-        onClick: () => {
-            console.log('Notification Clicked!');
-        }
+    singletons.gateway.addDummyLocation().then(r => {
+        notification.open({
+            message: 'Notification Title',
+            description: 'This is the content of the notification.',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            }
+        })
     });
 }
 

@@ -5,6 +5,7 @@ import { FullStateTree, IncrementAction } from './interfaces';
 import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from './action-creators';
+import singletons from './singletons';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -88,7 +89,16 @@ const shite = {
 };
 
 
-class App2 extends React.Component<AppProps> {
+class KeplerView extends React.Component<AppProps> {
+    activateLasers() {
+        singletons.gateway.retrieveLocations().then(r => {
+            r.records.forEach(x => {
+                console.log(x.get("latitude"));
+                console.log(x.get("longitude"));
+            });
+        });
+    }
+
     render() {
         // Destructure the props which are now typed by the <T> above.
         // increment should now dispatch an increment action
@@ -108,6 +118,8 @@ class App2 extends React.Component<AppProps> {
                 <header className="App-header">
                     <p>Counter value: {counter}</p>
 
+                    <button onClick={this.activateLasers}>Activate lasers</button>
+
                     <button onClick={(e) => addDataToMap(shite)}>Increment</button>
 
                     {token}
@@ -125,5 +137,5 @@ class App2 extends React.Component<AppProps> {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App2);
+export default connect(mapStateToProps, mapDispatchToProps)(KeplerView);
 

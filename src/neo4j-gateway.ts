@@ -7,6 +7,8 @@ import { QUERY_DEFINITIONS } from './cypher';
 import { CannedStatement } from './canned-statements';
 import uuidv4 from 'uuid/v4';
 
+import { LOC_1_LONGITUDE, LOC_1_LATITUDE } from './sample-data';
+
 const INSERT_SOURCE_ROW = `
 MATCH (s:Source {name: {sourceName}})
 CREATE (r:SourceRow {id: {id}, processed: false, json: {json}}),
@@ -216,11 +218,25 @@ export class Neo4jGateway {
         );
     }
 
-    addDummyLocation(): void {
+    addDummyLocation(): Result {
         this.checkInitialized();
 
-        // return this.session!.run(
-        //     "CREATE (l:Location {latitude: 
+
+        return this.session!.run(
+            "CREATE (l:Location {latitude: {latitude}, longitude: {longitude}})",
+            {
+                latitude: LOC_1_LATITUDE, longitude: LOC_1_LONGITUDE
+            }
+        );
+    }
+
+    retrieveLocations(): Result {
+        this.checkInitialized();
+
+        return this.session!.run(
+            `MATCH (l:Location) 
+             RETURN l.latitude AS latitude, l.longitude AS longitude`
+        );
     }
 
     destroy(): void {
