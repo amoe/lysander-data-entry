@@ -216,6 +216,13 @@ export class Neo4jGateway {
         );
     }
 
+    addDummyLocation(): void {
+        this.checkInitialized();
+
+        // return this.session!.run(
+        //     "CREATE (l:Location {latitude: 
+    }
+
     destroy(): void {
         if (this.session !== null) {
             this.session.close();

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 // Global CSS
@@ -28,6 +27,8 @@ import Workspace from './Workspace';
 import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
 import AntdComponentDemo from './AntdComponentDemo';
+import KeplerView from './KeplerView';
+
 
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
@@ -92,7 +93,7 @@ function About() {
 const routes = {
     "/": [Workspace, "Workspace"],
     "/about": [About, "About"],
-    "/kepler": [App, "Kepler"],
+    "/kepler-view": [KeplerView, "Kepler View"],
     "/graph-view": [GraphView, "Graph View"],
     "/formik-demo": [FormikDemo, "Formik Demo"],
     "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
@@ -102,7 +103,6 @@ function FooRouter() {
     // Munge the list items
     const listItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
-            console.log(route);
             return (
                 <li key={route}><Link to={route}>{description}</Link></li>
             );
@@ -112,7 +112,8 @@ function FooRouter() {
     const switchItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
 
-            // The route needs to have the 'exact' prop otherwise it's going to override everything else!
+            // The route needs to have the 'exact' prop otherwise it's going 
+            // to override everything else!
             const optionalProps: any = {};
             if (route === '/') {
                 optionalProps.exact = true;

@@ -3,8 +3,13 @@ import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
 
+import { Button, notification } from 'antd';
+
+
 import { Formik, FormikProps } from 'formik';
 import { Form, Input, InputNumber, Checkbox, SubmitButton, Select } from "formik-antd";
+
+import singletons from './singletons';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -85,6 +90,19 @@ class MyForm extends React.Component<FormProps, MyFormState> {
     }
 }
 
+function addLocation() {
+    console.log("I would add a location");
+
+    //    singletons.gateway.addDummyLocation().then(
+    notification.open({
+        message: 'Notification Title',
+        description: 'This is the content of the notification.',
+        onClick: () => {
+            console.log('Notification Clicked!');
+        }
+    });
+}
+
 // The codesandbox for formik/antd is available here
 
 class MyComponent extends React.Component<AppProps> {
@@ -93,6 +111,7 @@ class MyComponent extends React.Component<AppProps> {
             <div>
                 <h2>Formik/Antd demo</h2>
 
+                <Button onClick={addLocation}>Add a location</Button>
 
                 <Formik initialValues={{ firstName: "" }}
                     onSubmit={(values) => { console.log(values); }}
