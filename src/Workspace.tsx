@@ -141,7 +141,7 @@ class MyComponent extends React.Component<AppProps, MyComponentState> {
                 <Button onClick={addLocation}>Add a location</Button>
 
                 <Formik initialValues={{ firstName: "" }}
-                    onSubmit={(values) => { console.log(values); }}
+                    onSubmit={(values) => { console.log(JSON.stringify(values)); }}
                     component={MyForm}
                 />
             </div>
