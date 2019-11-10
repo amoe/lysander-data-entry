@@ -2,20 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
-
 import { Button, notification } from 'antd';
-
-
 import { Formik, FormikProps } from 'formik';
+import { KNOWN_LZ } from './known-lz';
+import { Typography, Layout, Menu } from 'antd';
+import singletons from './singletons';
 import {
     Form, Input, InputNumber, Checkbox, SubmitButton, Select,
     AutoComplete
 } from "formik-antd";
 
-import { KNOWN_LZ } from './known-lz';
-
-
-import singletons from './singletons';
+const { Header, Footer, Sider, Content } = Layout;
 
 
 function mapStateToProps(state: FullStateTree) {
@@ -108,14 +105,31 @@ class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <h1>Formik/Antd demo</h1>
+                <Layout className="layout">
 
-                <Button onClick={addLocation}>Add a location</Button>
+                    <Header>
+                        <div className="logo" />
+                        <Menu
+                            theme="dark"
+                            mode="horizontal"
+                            defaultSelectedKeys={['2']}
+                            style={{ lineHeight: '64px' }}
+                        >
+                            <Menu.Item key="1">nav 1</Menu.Item>
+                            <Menu.Item key="2">nav 2</Menu.Item>
+                            <Menu.Item key="3">nav 3</Menu.Item>
+                        </Menu>
+                    </Header>
+                    <Content>
+                        <Button onClick={addLocation}>Add a location</Button>
 
-                <Formik initialValues={{ firstName: "" }}
-                    onSubmit={(values) => { console.log(values); }}
-                    component={MyForm}
-                />
+                        <Formik initialValues={{ firstName: "" }}
+                            onSubmit={(values) => { console.log(values); }}
+                            component={MyForm}
+                        />
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>Lysander Project 2019</Footer>
+                </Layout>
             </div>
         );
     }
