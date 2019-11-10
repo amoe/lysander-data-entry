@@ -106,7 +106,6 @@ class MyComponent extends React.Component<AppProps> {
         return (
             <div>
                 <Layout className="layout">
-
                     <Header>
                         <div className="logo" />
                         <Menu
