@@ -100,13 +100,33 @@ function addLocation() {
     });
 }
 
+interface Int1 {
+    foo: any;
+}
+
+const MyFoo = (props: Int1) => {
+    return (
+        <div><h1>MYFOO</h1></div>
+    )
+};
+
 // The codesandbox for formik/antd is available here
 
-class MyComponent extends React.Component<AppProps> {
+interface MyComponentState {
+    tilletData: object[]
+}
+
+class MyComponent extends React.Component<AppProps, MyComponentState> {
+    constructor(props: AppProps) {
+        super(props);
+        this.state = { tilletData: [] };
+    }
+
     componentDidMount() {
         console.log("mount hook");
         axios.get("/sensitive/tillet_converted.json").then(r => {
             console.log("win", r.data);
+            this.setState({ tilletData: r.data });
         }).catch(e => {
             console.log("lose");
         });;
@@ -116,30 +136,14 @@ class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <Layout className="layout">
-                    <Header>
-                        <div className="logo" />
-                        <Menu
-                            theme="dark"
-                            mode="horizontal"
-                            defaultSelectedKeys={['2']}
-                            style={{ lineHeight: '64px' }}
-                        >
-                            <Menu.Item key="1">nav 1</Menu.Item>
-                            <Menu.Item key="2">nav 2</Menu.Item>
-                            <Menu.Item key="3">nav 3</Menu.Item>
-                        </Menu>
-                    </Header>
-                    <Content>
-                        <Button onClick={addLocation}>Add a location</Button>
+                <MyFoo foo={this.state.tilletData} />
 
-                        <Formik initialValues={{ firstName: "" }}
-                            onSubmit={(values) => { console.log(values); }}
-                            component={MyForm}
-                        />
-                    </Content>
-                    <Footer style={{ textAlign: 'center' }}>Lysander Project 2019</Footer>
-                </Layout>
+                <Button onClick={addLocation}>Add a location</Button>
+
+                <Formik initialValues={{ firstName: "" }}
+                    onSubmit={(values) => { console.log(values); }}
+                    component={MyForm}
+                />
             </div>
         );
     }
