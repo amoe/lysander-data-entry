@@ -15,4 +15,4 @@ if [ "$#" -gt 0 ]; then
 fi
 
 
-rsync $maybe_limit -aPv --delete "${build_dir}/" visarend.solasistim.net:/srv/http/lysander/
+rsync $maybe_limit -azPv --delete "${build_dir}/" visarend.solasistim.net:/srv/http/lysander/

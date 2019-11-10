@@ -102,6 +102,11 @@ function addLocation() {
 // The codesandbox for formik/antd is available here
 
 class MyComponent extends React.Component<AppProps> {
+    componentDidMount() {
+        console.log("mount hook");
+    }
+
+
     render() {
         return (
             <div>
