@@ -3,7 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from './action-creators';
 import { FullStateTree, IncrementAction } from './interfaces';
-import { DatePicker, Select } from 'antd';
+
+import {
+    DatePicker,
+    Select,
+    AutoComplete
+} from 'antd';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -31,6 +36,8 @@ interface AppState {
     secondsElapsed: number;
 }
 
+const SOME_VALUES = ['fry', 'bender', 'leela'];
+
 class MyComponent extends React.Component<AppProps, AppState> {
     timer: any;
 
@@ -51,6 +58,14 @@ class MyComponent extends React.Component<AppProps, AppState> {
     render() {
         return (
             <div>
+                <h1>Antd components</h1>
+
+                <p>These are vanilla antd components, not enhanced ones.</p>
+
+                <p>Autocomplete using array as data source</p>
+
+                <AutoComplete dataSource={SOME_VALUES}></AutoComplete>
+
                 <p>Counter value: {this.props.counter}</p>
                 <button onClick={(e) => this.props.increment()}>Increment</button>
 

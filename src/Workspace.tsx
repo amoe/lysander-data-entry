@@ -9,7 +9,11 @@ import { Button, notification } from 'antd';
 import { Formik, FormikProps } from 'formik';
 import { Form, Input, InputNumber, Checkbox, SubmitButton, Select } from "formik-antd";
 
+import { KNOWN_LZ } from './known-lz';
+
+
 import singletons from './singletons';
+
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -63,6 +67,13 @@ class MyForm extends React.Component<FormProps, MyFormState> {
     render() {
         return (
             <Form>
+                <h2>LZ codename</h2>
+
+                <Select name="lz">
+                    {KNOWN_LZ.map((lz, index) => <Select.Option key={index} value={lz}>{lz}</Select.Option>)}
+                </Select>
+
+
                 <Input name="firstName" placeholder="First Name" />
 
                 <Select
@@ -110,7 +121,7 @@ class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <h2>Formik/Antd demo</h2>
+                <h1>Formik/Antd demo</h1>
 
                 <Button onClick={addLocation}>Add a location</Button>
 
