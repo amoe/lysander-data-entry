@@ -7,6 +7,7 @@ import { Formik, FormikProps } from 'formik';
 import { KNOWN_LZ } from './known-lz';
 import { Typography, Layout, Menu } from 'antd';
 import singletons from './singletons';
+import axios from 'axios';
 import {
     Form, Input, InputNumber, Checkbox, SubmitButton, Select,
     AutoComplete
@@ -104,6 +105,11 @@ function addLocation() {
 class MyComponent extends React.Component<AppProps> {
     componentDidMount() {
         console.log("mount hook");
+        axios.get("/sensitive/tillet_converted.json").then(r => {
+            console.log("win", r.data);
+        }).catch(e => {
+            console.log("lose");
+        });;
     }
 
 
