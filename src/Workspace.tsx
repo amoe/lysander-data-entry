@@ -7,7 +7,10 @@ import { Button, notification } from 'antd';
 
 
 import { Formik, FormikProps } from 'formik';
-import { Form, Input, InputNumber, Checkbox, SubmitButton, Select } from "formik-antd";
+import {
+    Form, Input, InputNumber, Checkbox, SubmitButton, Select,
+    AutoComplete
+} from "formik-antd";
 
 import { KNOWN_LZ } from './known-lz';
 
@@ -69,31 +72,15 @@ class MyForm extends React.Component<FormProps, MyFormState> {
             <Form>
                 <h2>LZ codename</h2>
 
-                <Select name="lz">
-                    {KNOWN_LZ.map((lz, index) => <Select.Option key={index} value={lz}>{lz}</Select.Option>)}
-                </Select>
+                <AutoComplete name="lz0" dataSource={KNOWN_LZ}></AutoComplete>
 
+                <h2>Coordinates</h2>
 
-                <Input name="firstName" placeholder="First Name" />
+                <Input name="coordinates"></Input>
 
-                <Select
-                    name="select1"
-                    showSearch
-                    style={{ width: "100%" }}
-                    placeholder="Simple select"
-                    onSearch={handleSearch}
-                    filterOption={true}
-                    optionFilterProp="children"
-                    onChange={value => {
-                        // select allows adding an on change handler
-                        // most components do not yet support this
-                        console.log("select changed", value);
-                    }}
-                >
-                    {this.state.availableOptions.map(
-                        (x: any) => <Select.Option key={x.value} value={x.value}>{x.label}</Select.Option>
-                    )}
-                </Select>
+                <h2>Freetext search</h2>
+
+                <Input name="freetextLocation"></Input>
 
                 <SubmitButton>Stumbit</SubmitButton>
             </Form>
