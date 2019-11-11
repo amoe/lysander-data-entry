@@ -104,13 +104,14 @@ function addLocation() {
 // The codesandbox for formik/antd is available here
 
 interface MyComponentState {
-    tilletData: object[]
+    tilletData: object[],
+    coordinates: any
 }
 
 class MyComponent extends React.Component<AppProps, MyComponentState> {
     constructor(props: AppProps) {
         super(props);
-        this.state = { tilletData: [] };
+        this.state = { tilletData: [], coordinates: null };
     }
 
     componentDidMount() {
@@ -121,6 +122,13 @@ class MyComponent extends React.Component<AppProps, MyComponentState> {
         }).catch(e => {
             console.log("lose");
         });;
+
+        axios.get("/sensitive/parsed_sparse_coordinates.json").then(r => {
+            console.log("got psc");
+            this.setState({ coordinates: r.data });
+        }).catch(e => {
+            console.log("failed to get psc");
+        });
     }
 
 
