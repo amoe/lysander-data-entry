@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import actionCreators from './action-creators';
-import { FullStateTree, IncrementAction } from './interfaces';
+import actionCreators from '../action-creators';
+import { FullStateTree, IncrementAction } from '../interfaces';
 import { Button, notification } from 'antd';
 import { Formik, FormikProps } from 'formik';
-import { KNOWN_LZ } from './known-lz';
+import { KNOWN_LZ } from '../known-lz';
 import { Typography, Layout, Menu } from 'antd';
-import singletons from './singletons';
+import singletons from '../singletons';
 import axios from 'axios';
 import {
     Form, Input, InputNumber, Checkbox, SubmitButton, Select,

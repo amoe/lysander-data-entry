@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import actionCreators from './action-creators';
-import { FullStateTree, IncrementAction } from './interfaces';
+import actionCreators from '../action-creators';
+import { FullStateTree, IncrementAction } from '../interfaces';
 
 import {
     DatePicker,

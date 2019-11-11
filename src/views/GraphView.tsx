@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FullStateTree } from './interfaces';
+import { FullStateTree } from '../interfaces';
 import Neovis from 'neovis.js';
-import { makeConfig } from './neovis-support';
+import { makeConfig } from '../neovis-support';
 
 import './GraphView.css';
 

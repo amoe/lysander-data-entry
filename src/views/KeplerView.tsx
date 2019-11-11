@@ -1,11 +1,10 @@
 import React from 'react';
-import './App.css';
 import { connect } from 'react-redux';
-import { FullStateTree, IncrementAction } from './interfaces';
+import { FullStateTree, IncrementAction } from '../interfaces';
 import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
-import actionCreators from './action-creators';
-import singletons from './singletons';
+import actionCreators from '../action-creators';
+import singletons from '../singletons';
 
 function mapStateToProps(state: FullStateTree) {
     return {

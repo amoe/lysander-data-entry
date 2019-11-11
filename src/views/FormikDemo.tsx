@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import actionCreators from './action-creators';
-import { FullStateTree, IncrementAction } from './interfaces';
+import actionCreators from '../action-creators';
+import { FullStateTree, IncrementAction } from '../interfaces';
 import { Formik, Form, Field, FormikProps } from 'formik';
 import { TextField as FMUI_TextField } from 'formik-material-ui';
 import { MenuItem, Button, Select, TextField } from '@material-ui/core';
