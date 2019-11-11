@@ -9,7 +9,7 @@ npm run build
 
 maybe_limit=""
 if [ "$#" -gt 0 ]; then
-    if [ -n "$1" = "slow" ]; then
+    if [ "$1" = "slow" ]; then
         maybe_limit="--bwlimit=128k"
     fi
 fi
