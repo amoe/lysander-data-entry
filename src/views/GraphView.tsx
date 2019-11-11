@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { FullStateTree } from '../interfaces';
 import Neovis from 'neovis.js';
 import { makeConfig } from '../neovis-support';
-
+import { Typography, Divider, Row, Col } from 'antd';
 import './GraphView.css';
+
+const { Title, Paragraph, Text } = Typography;
+
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -34,7 +37,8 @@ class MyComponent extends React.Component<AppProps> {
     render() {
         return (
             <div>
-                <h1>Graph view</h1>
+                <Title level={2}>Graph view</Title>
+
 
                 <div id="viz"></div>
             </div>

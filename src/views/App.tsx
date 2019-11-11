@@ -10,6 +10,7 @@ import AntdComponentDemo from './AntdComponentDemo';
 import KeplerView from './KeplerView';
 import FormikAntdView from './FormikAntdView';
 import AdvancedView from './AdvancedView';
+import AboutView from './AboutView';
 
 import {
     Layout, Menu, Breadcrumb,
@@ -17,17 +18,9 @@ import {
 
 const { Header, Content, Footer } = Layout;
 
-
-function About() {
-    return (
-        <h1>About Lysander</h1>
-    );
-}
-
-
 const routes = {
     "/": [Workspace, "Workspace"],
-    "/about": [About, "About"],
+    "/about": [AboutView, "About"],
     "/kepler-view": [KeplerView, "Kepler View"],
     "/graph-view": [GraphView, "Graph View"],
     "/formik-demo": [FormikDemo, "Formik Demo"],

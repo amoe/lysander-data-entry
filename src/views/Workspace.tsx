@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Button } from 'antd';
 import singletons from '../singletons';
 import { notification } from 'antd';
-import { Typography, InputNumber } from 'antd';
+import { Typography, InputNumber, Divider } from 'antd';
 
 const { Title } = Typography;
 
@@ -141,6 +141,8 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
 
+                <Divider />
+
 
                 <Title level={3}>...or, enter coordinates:</Title>
 
@@ -167,4 +169,3 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);
-
