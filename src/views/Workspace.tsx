@@ -100,15 +100,6 @@ function addLocation() {
     });
 }
 
-interface Int1 {
-    foo: any;
-}
-
-const MyFoo = (props: Int1) => {
-    return (
-        <div><h1>MYFOO</h1></div>
-    )
-};
 
 // The codesandbox for formik/antd is available here
 
@@ -136,8 +127,6 @@ class MyComponent extends React.Component<AppProps, MyComponentState> {
     render() {
         return (
             <div>
-                <MyFoo foo={this.state.tilletData} />
-
                 <Button onClick={addLocation}>Add a location</Button>
 
                 <Formik initialValues={{ firstName: "" }}

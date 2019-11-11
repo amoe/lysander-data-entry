@@ -33,6 +33,8 @@ const routes = {
     "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
+const ABOUT_TEXT = "Lysander Project, 2019-2020";
+
 
 class FooRouter extends React.Component<RouteComponentProps> {
     render() {
@@ -80,7 +82,7 @@ class FooRouter extends React.Component<RouteComponentProps> {
                         </Switch>
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer style={{ textAlign: 'center' }}>{ABOUT_TEXT}</Footer>
             </Layout>
         );
     }
