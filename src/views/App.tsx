@@ -8,13 +8,14 @@ import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
 import AntdComponentDemo from './AntdComponentDemo';
 import KeplerView from './KeplerView';
+import FormikAntdView from './FormikAntdView';
+
+
 import {
     Layout, Menu, Breadcrumb,
 } from 'antd';
 
 const { Header, Content, Footer } = Layout;
-
-
 
 
 function About() {
@@ -30,7 +31,8 @@ const routes = {
     "/kepler-view": [KeplerView, "Kepler View"],
     "/graph-view": [GraphView, "Graph View"],
     "/formik-demo": [FormikDemo, "Formik Demo"],
-    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
+    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"],
+    "/formik-antd": [FormikAntdView, "Formik Antd Demo"]
 };
 
 const ABOUT_TEXT = "Lysander Project, 2019-2020";
