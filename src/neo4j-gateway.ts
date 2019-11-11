@@ -230,6 +230,19 @@ export class Neo4jGateway {
         );
     }
 
+
+    addLocation(longitude: number, latitude: number): Result {
+        this.checkInitialized();
+
+
+        return this.session!.run(
+            "CREATE (l:Location {longitude: {longitude}, latitude: {latitude}})",
+            {
+                longitude: longitude, latitude: latitude
+            }
+        );
+    }
+
     retrieveLocations(): Result {
         this.checkInitialized();
 
