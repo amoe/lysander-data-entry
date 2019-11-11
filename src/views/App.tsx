@@ -34,7 +34,7 @@ const routes = {
 
 const RouteMenuLink = ({ route, description }: any) => {
     return (
-        <li key={route}><Link to={route}>Foo {description}</Link></li>
+        <li><Link to={route}>Foo {description}</Link></li>
     );
 };
 
@@ -44,7 +44,7 @@ function FooRouter() {
     const listItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
             return (
-                <RouteMenuLink route={route} description={description} />
+                <RouteMenuLink key={route} route={route} description={description} />
             );
         }
     );
@@ -102,8 +102,3 @@ function FooRouter() {
 }
 
 export default FooRouter;
-
-
-/* <ul>
-                * {listItems}
-                * </ul>*/
