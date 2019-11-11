@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Switch, HashRouter, Route } from 'react-router-dom';
+import { Link, Switch, HashRouter, Route, withRouter, RouteComponentProps } from 'react-router-dom';
 
 
 // Our components
@@ -13,6 +13,7 @@ import {
 } from 'antd';
 
 const { Header, Content, Footer } = Layout;
+
 
 
 
@@ -33,42 +34,41 @@ const routes = {
 };
 
 
-function FooRouter() {
-    // Munge the list items
-    const listItems = Object.entries(routes).map(
-        ([route, [component, description]], index) => {
-            return (
-                <Menu.Item key={route}><Link to={route}>{description}</Link></Menu.Item>
+class FooRouter extends React.Component<RouteComponentProps> {
+    render() {
+        // Munge the list items
+        const listItems = Object.entries(routes).map(
+            ([route, [component, description]], index) => {
+                return (
+                    <Menu.Item key={route}><Link to={route}>{description}</Link></Menu.Item>
 
-            );
-        }
-    );
-
-    const switchItems = Object.entries(routes).map(
-        ([route, [component, description]]) => {
-
-            // The route needs to have the 'exact' prop otherwise it's going 
-            // to override everything else!
-            const optionalProps: any = {};
-            if (route === '/') {
-                optionalProps.exact = true;
+                );
             }
+        );
 
-            const TheTargetComponent = component;
-            return (
-                <Route key={route} path={route} {...optionalProps}><TheTargetComponent /></Route>
-            );
-        }
-    );
+        const switchItems = Object.entries(routes).map(
+            ([route, [component, description]]) => {
+
+                // The route needs to have the 'exact' prop otherwise it's going 
+                // to override everything else!
+                const optionalProps: any = {};
+                if (route === '/') {
+                    optionalProps.exact = true;
+                }
+
+                const TheTargetComponent = component;
+                return (
+                    <Route key={route} path={route} {...optionalProps}><TheTargetComponent /></Route>
+                );
+            }
+        );
 
 
-    return (
-        <HashRouter>
+        return (
             <Layout className="layout">
                 <Header>
                     <div className="logo" />
                     <Menu theme="dark" mode="horizontal" style={{ lineHeight: '64px' }}>
-                        <Menu.Item key="1"><Link to="/about">About</Link></Menu.Item>
                         {listItems}
                     </Menu>
                 </Header>
@@ -87,8 +87,8 @@ function FooRouter() {
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>
-        </HashRouter>
-    );
+        );
+    }
 }
 
-export default FooRouter;
+export default withRouter(FooRouter);

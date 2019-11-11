@@ -20,7 +20,8 @@ import { keplerGlReducer } from 'kepler.gl/reducers';
 import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 
 
-import FooRouter from './views/App';
+import { HashRouter } from 'react-router-dom';
+import App from './views/App';
 
 
 // Custom state to disable the add data modal dialog.
@@ -79,7 +80,9 @@ const store = createStore(
 
 ReactDOM.render(
     <Provider store={store}>
-        <FooRouter />
+        <HashRouter>
+            <App />
+        </HashRouter>
     </Provider>,
     document.getElementById('root')
 );
