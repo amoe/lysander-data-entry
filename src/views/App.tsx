@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Link, Switch, HashRouter, Route } from 'react-router-dom';
 
 
@@ -9,11 +8,17 @@ import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
 import AntdComponentDemo from './AntdComponentDemo';
 import KeplerView from './KeplerView';
+import {
+    Layout, Menu, Breadcrumb,
+} from 'antd';
+
+const { Header, Content, Footer } = Layout;
+
 
 
 function About() {
     return (
-        <h1>About</h1>
+        <h1>About Lysander</h1>
     );
 }
 
@@ -27,12 +32,19 @@ const routes = {
     "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
+const RouteMenuLink = ({ route, description }: any) => {
+    return (
+        <li key={route}><Link to={route}>Foo {description}</Link></li>
+    );
+};
+
+
 function FooRouter() {
     // Munge the list items
     const listItems = Object.entries(routes).map(
         ([route, [component, description]]) => {
             return (
-                <li key={route}><Link to={route}>{description}</Link></li>
+                <RouteMenuLink route={route} description={description} />
             );
         }
     );
@@ -57,17 +69,41 @@ function FooRouter() {
 
     return (
         <HashRouter>
-            <div>
-                <ul>
-                    {listItems}
-                </ul>
-                <hr />
-                <Switch>
-                    {switchItems}
-                </Switch>
-            </div>
+            <Layout className="layout">
+                <Header>
+                    <div className="logo" />
+                    <Menu theme="dark"
+                        mode="horizontal"
+                        defaultSelectedKeys={['2']}
+                        style={{ lineHeight: '64px' }}>
+                        <Menu.Item key="1"><Link to="/about">About</Link></Menu.Item>
+                        <Menu.Item key="2"><Link to="/home">Home</Link></Menu.Item>
+                        <Menu.Item key="3">nav 3</Menu.Item>
+                    </Menu>
+                </Header>
+                <Content style={{ padding: '0 50px' }}>
+                    <Breadcrumb style={{ margin: '16px 0' }}>
+                        <Breadcrumb.Item>Home</Breadcrumb.Item>
+                        <Breadcrumb.Item>List</Breadcrumb.Item>
+                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                        <hr />
+                        {listItems}
+                        <Switch>
+                            {switchItems}
+                        </Switch>
+                    </div>
+                </Content>
+                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+            </Layout>
         </HashRouter>
     );
 }
 
 export default FooRouter;
+
+
+/* <ul>
+                * {listItems}
+                * </ul>*/
