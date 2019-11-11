@@ -7,6 +7,10 @@ import axios from 'axios';
 import { Button } from 'antd';
 import singletons from '../singletons';
 import { notification } from 'antd';
+import { Typography, InputNumber } from 'antd';
+
+const { Title } = Typography;
+
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -25,12 +29,17 @@ interface AppState {
     tilletData: any;
     coordinates: any;
     selectedOption: string;
+    coordinateLongitude: number;
+    coordinateLatitude: number;
 }
 
 class MyComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
-        this.state = { tilletData: [], coordinates: null, selectedOption: "" };
+        this.state = {
+            tilletData: [], coordinates: null, selectedOption: "",
+            coordinateLongitude: 0, coordinateLatitude: 0
+        };
     }
 
     componentDidMount() {
@@ -61,6 +70,7 @@ class MyComponent extends React.Component<AppProps, AppState> {
                 message: 'Unknown coordinates',
                 description: 'This record was not able to be scanned for coordinates.'
             });
+            return;
         }
 
         const long = val[0];
@@ -80,12 +90,46 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
 
+    createLocationFromCoordinates(): void {
+        console.log("creating loc", this.state);
+
+        const long = this.state.coordinateLongitude;
+        const lat = this.state.coordinateLatitude;
+
+        singletons.gateway.addLocation(long, lat).then(r => {
+            notification.success({
+                message: 'Success',
+                description: 'Added location to database.'
+            });
+        });
+
+    }
+
+    updateLatitude(value: number | undefined): void {
+        if (value === undefined) throw new Error("fail");
+
+        this.setState({ coordinateLatitude: value })
+    }
+
+    updateLongitude(value: number | undefined): void {
+        if (value === undefined) throw new Error("fail");
+        this.setState({ coordinateLongitude: value })
+    }
+
+
+
 
     render() {
         const derived = this.state.tilletData.map((r: any) => <Select.Option key={r.record_id} value={r.record_id}>{r.landing_zone.join(' - ')}</Select.Option>);
 
         return (
             <div>
+                <Title level={2}>Location entry</Title>
+
+
+                <Title level={3}>Select sheet location</Title>
+
+
                 <Select style={{ width: 800 }}
                     value={this.state.selectedOption}
                     onChange={(value: string) => this.handleChange(value)}
@@ -93,10 +137,28 @@ class MyComponent extends React.Component<AppProps, AppState> {
                     {derived}
                 </Select>
 
-                <p>Selected option value: {this.state.selectedOption}</p>
+                <Button onClick={() => this.handleClick()}>Create location</Button>
 
-                <Button onClick={() => this.handleClick()}>Create</Button>
 
+
+
+                <Title level={3}>...or, enter coordinates:</Title>
+
+                Latitude
+              <InputNumber value={this.state.coordinateLatitude}
+                    precision={6}
+                    onChange={(v) => this.updateLatitude(v)}
+                    style={{ width: 200 }}></InputNumber>
+
+                Longitude
+              <InputNumber value={this.state.coordinateLongitude}
+                    precision={6}
+                    style={{ width: 200 }}
+                    onChange={(v) => this.updateLongitude(v)}></InputNumber>
+
+
+
+                <Button onClick={() => this.createLocationFromCoordinates()}>Create location from coordinates</Button>
 
             </div>
         );

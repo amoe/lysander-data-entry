@@ -5,6 +5,11 @@ import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
+import { Button, notification, Row, Col } from 'antd';
+
+
+const DATASET_NAME = 'Lysander Flights';
+const ARC_NAME = 'LysanderArc1';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -38,13 +43,13 @@ interface AppProps {
 function makeData(rows: any) {
     return {
         fields: [
-            { name: 'tpep_pickup_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
+            { name: 'flight_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
             { name: 'start_longitude', format: '', type: 'real' },
             { name: 'start_latitude', format: '', type: 'real' },
             { name: 'end_longitude', format: '', type: 'real' },
             { name: 'end_latitude', format: '', type: 'real' }
         ],
-        rows: SAMPLE_ROWS
+        rows: rows
     };
 }
 
@@ -54,7 +59,7 @@ const myArc = {
     "type": "arc",
     "config": {
         "dataId": "test_trip_data",
-        "label": "DaveArc",
+        "label": ARC_NAME,
         "columns": {
             "lat0": "start_latitude",
             "lng0": "start_longitude",
@@ -78,7 +83,7 @@ function makeKeplerData(rows: any) {
     return {
         datasets: [{
             info: {
-                label: 'Dave Sample Data',
+                label: DATASET_NAME,
                 id: 'test_trip_data'
             },
             data: makeData(rows)
@@ -92,19 +97,37 @@ function makeKeplerData(rows: any) {
 }
 
 
+const TANGMERE_LONGITUDE = -0.7063888888888888;
+const TANGMERE_LATITUDE = 50.84583333333333;
+
+
 class KeplerView extends React.Component<AppProps> {
-    activateLasers() {
+    renderLocations() {
         singletons.gateway.retrieveLocations().then(r => {
 
 
+
+            console.log("record count is ", r.records.length);
+            const count = r.records.length;
+
+            if (count === 0) {
+                notification.error({
+                    message: 'Error',
+                    description: 'No locations found.'
+                });
+            }
+
             const newRows = r.records.map(x => {
                 return [
-                    '2019-11-01 08:30:00 +00:00',
+                    '1940-01-01 08:30:00 +00:00',
+                    TANGMERE_LONGITUDE,
+                    TANGMERE_LATITUDE,
                     x.get('longitude'),
-                    x.get('latitude'),
-                    -0.087816, 50.867578
+                    x.get('latitude')
                 ];
             });
+
+            console.log("row values are %o", newRows);
 
             this.props.addDataToMap(makeKeplerData(newRows));
         });
@@ -121,27 +144,24 @@ class KeplerView extends React.Component<AppProps> {
         const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
         console.log("token is %o", token);
 
-        const width = 800;
-        const height = 800;
+        const width = 1280;
+        const height = 720;
 
         return (
-            <div className="App">
-                <header className="App-header">
-                    <p>Counter value: {counter}</p>
+            <div>
+                <p>If only the control pane displays below, and the map does not
+                display, check your internet connection.</p>
 
-                    <button onClick={() => this.activateLasers()}>Activate lasers</button>
+                <Button onClick={() => this.renderLocations()}>Render locations</Button>
 
-                    <button onClick={(e) => addDataToMap(makeKeplerData(SAMPLE_ROWS))}>Increment</button>
-
-                    {token}
-
-                    <KeplerGl id="foo"
-                        mapboxApiAccessToken={token}
-                        width={width}
-                        height={height} />
-
-
-                </header>
+                <Row>
+                    <Col span={10} offset={2}>
+                        <KeplerGl id="foo"
+                            mapboxApiAccessToken={token}
+                            width={width}
+                            height={height} />
+                    </Col>
+                </Row>
             </div>
         );
     }
