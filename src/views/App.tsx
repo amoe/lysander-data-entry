@@ -32,19 +32,14 @@ const routes = {
     "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
-const RouteMenuLink = ({ route, description }: any) => {
-    return (
-        <li><Link to={route}>Foo {description}</Link></li>
-    );
-};
-
 
 function FooRouter() {
     // Munge the list items
     const listItems = Object.entries(routes).map(
-        ([route, [component, description]]) => {
+        ([route, [component, description]], index) => {
             return (
-                <RouteMenuLink key={route} route={route} description={description} />
+                <Menu.Item key={route}><Link to={route}>{description}</Link></Menu.Item>
+
             );
         }
     );
@@ -72,13 +67,9 @@ function FooRouter() {
             <Layout className="layout">
                 <Header>
                     <div className="logo" />
-                    <Menu theme="dark"
-                        mode="horizontal"
-                        defaultSelectedKeys={['2']}
-                        style={{ lineHeight: '64px' }}>
+                    <Menu theme="dark" mode="horizontal" style={{ lineHeight: '64px' }}>
                         <Menu.Item key="1"><Link to="/about">About</Link></Menu.Item>
-                        <Menu.Item key="2"><Link to="/home">Home</Link></Menu.Item>
-                        <Menu.Item key="3">nav 3</Menu.Item>
+                        {listItems}
                     </Menu>
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
@@ -89,7 +80,6 @@ function FooRouter() {
                     </Breadcrumb>
                     <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
                         <hr />
-                        {listItems}
                         <Switch>
                             {switchItems}
                         </Switch>
