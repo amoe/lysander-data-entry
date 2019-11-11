@@ -13,6 +13,8 @@ import {
     AutoComplete
 } from "formik-antd";
 
+import { AutoComplete as StockAutoComplete } from 'antd';
+
 const { Header, Footer, Sider, Content } = Layout;
 
 
@@ -104,7 +106,7 @@ function addLocation() {
 // The codesandbox for formik/antd is available here
 
 interface MyComponentState {
-    tilletData: object[],
+    tilletData: any,
     coordinates: any
 }
 
@@ -133,6 +135,8 @@ class MyComponent extends React.Component<AppProps, MyComponentState> {
 
 
     render() {
+        const derived = this.state.tilletData.map((x: any) => x['landing_zone'].join('\n'));
+
         return (
             <div>
                 <Button onClick={addLocation}>Add a location</Button>
