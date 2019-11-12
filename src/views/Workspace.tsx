@@ -9,7 +9,7 @@ import singletons from '../singletons';
 import { notification } from 'antd';
 import { Typography, InputNumber, Divider } from 'antd';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 
 function mapStateToProps(state: FullStateTree) {
@@ -166,7 +166,9 @@ class MyComponent extends React.Component<AppProps, AppState> {
     }
 
     render() {
-        const derived = this.state.tilletData.map((r: any) => <Select.Option key={r.record_id} value={r.record_id}>{r.landing_zone.join(' - ')}</Select.Option>);
+        const derived = this.state.tilletData.map(
+            (r: any) => <Select.Option key={r.record_id} value={r.record_id}>{r.record_id} — {r.landing_zone.join(' - ')}</Select.Option>
+        );
 
         const sortedLz = Object.keys(this.state.recordIdsByLz);
         sortedLz.sort();
@@ -177,6 +179,9 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
                 <Title level={3}>Select sheet location</Title>
+
+
+                <Paragraph>These refer to record IDs from the spreadsheet compiled by Pierre Tillet.</Paragraph>
 
 
                 <Select style={{ width: 800 }}
@@ -194,6 +199,9 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
                 <Title level={3}>...or, enter coordinates:</Title>
+
+                <Paragraph>Enter the literal coordinates of the landing zone location.</Paragraph>
+
 
                 Latitude
               <InputNumber value={this.state.coordinateLatitude}
@@ -214,6 +222,9 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
                 <Title level={3}>...or, choose by LZ:</Title>
+
+
+                <Paragraph>Create a location by selecting from pre-scanned LZ names.</Paragraph>
 
 
                 <Select style={{ width: 300 }}
