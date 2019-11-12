@@ -23,9 +23,9 @@ const routes = {
     "/about": [AboutView, "About"],
     "/kepler-view": [KeplerView, "Kepler View"],
     "/graph-view": [GraphView, "Graph View"],
-    //    "/formik-demo": [FormikDemo, "Formik Demo"],
-    //    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"],
-    //    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
+    "/formik-demo": [FormikDemo, "Formik Demo"],
+    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"],
+    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
     "/advanced": [AdvancedView, "Advanced View"]
 };
 
