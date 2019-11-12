@@ -5,7 +5,7 @@ import KeplerGl from 'kepler.gl';
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
-import { Button, notification, Row, Col } from 'antd';
+import { Button, notification, Row, Col, Divider } from 'antd';
 
 
 const DATASET_NAME = 'Lysander Flights';
@@ -104,9 +104,6 @@ const TANGMERE_LATITUDE = 50.84583333333333;
 class KeplerView extends React.Component<AppProps> {
     renderLocations() {
         singletons.gateway.retrieveLocations().then(r => {
-
-
-
             console.log("record count is ", r.records.length);
             const count = r.records.length;
 
@@ -153,6 +150,9 @@ class KeplerView extends React.Component<AppProps> {
                 display, check your internet connection.</p>
 
                 <Button onClick={() => this.renderLocations()}>Render locations</Button>
+
+                <Divider />
+
 
                 <Row>
                     <Col span={10} offset={2}>

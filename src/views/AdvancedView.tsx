@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from '../action-creators';
 import { FullStateTree } from '../interfaces';
-import { Button, notification } from 'antd';
+import { Button, notification, Typography } from 'antd';
 import singletons from '../singletons';
+
+const { Title, Paragraph } = Typography;
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -32,6 +34,12 @@ class AdvancedView extends React.Component<AppProps> {
     render() {
         return (
             <div>
+                <Title level={2}>Advanced tools</Title>
+
+
+                <Paragraph>Stay away from these buttons.</Paragraph>
+
+
                 <Button onClick={() => this.handleClick()}>Clear graph</Button>
             </div>
         );
