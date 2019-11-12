@@ -40,7 +40,8 @@ class MyComponent extends React.Component<AppProps> {
                 <Title level={2}>Graph view</Title>
 
 
-                <Paragraph>This view displays a visual representation of the nodes and relationships currently stored in the graph database.</Paragraph>
+                <Paragraph>This view displays a visual representation of the
+                nodes and relationships currently stored in the graph database.</Paragraph>
 
                 <div id="viz"></div>
             </div>
