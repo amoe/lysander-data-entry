@@ -1,5 +1,5 @@
 {
-  "name": "demo-kepler",
+  "name": "lysander-data-entry",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -41,7 +41,7 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+      "extends": ["react-app", "./my-eslint-config.js"]
   },
   "browserslist": {
     "production": [

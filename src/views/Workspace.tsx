@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import actionCreators from '../action-creators';
-import { FullStateTree } from '../interfaces';
+import { FullStateTree, TilletDatum } from '../interfaces';
 import { Select } from 'antd';
 import axios from 'axios';
 import { Button } from 'antd';
@@ -25,21 +25,30 @@ interface AppProps {
 
 }
 
+// Actually a number but we treat it as a string always.
+type TilletRecordId = string;
+
+
+type GeoTuple = [number, number];   // long, lat
+
+
 interface AppState {
-    tilletData: any;
-    coordinates: any;   // map<string -> [lat, lng]>
+    tilletData: TilletDatum[];
+    coordinates: { [k: string]: GeoTuple };
     selectedOption: string;
     coordinateLongitude: number;
     coordinateLatitude: number;
-    recordIdsByLz: any;  // map<string -> number>
-    selectedLz: any;
+    recordIdsByLz: { [k: string]: string };
+    selectedLz: string;
 }
 
 class MyComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            tilletData: [], coordinates: null, recordIdsByLz: {},
+            tilletData: [],
+            coordinates: {},
+            recordIdsByLz: {},
             selectedOption: "",
             coordinateLongitude: 0, coordinateLatitude: 0,
             selectedLz: ""
@@ -167,7 +176,7 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
     render() {
         const derived = this.state.tilletData.map(
-            (r: any) => <Select.Option key={r.record_id} value={r.record_id}>{r.record_id} — {r.landing_zone.join(' - ')}</Select.Option>
+            r => <Select.Option key={r.record_id} value={r.record_id}>{r.record_id} — {r.landing_zone.join(' - ')}</Select.Option>
         );
 
         const sortedLz = Object.keys(this.state.recordIdsByLz);
