@@ -190,7 +190,7 @@ class MyComponent extends React.Component<AppProps, AppState> {
                 <Title level={3}>Select sheet location</Title>
 
 
-                <Paragraph>These refer to record IDs from the spreadsheet compiled by Pierre Tillet.</Paragraph>
+                <Paragraph>These refer to record IDs from the spreadsheet compiled by Pierre Tillet.  Coordinate references within the rows have been pre-scanned.  Note that not all rows are able to be automatically interpreted.</Paragraph>
 
 
                 <Select style={{ width: 800 }}
