@@ -27,18 +27,22 @@ interface AppProps {
 
 interface AppState {
     tilletData: any;
-    coordinates: any;
+    coordinates: any;   // map<string -> [lat, lng]>
     selectedOption: string;
     coordinateLongitude: number;
     coordinateLatitude: number;
+    recordIdsByLz: any;  // map<string -> number>
+    selectedLz: any;
 }
 
 class MyComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            tilletData: [], coordinates: null, selectedOption: "",
-            coordinateLongitude: 0, coordinateLatitude: 0
+            tilletData: [], coordinates: null, recordIdsByLz: {},
+            selectedOption: "",
+            coordinateLongitude: 0, coordinateLatitude: 0,
+            selectedLz: ""
         };
     }
 
@@ -57,6 +61,14 @@ class MyComponent extends React.Component<AppProps, AppState> {
         }).catch(e => {
             console.log("failed to get psc");
         });
+
+        axios.get("/sensitive/lz_record_index.json").then(r => {
+            console.log("got lzi");
+            this.setState({ recordIdsByLz: r.data });
+        }).catch(e => {
+            console.log("failed to get psc");
+        });
+
     }
 
     handleClick() {
@@ -118,9 +130,46 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
 
+    createLocationFromLz(): void {
+        console.log("I would create from lz %o", this.state.selectedLz);
+
+        const lz = this.state.selectedLz;
+        const recordId = this.state.recordIdsByLz[lz];
+
+        if (recordId === undefined) {
+            throw new Error("can't happen because lz is selected from valid keys");
+        }
+
+        const val = this.state.coordinates[recordId];
+
+        if (val === undefined) {
+            notification.error({
+                message: 'Unknown coordinates',
+                description: 'This record was not able to be scanned for coordinates.'
+            });
+            return;
+        }
+
+        const long = val[0];
+        const lat = val[1];
+
+        singletons.gateway.addLocation(long, lat).then(r => {
+            notification.success({
+                message: 'Success',
+                description: 'Added location to database.'
+            });
+        });
+    }
+
+    onLzChange(value: string): void {
+        this.setState({ selectedLz: value });
+    }
 
     render() {
         const derived = this.state.tilletData.map((r: any) => <Select.Option key={r.record_id} value={r.record_id}>{r.landing_zone.join(' - ')}</Select.Option>);
+
+        const sortedLz = Object.keys(this.state.recordIdsByLz);
+        sortedLz.sort();
 
         return (
             <div>
@@ -161,6 +210,25 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
 
                 <Button onClick={() => this.createLocationFromCoordinates()}>Create location from coordinates</Button>
+                <Divider />
+
+
+                <Title level={3}>...or, choose by LZ:</Title>
+
+
+                <Select style={{ width: 300 }}
+                    value={this.state.selectedLz}
+                    onChange={(value: string) => this.onLzChange(value)}
+                    showSearch>
+                    {
+                        sortedLz.map(
+                            (x, idx) => <Select.Option key={idx} value={x}>{x}</Select.Option>
+                        )
+                    }
+                </Select>
+
+                <Button onClick={() => this.createLocationFromLz()}>Create location from LZ name</Button>
+
 
             </div>
         );
