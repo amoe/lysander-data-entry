@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
+import { CustomHeader } from './custom-header';
 //import KeplerGl from 'kepler.gl';
 import { injectComponents, PanelHeaderFactory } from 'kepler.gl/components';
+
+
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
 
-const CustomHeader = () => (<div>My kepler.gl app</div>);
-
 const myCustomHeaderFactory = () => CustomHeader;
-
 
 const KeplerGl = injectComponents([
     [PanelHeaderFactory, myCustomHeaderFactory]
