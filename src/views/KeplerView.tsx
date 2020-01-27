@@ -1,11 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
-import KeplerGl from 'kepler.gl';
+//import KeplerGl from 'kepler.gl';
+import { injectComponents, PanelHeaderFactory } from 'kepler.gl/components';
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
+
+const CustomHeader = () => (<div>My kepler.gl app</div>);
+
+const myCustomHeaderFactory = () => CustomHeader;
+
+
+const KeplerGl = injectComponents([
+    [PanelHeaderFactory, myCustomHeaderFactory]
+]);
 
 
 const DATASET_NAME = 'Lysander Flights';
@@ -144,6 +154,17 @@ class KeplerView extends React.Component<AppProps> {
         const width = 1280;
         const height = 720;
 
+        const keplerConfig = {
+            appName: "LYSANDER"
+            // Can't use the light theme at present because it causes
+            // the map tiles to break.
+//            theme: "light"
+        };
+
+        // I am about to press TAB.
+        // Why did it move here?
+        // oh I see, it has a lisp-style indentation strategy.
+
         return (
             <div>
                 <p>If only the control pane displays below, and the map does not
@@ -157,9 +178,11 @@ class KeplerView extends React.Component<AppProps> {
                 <Row>
                     <Col span={10} offset={2}>
                         <KeplerGl id="foo"
-                            mapboxApiAccessToken={token}
-                            width={width}
-                            height={height} />
+                                  mapboxApiAccessToken={token}
+                                  appName="LYSANDER"
+                                  width={width}
+                                  height={height}
+                                  {...keplerConfig}/>
                     </Col>
                 </Row>
             </div>

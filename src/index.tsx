@@ -28,7 +28,10 @@ import App from './views/App';
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
 const customKeplerReducer = keplerGlReducer.initialState({
     uiState: {
-        currentModal: null
+        currentModal: null,
+// Will hide the current side pane if true
+        //
+        readOnly: false
     }
 });
 
