@@ -20,6 +20,8 @@ import mockdata from '../mockdata';
 
 const myCustomHeaderFactory = () => CustomHeader;
 
+// Note that we can actually bind the action creator here.
+// We don't need to use any propsified version.  This is actually a wrapper for connect().
 const stupidFactory = () => withState(
     [],
     (x: any) => (x),
