@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, SidebarFactory, PanelHeaderFactory } from 'kepler.gl/components';
+import {
+    Button, SidebarFactory, PanelHeaderFactory, ItemSelector, PanelLabel
+} from 'kepler.gl/components';
 
 const appName = "foo";
 const version = "1.0.0";
@@ -21,6 +23,9 @@ function CustomSidePanelFactory(
         render() {
             /* const uiState = this.props.uiState;
              * const uiStateActions = this.props.uiStateActions;*/
+            // Includes visStateActions which can be used to dispatch actions.
+            console.log(this.props);
+
 
             return (
                 <div>
@@ -29,6 +34,13 @@ function CustomSidePanelFactory(
                            minifiedWidth={0}>
                     
                     <PanelHeader appName="Lysander" version="0.0.1"/>
+
+                    <PanelLabel>Pilot</PanelLabel>
+                    <ItemSelector options={['foo', 'bar', 'baz']}
+                                  selectedItems={'foo'}
+                                  multiSelect={false}
+                                  searchable={false}
+                                  onChange={() => this.handleClick()}></ItemSelector>
 
                     {/* <PanelHeader
                         appName={appName}
