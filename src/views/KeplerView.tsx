@@ -1,10 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
-import { CustomHeader } from './custom-header';
-//import KeplerGl from 'kepler.gl';
-import { injectComponents, PanelHeaderFactory } from 'kepler.gl/components';
+import { CustomHeader } from '../components/custom-header';
+import { CustomSidePanelFactory } from '../components/side-panel';
 
+
+import {
+    injectComponents, PanelHeaderFactory, SidePanelFactory
+} from 'kepler.gl/components';
+
+import {Button as KButton } from 'kepler.gl/components';
 
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
@@ -14,7 +19,8 @@ import { Button, notification, Row, Col, Divider } from 'antd';
 const myCustomHeaderFactory = () => CustomHeader;
 
 const KeplerGl = injectComponents([
-    [PanelHeaderFactory, myCustomHeaderFactory]
+//    [PanelHeaderFactory, myCustomHeaderFactory],
+    [SidePanelFactory, CustomSidePanelFactory]
 ]);
 
 
@@ -100,7 +106,6 @@ function makeKeplerData(rows: any) {
         }],
         option: {
             centerMap: true,
-            readOnly: true   // hide the left display panel
         },
         config: sampleConfig
     };
@@ -171,6 +176,8 @@ class KeplerView extends React.Component<AppProps> {
                 display, check your internet connection.</p>
 
                 <Button onClick={() => this.renderLocations()}>Render locations</Button>
+
+                <KButton>Foo bar</KButton>
 
                 <Divider />
 
