@@ -150,7 +150,8 @@ class KeplerView extends React.Component<AppProps> {
         // increment should now dispatch an increment action
 
         // MAKE SURE YOU USE THE VERSION FROM PROPS!
-        // if you just call the action creator, then stuff will just silently die.
+        // if you just call the action creator that's imported, then stuff will
+        // just silently die.
         const { counter, addDataToMap } = this.props;
 
         const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
