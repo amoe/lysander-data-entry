@@ -28,13 +28,17 @@ const mapDispatchToProps = {
 
 
 class CustomHeaderPrimePrime extends React.Component<AppProps> {
+    constructor(props: AppProps) {
+        super(props);
+        console.log("Props are %o", this.props);
+    }
+
     handleClick() {
         console.log("It was clicked.");
     }
     
     render() {
         console.log("Rendering connected header component.");
-        console.log("Props are %o", this.props.increment);
         return (<div>
           My kepler.gl app
 
