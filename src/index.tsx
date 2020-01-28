@@ -48,7 +48,6 @@ const INITIAL_STATE: FullStateTree = {
 };
 
 function myReducer(state: MyState | undefined, action: MyActionTypes): MyState {
-    console.log("Reducer being called.");
     if (state === undefined) {
         return { counter: 0 };
     }

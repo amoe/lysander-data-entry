@@ -11,21 +11,29 @@ interface AppProps {
     uiStateActions: any;
 }
 
+interface AppState {
+    selectedItems: string[];
+}
+
 function CustomSidePanelFactory(
     Sidebar: any,
     PanelHeader: any,
 ) {
-    return class CustomSidePanel extends React.Component<AppProps> {
-        handleClick() {
-            console.log("it was clicked");
+    return class CustomSidePanel extends React.Component<AppProps, AppState> {
+        constructor(props: AppProps) {
+            super(props);
+            this.state = {selectedItems: ['foo']};
+        }
+
+        onChange(items: any) {
+            this.setState({selectedItems: items});
         }
 
         render() {
             /* const uiState = this.props.uiState;
              * const uiStateActions = this.props.uiStateActions;*/
             // Includes visStateActions which can be used to dispatch actions.
-            console.log(this.props);
-
+//            console.log(this.props);
 
             return (
                 <div>
@@ -37,10 +45,10 @@ function CustomSidePanelFactory(
 
                     <PanelLabel>Pilot</PanelLabel>
                     <ItemSelector options={['foo', 'bar', 'baz']}
-                                  selectedItems={'foo'}
-                                  multiSelect={false}
+                                  selectedItems={this.state.selectedItems}
+                                  multiSelect={true}
                                   searchable={false}
-                                  onChange={() => this.handleClick()}></ItemSelector>
+                                  onChange={this.onChange.bind(this)}></ItemSelector>
 
                     {/* <PanelHeader
                         appName={appName}
