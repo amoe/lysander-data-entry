@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
 import { CustomHeader } from '../components/custom-header';
 //import { CustomSidePanelFactory } from '../components/side-panel';
-import ConnectedHeader from '../components/connected-header';
-import {CustomSidePanelFactory} from '../components/connected-header-factory';
+import ReactReduxPlainConnectedHeader from '../components/connected-header';
+import {ReactReduxConnectedHeaderFactory} from '../components/connected-header-factory';
 import {
     injectComponents, PanelHeaderFactory, SidePanelFactory, withState
 } from 'kepler.gl/components';
@@ -31,9 +31,12 @@ const stupidFactory = () => withState(
 const KeplerGl = injectComponents([
     //    [PanelHeaderFactory, myCustomHeaderFactory],
     //    [SidePanelFactory, CustomSidePanelFactory],
-    //    [SidePanelFactory, CustomSidePanelFactory],
-    //    [SidePanelFactory, CustomSidePanelFactory],
-    [SidePanelFactory, stupidFactory],
+    
+    // Different variations of ways to connect.  These all actually give the
+    // same results.
+//    [SidePanelFactory, () => ReactReduxPlainConnectedHeader],
+//    [SidePanelFactory, ReactReduxConnectedHeaderFactory],
+//    [SidePanelFactory, stupidFactory],
 ]);
 
 

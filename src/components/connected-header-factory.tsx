@@ -38,7 +38,8 @@ class CustomHeaderPrimePrime extends React.Component<AppProps> {
     }
     
     render() {
-        console.log("Rendering connected header component.");
+        console.log("Rendering connected header component that was created by a factory.");
+        console.log("Prop keys are %o", Object.keys(this.props));
         return (<div>
           My kepler.gl app
 
@@ -52,15 +53,15 @@ class CustomHeaderPrimePrime extends React.Component<AppProps> {
 
 const ConnectedCustomHeaderPrimePrime = connect(mapStateToProps, mapDispatchToProps)(CustomHeaderPrimePrime);
 
-function CustomSidePanelFactory(
+function ReactReduxConnectedHeaderFactory(
     PanelHeader: any
 ) {
     console.log("Inside connected custom header factory");
     return ConnectedCustomHeaderPrimePrime;
 }
-        
-CustomSidePanelFactory.deps = [
+
+ReactReduxConnectedHeaderFactory.deps = [
     PanelHeaderFactory
 ];
 
-export { CustomSidePanelFactory };
+export { ReactReduxConnectedHeaderFactory };
