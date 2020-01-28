@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, SidePanelFactory, PanelHeaderFactory } from 'kepler.gl/components';
+import { Button, SidebarFactory, PanelHeaderFactory } from 'kepler.gl/components';
 
 const appName = "foo";
 const version = "1.0.0";
@@ -10,6 +10,7 @@ interface AppProps {
 }
 
 function CustomSidePanelFactory(
+    Sidebar: any,
     PanelHeader: any,
 ) {
     return class CustomSidePanel extends React.Component<AppProps> {
@@ -23,25 +24,26 @@ function CustomSidePanelFactory(
 
             return (
                 <div>
-                  My kepler.gl app
-                  <Button onClick={() => this.handleClick()}>Foo</Button>
-                  Bar
+                  <Sidebar width={300}
+                           isOpen={true}
+                           minifiedWidth={0}>
+                    
+                    <PanelHeader appName="Lysander" version="0.0.1"/>
 
-                  <PanelHeader appName="Lysander" version="0.0.1"/>
+                    {/* <PanelHeader
+                        appName={appName}
+                        version={version}
+                        onExportImage={() => this.handleClick()}
+                        onExportData={() => this.handleClick()}
+                        visibleDropdown={uiState.visibleDropdown}
+                        showExportDropdown={uiStateActions.showExportDropdown}
+                        hideExportDropdown={uiStateActions.hideExportDropdown}
+                        onExportMap={() => this.handleClick()}
+                        onSaveMap={() => this.handleClick()}
 
-                  {/* <PanelHeader
-                      appName={appName}
-                      version={version}
-                      onExportImage={() => this.handleClick()}
-                      onExportData={() => this.handleClick()}
-                      visibleDropdown={uiState.visibleDropdown}
-                      showExportDropdown={uiStateActions.showExportDropdown}
-                      hideExportDropdown={uiStateActions.hideExportDropdown}
-                      onExportMap={() => this.handleClick()}
-                      onSaveMap={() => this.handleClick()}
-
-                      />
-                    */}
+                        />
+                      */}
+                  </Sidebar>
                 </div>
             )
         }
@@ -49,6 +51,7 @@ function CustomSidePanelFactory(
 };
 
 CustomSidePanelFactory.deps = [
+    SidebarFactory,
     PanelHeaderFactory
 ];
 
