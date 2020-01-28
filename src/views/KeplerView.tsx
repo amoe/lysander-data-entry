@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
 import { CustomHeader } from '../components/custom-header';
-import { CustomSidePanelFactory } from '../components/side-panel';
+//import { CustomSidePanelFactory } from '../components/side-panel';
 import ConnectedHeader from '../components/connected-header';
+import {CustomSidePanelFactory} from '../components/connected-header-factory';
 import {
     injectComponents, PanelHeaderFactory, SidePanelFactory
 } from 'kepler.gl/components';
@@ -20,7 +21,7 @@ const myCustomHeaderFactory = () => CustomHeader;
 const KeplerGl = injectComponents([
 //    [PanelHeaderFactory, myCustomHeaderFactory],
 //    [SidePanelFactory, CustomSidePanelFactory],
-    [SidePanelFactory, () => ConnectedHeader]
+    [SidePanelFactory, CustomSidePanelFactory]
 ]);
 
 
