@@ -49,20 +49,6 @@ function CustomSidePanelFactory(
                                   multiSelect={true}
                                   searchable={false}
                                   onChange={this.onChange.bind(this)}></ItemSelector>
-
-                    {/* <PanelHeader
-                        appName={appName}
-                        version={version}
-                        onExportImage={() => this.handleClick()}
-                        onExportData={() => this.handleClick()}
-                        visibleDropdown={uiState.visibleDropdown}
-                        showExportDropdown={uiStateActions.showExportDropdown}
-                        hideExportDropdown={uiStateActions.hideExportDropdown}
-                        onExportMap={() => this.handleClick()}
-                        onSaveMap={() => this.handleClick()}
-
-                        />
-                      */}
                   </Sidebar>
                 </div>
             )
