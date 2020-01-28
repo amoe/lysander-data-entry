@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
 import { CustomHeader } from '../components/custom-header';
 import { CustomSidePanelFactory } from '../components/side-panel';
-
-
+import ConnectedHeader from '../components/connected-header';
 import {
     injectComponents, PanelHeaderFactory, SidePanelFactory
 } from 'kepler.gl/components';
@@ -20,7 +19,8 @@ const myCustomHeaderFactory = () => CustomHeader;
 
 const KeplerGl = injectComponents([
 //    [PanelHeaderFactory, myCustomHeaderFactory],
-    [SidePanelFactory, CustomSidePanelFactory]
+//    [SidePanelFactory, CustomSidePanelFactory],
+    [SidePanelFactory, () => ConnectedHeader]
 ]);
 
 
@@ -175,6 +175,9 @@ class KeplerView extends React.Component<AppProps> {
             <div>
                 <p>If only the control pane displays below, and the map does not
                 display, check your internet connection.</p>
+
+                <p>Current counter value is {counter}</p>
+                <Button onClick={this.props.increment}>foo</Button>
 
                 <Button onClick={() => this.renderLocations()}>Render locations</Button>
 
