@@ -6,22 +6,32 @@ import { CustomHeader } from '../components/custom-header';
 import ConnectedHeader from '../components/connected-header';
 import {CustomSidePanelFactory} from '../components/connected-header-factory';
 import {
-    injectComponents, PanelHeaderFactory, SidePanelFactory
+    injectComponents, PanelHeaderFactory, SidePanelFactory, withState
 } from 'kepler.gl/components';
 
+import {StupidComponent} from '../components/stupid-component';
 import {Button as KButton } from 'kepler.gl/components';
 
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
+import mockdata from '../mockdata';
 
 const myCustomHeaderFactory = () => CustomHeader;
 
+const stupidFactory = () => withState(
+    [],
+    (x: any) => (x),
+    {addDataToMap}
+)(StupidComponent);
+
 const KeplerGl = injectComponents([
-//    [PanelHeaderFactory, myCustomHeaderFactory],
-//    [SidePanelFactory, CustomSidePanelFactory],
-    [SidePanelFactory, CustomSidePanelFactory]
+    //    [PanelHeaderFactory, myCustomHeaderFactory],
+    //    [SidePanelFactory, CustomSidePanelFactory],
+    //    [SidePanelFactory, CustomSidePanelFactory],
+    //    [SidePanelFactory, CustomSidePanelFactory],
+    [SidePanelFactory, stupidFactory],
 ]);
 
 
@@ -142,7 +152,11 @@ class KeplerView extends React.Component<AppProps> {
 
             console.log("row values are %o", newRows);
 
-            this.props.addDataToMap(makeKeplerData(newRows));
+            const kdata = makeKeplerData(newRows.slice(0, 2));
+            
+            console.log(JSON.stringify(kdata, null, 4));
+
+            this.props.addDataToMap(mockdata);
         });
     }
 
