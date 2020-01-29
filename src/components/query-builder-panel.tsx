@@ -8,7 +8,7 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import actionCreators from '../action-creators';
 import mockdata from '../mockdata';
 import singletons from '../singletons';
-import { STPointsByPilot } from '../canned-statements';
+import { STPointsByPilot, GetDistinctPilots } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
 
 
@@ -44,6 +44,14 @@ function QueryBuilderPanelFactory(
     return connect(mapStateToProps, mapDispatchToProps)(
         class extends React.Component<any> {
             onClick() {
+                singletons.gateway.search(new GetDistinctPilots()).then(
+                    ({records}) => {
+                        for (let x of records) {
+                            console.log("%o %o", x.get('firstName'), x.get('lastName'));
+                        }
+                    }
+                );
+
                 singletons.gateway.search(new STPointsByPilot(WANTED_PILOT)).then(r => {
                     console.log("record count is ", r.records.length);
                     const count = r.records.length;

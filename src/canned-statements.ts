@@ -41,6 +41,24 @@ interface WantedPilot {
     lastName: string[]
 }
 
+export class GetDistinctPilots implements CannedStatement {
+    getCypher(): string {
+        const result = `
+            MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(),
+                  (pc)-[:HAS_PERSON]->(p)
+            WITH DISTINCT p
+            RETURN
+                p.firstName AS firstName,
+                p.lastName AS lastName
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {};
+    }
+}
+
 export class STPointsByPilot implements CannedStatement {
     pilot: WantedPilot;
 
