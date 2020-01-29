@@ -4,8 +4,6 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import {
     injectComponents, PanelHeaderFactory, SidePanelFactory, withState
 } from 'kepler.gl/components';
-
-
 import {Button as KButton } from 'kepler.gl/components';
 
 import { addDataToMap } from 'kepler.gl/actions';
@@ -18,10 +16,6 @@ import { QueryBuilderPanelFactory } from '../components/query-builder-panel';
 const KeplerGl = injectComponents([
     [SidePanelFactory, QueryBuilderPanelFactory]
 ]);
-
-
-const DATASET_NAME = 'Lysander Flights';
-const ARC_NAME = 'LysanderArc1';
 
 function mapStateToProps(state: FullStateTree) {
     return {
@@ -36,12 +30,6 @@ const mapDispatchToProps = {
     addDataToMap
 };
 
-
-
-const SAMPLE_ROWS = [
-    ['2019-11-01 08:30:00 +00:00', -0.155861, 50.824926, -0.087816, 50.867578]
-];
-
 // Combined props from mapState & mapDispatch
 interface AppProps {
     counter: number;
@@ -49,102 +37,10 @@ interface AppProps {
     addDataToMap: typeof addDataToMap;
 }
 
-// If you have two fields like SOMETHING_longitude, SOMETHING_latitude, kepler
-// will combine it into a Point.
-
-function makeData(rows: any) {
-    return {
-        fields: [
-            { name: 'flight_datetime', format: 'YYYY-M-D H:m:s', type: 'timestamp' },
-            { name: 'start_longitude', format: '', type: 'real' },
-            { name: 'start_latitude', format: '', type: 'real' },
-            { name: 'end_longitude', format: '', type: 'real' },
-            { name: 'end_latitude', format: '', type: 'real' }
-        ],
-        rows: rows
-    };
-}
-
-
-const myArc = {
-    "id": "zslehy",
-    "type": "arc",
-    "config": {
-        "dataId": "test_trip_data",
-        "label": ARC_NAME,
-        "columns": {
-            "lat0": "start_latitude",
-            "lng0": "start_longitude",
-            "lat1": "end_latitude",
-            "lng1": "end_longitude"
-        },
-        "isVisible": true,
-    }
-};
-
-const sampleConfig = {
-    visState: {
-        filters: [
-        ],
-        layers: [myArc]
-    }
-};
-
-
-function makeKeplerData(rows: any) {
-    return {
-        datasets: [{
-            info: {
-                label: DATASET_NAME,
-                id: 'test_trip_data'
-            },
-            data: makeData(rows)
-        }],
-        option: {
-            centerMap: true,
-        },
-        config: sampleConfig
-    };
-}
-
-
 const TANGMERE_LONGITUDE = -0.7063888888888888;
 const TANGMERE_LATITUDE = 50.84583333333333;
 
-
 class KeplerView extends React.Component<AppProps> {
-    renderLocations() {
-        singletons.gateway.retrieveLocations().then(r => {
-            console.log("record count is ", r.records.length);
-            const count = r.records.length;
-
-            if (count === 0) {
-                notification.error({
-                    message: 'Error',
-                    description: 'No locations found.'
-                });
-            }
-
-            const newRows = r.records.map(x => {
-                return [
-                    '1940-01-01 08:30:00 +00:00',
-                    TANGMERE_LONGITUDE,
-                    TANGMERE_LATITUDE,
-                    x.get('longitude'),
-                    x.get('latitude')
-                ];
-            });
-
-            console.log("row values are %o", newRows);
-
-            const kdata = makeKeplerData(newRows.slice(0, 2));
-            
-            console.log(JSON.stringify(kdata, null, 4));
-
-            this.props.addDataToMap(kdata);
-        });
-    }
-
     render() {
         // Destructure the props which are now typed by the <T> above.
         // increment should now dispatch an increment action
@@ -179,12 +75,9 @@ class KeplerView extends React.Component<AppProps> {
                 <p>Current counter value is {counter}</p>
                 <Button onClick={this.props.increment}>foo</Button>
 
-                <Button onClick={() => this.renderLocations()}>Render locations</Button>
-
                 <KButton>Foo bar</KButton>
 
                 <Divider />
-
 
                 <Row>
                     <Col span={10} offset={2}>

@@ -35,3 +35,16 @@ export class FuzzySearchStatement implements CannedStatement {
         return { query: this.query };
     }
 }
+
+export class GetLocationsStatement implements CannedStatement {
+    getCypher(): string {
+        const result = `
+            MATCH (l:Location) RETURN l.latitude, l.longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {};
+    }
+}
