@@ -71,7 +71,8 @@ export class STPointsByPilot implements CannedStatement {
             MATCH (p:Person {firstName: {firstName}, lastName: {lastName}}),
                   (pc:PersonCluster)-[:HAS_PERSON]->(p),
                   (pc)-[:HAS_ROLE {type: 'pilot'}]->(s:Sortie),
-                  (s)-[HAS_LANDING_ZONE]->(l:Location)
+            WITH DISTINCT s AS s
+            MATCH (s)-[HAS_LANDING_ZONE]->(l:Location)
             RETURN
                 s.nightOf AS nightOf,
                 l.latitude AS latitude,
