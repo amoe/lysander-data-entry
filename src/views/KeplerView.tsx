@@ -1,42 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
-import { CustomHeader } from '../components/custom-header';
-//import { CustomSidePanelFactory } from '../components/side-panel';
-import ReactReduxPlainConnectedHeader from '../components/connected-header';
-import {ReactReduxConnectedHeaderFactory} from '../components/connected-header-factory';
 import {
     injectComponents, PanelHeaderFactory, SidePanelFactory, withState
 } from 'kepler.gl/components';
 
-import {StupidComponent} from '../components/stupid-component';
+
 import {Button as KButton } from 'kepler.gl/components';
 
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
 import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
-import mockdata from '../mockdata';
 
-const myCustomHeaderFactory = () => CustomHeader;
-
-// Note that we can actually bind the action creator here.
-// We don't need to use any propsified version.  This is actually a wrapper for connect().
-const stupidFactory = () => withState(
-    [],
-    (x: any) => (x),
-    {addDataToMap}
-)(StupidComponent);
+import { QueryBuilderPanelFactory } from '../components/query-builder-panel';
 
 const KeplerGl = injectComponents([
-    //    [PanelHeaderFactory, myCustomHeaderFactory],
-    //    [SidePanelFactory, CustomSidePanelFactory],
-    
-    // Different variations of ways to connect.  These all actually give the
-    // same results.
-//    [SidePanelFactory, () => ReactReduxPlainConnectedHeader],
-//    [SidePanelFactory, ReactReduxConnectedHeaderFactory],
-//    [SidePanelFactory, stupidFactory],
+    [SidePanelFactory, QueryBuilderPanelFactory]
 ]);
 
 
@@ -161,7 +141,7 @@ class KeplerView extends React.Component<AppProps> {
             
             console.log(JSON.stringify(kdata, null, 4));
 
-            this.props.addDataToMap(mockdata);
+            this.props.addDataToMap(kdata);
         });
     }
 
