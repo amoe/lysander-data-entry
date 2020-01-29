@@ -36,15 +36,33 @@ export class FuzzySearchStatement implements CannedStatement {
     }
 }
 
-export class GetLocationsStatement implements CannedStatement {
+interface WantedPilot {
+    firstName: string[],
+    lastName: string[]
+}
+
+export class STPointsByPilot implements CannedStatement {
+    pilot: WantedPilot;
+
+    constructor(pilot: WantedPilot) {
+        this.pilot = pilot;
+    }
+
     getCypher(): string {
         const result = `
-            MATCH (l:Location) RETURN l.latitude, l.longitude
+            MATCH (p:Person {firstName: {firstName}, lastName: {lastName}}),
+                  (pc:PersonCluster)-[:HAS_PERSON]->(p),
+                  (pc)-[:HAS_ROLE {type: 'pilot'}]->(s:Sortie),
+                  (s)-[HAS_LANDING_ZONE]->(l:Location)
+            RETURN
+                s.nightOf AS nightOf,
+                l.latitude AS latitude,
+                l.longitude AS longitude
         `;
         return result;
     }
 
     getParameters(): object {
-        return {};
+        return this.pilot;
     }
 }

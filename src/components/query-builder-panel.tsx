@@ -8,7 +8,7 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import actionCreators from '../action-creators';
 import mockdata from '../mockdata';
 import singletons from '../singletons';
-import { GetLocationsStatement } from '../canned-statements';
+import { STPointsByPilot } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
 
 
@@ -33,24 +33,29 @@ const mapDispatchToProps = {
 const TANGMERE_LONGITUDE = -0.7063888888888888;
 const TANGMERE_LATITUDE = 50.84583333333333;
 
+const WANTED_PILOT = {
+    firstName: ['john', 'xavier'],
+    lastName: ['doe']
+};
+
 function QueryBuilderPanelFactory(
     Sidebar: any
 ) {
     return connect(mapStateToProps, mapDispatchToProps)(
         class extends React.Component<any> {
             onClick() {
-                singletons.gateway.retrieveLocations().then(r => {
+                singletons.gateway.search(new STPointsByPilot(WANTED_PILOT)).then(r => {
                     console.log("record count is ", r.records.length);
                     const count = r.records.length;
                     if (count === 0) {
                         notification.error({
                             message: 'Error',
-                            description: 'No locations found.'
+                            description: 'No STPoints found.'
                         });
                     }
                     const newRows = r.records.map(x => {
                         return [
-                            '1940-01-01 08:30:00 +00:00',
+                            x.get('nightOf'),
                             TANGMERE_LONGITUDE,
                             TANGMERE_LATITUDE,
                             x.get('longitude'),
