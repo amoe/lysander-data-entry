@@ -8,6 +8,7 @@ import mockdata from '../mockdata';
 
 function mapStateToProps(state: FullStateTree) {
     return {
+        counter: state.app.counter
     };
 }
 
