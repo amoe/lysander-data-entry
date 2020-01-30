@@ -103,10 +103,10 @@ function QueryBuilderPanelFactory(
                                isOpen={true}
                                minifiedWidth={0}>
                         <ItemSelector options={['fry', 'bender', 'leela']}
+                                      selectedItems={this.state.selectedPilots} 
                                       multiSelect={true}
                                       onChange={this.onSelectPilot.bind(this)}></ItemSelector>
-                        <Button selectedItems={this.state.selectedPilots} 
-                                onClick={this.onClick.bind(this)}>Query</Button>
+                        <Button onClick={this.onClick.bind(this)}>Query</Button>
                       </Sidebar>
                     </div>
                 );

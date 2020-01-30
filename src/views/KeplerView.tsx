@@ -17,6 +17,8 @@ const KeplerGl = injectComponents([
     [SidePanelFactory, QueryBuilderPanelFactory]
 ]);
 
+
+
 function mapStateToProps(state: FullStateTree) {
     return {
         counter: state.app.counter
