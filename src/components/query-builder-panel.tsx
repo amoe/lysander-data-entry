@@ -46,6 +46,7 @@ const WANTED_PILOT = {
 
 interface AppState {
     selectedPilots: string[];
+    availablePilots: any[];
 }
 
 function QueryBuilderPanelFactory(
@@ -55,17 +56,21 @@ function QueryBuilderPanelFactory(
         class QueryBuilderPanel extends React.Component<any, AppState> {
             constructor(props: any) {
                 super(props);
-                this.state = {selectedPilots: []}
+                this.state = {
+                    selectedPilots: [],
+                    availablePilots: []
+                }
+            }
+
+            componentDidMount() {
+                singletons.gateway.search(new GetDistinctPilots()).then(
+                    ({records}) => {
+                        this.setState({availablePilots: records.map(x => x.toObject())})
+                    }
+                );
             }
 
             onClick() {
-                singletons.gateway.search(new GetDistinctPilots()).then(
-                    ({records}) => {
-                        for (let x of records) {
-                            console.log("%o %o", x.get('firstName'), x.get('lastName'));
-                        }
-                    }
-                );
 
                 singletons.gateway.search(new STPointsByPilot(WANTED_PILOT)).then(r => {
                     console.log("record count is ", r.records.length);
@@ -96,15 +101,20 @@ function QueryBuilderPanelFactory(
                 this.setState({selectedPilots: newItems});
             }
             
+            getPilotLabel(clusterId: string) {
+                return clusterId.toUpperCase();
+            }
+            
             render() {
                 return (
                     <div>
                       <Sidebar width={300}
                                isOpen={true}
                                minifiedWidth={0}>
-                        <ItemSelector options={['fry', 'bender', 'leela']}
+                        <ItemSelector options={this.state.availablePilots.map(x => x.clusterId)}
                                       selectedItems={this.state.selectedPilots} 
                                       multiSelect={true}
+                                      displayOption={this.getPilotLabel.bind(this)}
                                       onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         <Button onClick={this.onClick.bind(this)}>Query</Button>
                       </Sidebar>
