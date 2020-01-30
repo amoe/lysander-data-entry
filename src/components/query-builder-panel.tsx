@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { notification } from 'antd';
 import { addDataToMap } from 'kepler.gl/actions';
+import { identity } from '../utility';
 
 import { 
     SidebarFactory,
@@ -13,7 +14,7 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import actionCreators from '../action-creators';
 import mockdata from '../mockdata';
 import singletons from '../singletons';
-import { STPointsByPilot, GetDistinctPilots } from '../canned-statements';
+import { STPointsByPilotCluster, GetDistinctPilots } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
 
 
@@ -71,8 +72,12 @@ function QueryBuilderPanelFactory(
             }
 
             onClick() {
+                /* const pilotCluster = this.state.selectedPilots[0];*/
+                const pilotCluster: any = this.state.selectedPilots;
 
-                singletons.gateway.search(new STPointsByPilot(WANTED_PILOT)).then(r => {
+                console.log("I would search for cluster %o", pilotCluster);
+
+                singletons.gateway.search(new STPointsByPilotCluster(pilotCluster)).then(r => {
                     console.log("record count is ", r.records.length);
                     const count = r.records.length;
                     if (count === 0) {
@@ -100,11 +105,28 @@ function QueryBuilderPanelFactory(
                 console.log("new items are: %o", newItems);
                 this.setState({selectedPilots: newItems});
             }
+
+            // Yuck!
+            getClusterById(clusterId: string) {
+                for (let x of this.state.availablePilots) {
+                    if (x.clusterId === clusterId) 
+                        return x;
+                }
+            }
+
+            // This does not work well.  We want to get passed the c
             
             getPilotLabel(clusterId: string) {
-                return clusterId.toUpperCase();
+                const separator = ' ';
+
+                const thisCluster = this.getClusterById(clusterId);
+
+                const joinedFirstName = thisCluster.firstName.join(separator);
+                const joinedLastName = thisCluster.lastName.join(separator);
+
+                return `${joinedFirstName} ${joinedLastName}`;
             }
-            
+
             render() {
                 return (
                     <div>
@@ -113,8 +135,9 @@ function QueryBuilderPanelFactory(
                                minifiedWidth={0}>
                         <ItemSelector options={this.state.availablePilots.map(x => x.clusterId)}
                                       selectedItems={this.state.selectedPilots} 
-                                      multiSelect={true}
+                                      multiSelect={false}
                                       displayOption={this.getPilotLabel.bind(this)}
+                                      getOptionValue={identity}
                                       onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         <Button onClick={this.onClick.bind(this)}>Query</Button>
                       </Sidebar>
