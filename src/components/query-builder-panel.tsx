@@ -33,6 +33,7 @@ const mapDispatchToProps = {
 const TANGMERE_LONGITUDE = -0.7063888888888888;
 const TANGMERE_LATITUDE = 50.84583333333333;
 
+// Filter the available flights so there's only one.
 const WANTED_PILOT = {
     firstName: ['john', 'xavier'],
     lastName: ['doe']
