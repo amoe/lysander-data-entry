@@ -44,12 +44,14 @@ interface WantedPilot {
 export class GetDistinctPilots implements CannedStatement {
     getCypher(): string {
         const result = `
-            MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(),
-                  (pc)-[:HAS_PERSON]->(p)
-            WITH DISTINCT p
-            RETURN
-                p.firstName AS firstName,
-                p.lastName AS lastName
+            MATCH (pc:PersonCluster)-[:HAS_PERSON]->(p:Person),
+                  (pc)-[:HAS_ROLE {type: 'pilot'}]->()
+            WITH pc AS pc, p AS p
+            ORDER BY pc.id, p.id    
+            WITH pc AS pc, COLLECT(p)[0] AS firstPerson
+            RETURN pc.id AS clusterId,
+                   firstPerson.firstName AS firstName, 
+                   firstPerson.lastName AS lastName
         `;
         return result;
     }
@@ -70,7 +72,7 @@ export class STPointsByPilot implements CannedStatement {
         const result = `
             MATCH (p:Person {firstName: {firstName}, lastName: {lastName}}),
                   (pc:PersonCluster)-[:HAS_PERSON]->(p),
-                  (pc)-[:HAS_ROLE {type: 'pilot'}]->(s:Sortie),
+                  (pc)-[:HAS_ROLE {type: 'pilot'}]->(s:Sortie)
             WITH DISTINCT s AS s
             MATCH (s)-[HAS_LANDING_ZONE]->(l:Location)
             RETURN
