@@ -97,14 +97,12 @@ export class STPointsByPilotCluster implements CannedStatement {
 
     getCypher(): string {
         const result = `
-            MATCH (pc:PersonCluster {id: {clusterId}}),
-                  (pc)-[:HAS_ROLE {type: 'pilot'}]->(s:Sortie)
-            WITH DISTINCT s AS s
-            MATCH (s)-[HAS_LANDING_ZONE]->(l:Location)
-            RETURN
-                s.nightOf AS nightOf,
-                l.latitude AS latitude,
-                l.longitude AS longitude
+            MATCH (pc {id: {clusterId}})-[:HAS_ROLE {type: 'pilot'}]->()
+            WITH DISTINCT pc AS pc
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
+            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
         `;
         return result;
     }
