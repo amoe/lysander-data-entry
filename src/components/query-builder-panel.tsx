@@ -2,7 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { notification } from 'antd';
 import { addDataToMap } from 'kepler.gl/actions';
-import { Button, SidebarFactory } from 'kepler.gl/components';
+
+import { 
+    SidebarFactory,
+    Button,
+    ItemSelector
+} from 'kepler.gl/components';
 
 import { FullStateTree, IncrementAction } from '../interfaces';
 import actionCreators from '../action-creators';
@@ -39,11 +44,20 @@ const WANTED_PILOT = {
     lastName: ['doe']
 };
 
+interface AppState {
+    selectedPilots: string[];
+}
+
 function QueryBuilderPanelFactory(
     Sidebar: any
 ) {
     return connect(mapStateToProps, mapDispatchToProps)(
-        class extends React.Component<any> {
+        class QueryBuilderPanel extends React.Component<any, AppState> {
+            constructor(props: any) {
+                super(props);
+                this.state = {selectedPilots: []}
+            }
+
             onClick() {
                 singletons.gateway.search(new GetDistinctPilots()).then(
                     ({records}) => {
@@ -77,13 +91,22 @@ function QueryBuilderPanelFactory(
                 });
             }
             
+            onSelectPilot(newItems: any) {
+                console.log("new items are: %o", newItems);
+                this.setState({selectedPilots: newItems});
+            }
+            
             render() {
                 return (
                     <div>
                       <Sidebar width={300}
                                isOpen={true}
                                minifiedWidth={0}>
-                        <Button onClick={this.onClick.bind(this)}>Query</Button>
+                        <ItemSelector options={['fry', 'bender', 'leela']}
+                                      multiSelect={true}
+                                      onChange={this.onSelectPilot.bind(this)}></ItemSelector>
+                        <Button selectedItems={this.state.selectedPilots} 
+                                onClick={this.onClick.bind(this)}>Query</Button>
                       </Sidebar>
                     </div>
                 );
