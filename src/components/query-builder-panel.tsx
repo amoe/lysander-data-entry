@@ -14,7 +14,11 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import actionCreators from '../action-creators';
 import mockdata from '../mockdata';
 import singletons from '../singletons';
-import { STPointsByPilotCluster, GetDistinctPilots } from '../canned-statements';
+import {
+    STPointsByPilotCluster,
+    GetDistinctPilots,
+    GetDistinctLocations
+} from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
 
 
@@ -45,9 +49,15 @@ const WANTED_PILOT = {
     lastName: ['doe']
 };
 
+interface Location {
+    code: string;
+    description: string;
+}
+
 interface AppState {
     selectedPilots: string[];
     availablePilots: any[];
+    availableLocations: Location[]
 }
 
 function QueryBuilderPanelFactory(
@@ -59,7 +69,8 @@ function QueryBuilderPanelFactory(
                 super(props);
                 this.state = {
                     selectedPilots: [],
-                    availablePilots: []
+                    availablePilots: [],
+                    availableLocations: []
                 }
             }
 
@@ -67,6 +78,16 @@ function QueryBuilderPanelFactory(
                 singletons.gateway.search(new GetDistinctPilots()).then(
                     ({records}) => {
                         this.setState({availablePilots: records.map(x => x.toObject())})
+                    }
+                );
+                singletons.gateway.search(new GetDistinctLocations()).then(
+                    ({records}) => {
+
+                        const locations = records.map(x => {
+                            return x.toObject() as Location
+                        });
+
+                        this.setState({availableLocations: locations});
                     }
                 );
             }

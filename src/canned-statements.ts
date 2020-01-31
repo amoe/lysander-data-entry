@@ -111,3 +111,16 @@ export class STPointsByPilotCluster implements CannedStatement {
         return {clusterId: this.clusterId};
     }
 }
+
+export class GetDistinctLocations implements CannedStatement {
+    getCypher(): string {
+        const result = `
+            MATCH (l:Location) RETURN l.code AS code, l.description AS description
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {};
+    }
+}
