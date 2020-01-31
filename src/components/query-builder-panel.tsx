@@ -19,7 +19,8 @@ import mockdata from '../mockdata';
 import singletons from '../singletons';
 import {
     STPointsByMultiplePilotClusters,
-    STPointsByLocation,
+    STPointsByLocations,
+    STPointsByOperations,
     GetDistinctPilots,
     GetDistinctLocations,
     GetDistinctOperations
@@ -185,7 +186,34 @@ function QueryBuilderPanelFactory(
             doLocationQuery() {
                 const wantedLocations = this.state.selectedLocations;
 
-                singletons.gateway.search(new STPointsByLocation(wantedLocations)).then(r => {
+                singletons.gateway.search(new STPointsByLocations(wantedLocations)).then(r => {
+                    console.log("record count is ", r.records.length);
+                    const count = r.records.length;
+                    if (count === 0) {
+                        notification.error({
+                            message: 'Error',
+                            description: 'No STPoints found.'
+                        });
+                    }
+                    const newRows = r.records.map(x => {
+                        return [
+                            x.get('nightOf'),
+                            TANGMERE_LONGITUDE,
+                            TANGMERE_LATITUDE,
+                            x.get('longitude'),
+                            x.get('latitude')
+                        ];
+                    });
+                    console.log("row values are %o", newRows);
+                    const kdata = makeKeplerData(newRows);
+                    this.props.addDataToMap(kdata);
+                });
+            }
+
+            doOperationQuery() {
+                const wantedOperations = this.state.selectedOperations;
+
+                singletons.gateway.search(new STPointsByOperations(wantedOperations)).then(r => {
                     console.log("record count is ", r.records.length);
                     const count = r.records.length;
                     if (count === 0) {
@@ -250,7 +278,7 @@ function QueryBuilderPanelFactory(
                               getOptionValue={identity}
                               onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         </SidePanelSection>
-
+p
                         <SidePanelSection>
                           <PanelLabel>Select Locations</PanelLabel>
                           <ItemSelector 
@@ -273,7 +301,7 @@ function QueryBuilderPanelFactory(
                               onChange={this.onSelectOperation.bind(this)}></ItemSelector>
                         </SidePanelSection>
 
-                        <Button onClick={this.doLocationQuery.bind(this)}>Query</Button>
+                        <Button onClick={this.doOperationQuery.bind(this)}>Query</Button>
                       </Sidebar>
                     </div>
                 );

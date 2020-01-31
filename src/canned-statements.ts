@@ -164,7 +164,7 @@ export class GetDistinctOperations implements CannedStatement {
 }
 
 
-export class STPointsByLocation implements CannedStatement {
+export class STPointsByLocations implements CannedStatement {
     locationCodes: string[];
 
     constructor(locationCodes: string[]) {
@@ -185,3 +185,25 @@ export class STPointsByLocation implements CannedStatement {
     }
 }
 
+
+
+export class STPointsByOperations implements CannedStatement {
+    operationNames: string[];
+
+    constructor(operationNames: string[]) {
+        this.operationNames = operationNames;
+    }
+
+    getCypher(): string {
+        const result = `
+            MATCH (o:Operation)-[:HAS_SORTIE]->(s:Sortie)-[:HAS_LANDING_ZONE]->(l:Location)
+            WHERE o.name IN {operationNames}
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {operationNames: this.operationNames};
+    }
+}
