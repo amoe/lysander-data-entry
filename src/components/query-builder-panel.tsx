@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { notification } from 'antd';
 import { addDataToMap } from 'kepler.gl/actions';
 import { identity } from '../utility';
+import { Record } from 'neo4j-driver/types/v1/index';
 
 import { 
     SidebarFactory,
@@ -22,6 +23,16 @@ import {
     GetDistinctLocations
 } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
+
+interface Pilot {
+    clusterId: string;
+    firstName: string[];
+    lastName: string[];
+}
+
+interface PilotIndex {
+    [key: string]: Pilot;
+}
 
 
 function mapStateToProps(state: FullStateTree) {
@@ -58,8 +69,19 @@ interface Location {
 
 interface AppState {
     selectedPilots: string[];
-    availablePilots: any[];
+    availablePilots: PilotIndex;
     availableLocations: Location[]
+}
+
+function blah(records: Record[]): PilotIndex {
+    const result: PilotIndex = {};
+
+    for (let record of records) {
+        const clusterId = record.get('clusterId');
+        result[clusterId] = record.toObject() as Pilot;
+        
+    }
+    return result;
 }
 
 function QueryBuilderPanelFactory(
@@ -71,7 +93,7 @@ function QueryBuilderPanelFactory(
                 super(props);
                 this.state = {
                     selectedPilots: [],
-                    availablePilots: [],
+                    availablePilots: {},
                     availableLocations: []
                 }
             }
@@ -79,19 +101,19 @@ function QueryBuilderPanelFactory(
             componentDidMount() {
                 singletons.gateway.search(new GetDistinctPilots()).then(
                     ({records}) => {
-                        this.setState({availablePilots: records.map(x => x.toObject())})
+                        this.setState({availablePilots: blah(records)});
                     }
                 );
-                singletons.gateway.search(new GetDistinctLocations()).then(
-                    ({records}) => {
+                /* singletons.gateway.search(new GetDistinctLocations()).then(
+                 *     ({records}) => {
 
-                        const locations = records.map(x => {
-                            return x.toObject() as Location
-                        });
+                 *         const locations = records.map(x => {
+                 *             return x.toObject() as Location
+                 *         });
 
-                        this.setState({availableLocations: locations});
-                    }
-                );
+                 *         this.setState({availableLocations: locations});
+                 *     }
+                 * );*/
             }
 
             onClick() {
@@ -129,29 +151,20 @@ function QueryBuilderPanelFactory(
                 this.setState({selectedPilots: newItems});
             }
 
-            // Yuck!
-            getClusterById(clusterId: string) {
-                for (let x of this.state.availablePilots) {
-                    if (x.clusterId === clusterId) 
-                        return x;
-                }
-            }
-
             // This does not work well.  We want to get passed the c
             
             getPilotLabel(clusterId: string) {
                 const separator = ' ';
-
-                const thisCluster = this.getClusterById(clusterId);
-
+                const thisCluster = this.state.availablePilots[clusterId];
                 const joinedFirstName = thisCluster.firstName.join(separator);
                 const joinedLastName = thisCluster.lastName.join(separator);
-
                 return `${joinedFirstName} ${joinedLastName}`;
             }
 
             render() {
                 return (
+                    
+                    
                     <div>
                       <Sidebar width={300}
                                isOpen={true}
@@ -161,7 +174,7 @@ function QueryBuilderPanelFactory(
                         <SidePanelSection>
                           <PanelLabel>Select Pilots</PanelLabel>
                           <ItemSelector 
-                              options={this.state.availablePilots.map(x => x.clusterId)}
+                              options={Object.keys(this.state.availablePilots)}
                               selectedItems={this.state.selectedPilots} 
                               multiSelect={false}
                               displayOption={this.getPilotLabel.bind(this)}
