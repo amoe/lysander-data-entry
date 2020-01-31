@@ -19,6 +19,7 @@ import mockdata from '../mockdata';
 import singletons from '../singletons';
 import {
     STPointsByMultiplePilotClusters,
+    STPointsByLocation,
     GetDistinctPilots,
     GetDistinctLocations
 } from '../canned-statements';
@@ -157,6 +158,33 @@ function QueryBuilderPanelFactory(
                     this.props.addDataToMap(kdata);
                 });
             }
+
+            doLocationQuery() {
+                const wantedLocations = this.state.selectedLocations;
+
+                singletons.gateway.search(new STPointsByLocation(wantedLocations)).then(r => {
+                    console.log("record count is ", r.records.length);
+                    const count = r.records.length;
+                    if (count === 0) {
+                        notification.error({
+                            message: 'Error',
+                            description: 'No STPoints found.'
+                        });
+                    }
+                    const newRows = r.records.map(x => {
+                        return [
+                            x.get('nightOf'),
+                            TANGMERE_LONGITUDE,
+                            TANGMERE_LATITUDE,
+                            x.get('longitude'),
+                            x.get('latitude')
+                        ];
+                    });
+                    console.log("row values are %o", newRows);
+                    const kdata = makeKeplerData(newRows);
+                    this.props.addDataToMap(kdata);
+                });
+            }
             
             onSelectPilot(newItems: any) {
                 console.log("new items are: %o", newItems);
@@ -207,7 +235,9 @@ function QueryBuilderPanelFactory(
                               onChange={this.onSelectLocation.bind(this)}></ItemSelector>
                         </SidePanelSection>
 
-                        <Button onClick={this.onClick.bind(this)}>Query</Button>
+                        {/* <Button onClick={this.doPilotQuery.bind(this)}>Query</Button> */}
+
+                        <Button onClick={this.doLocationQuery.bind(this)}>Query</Button>
                       </Sidebar>
                     </div>
                 );

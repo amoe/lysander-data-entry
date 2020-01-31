@@ -149,3 +149,26 @@ export class GetDistinctLocations implements CannedStatement {
         return {};
     }
 }
+
+
+export class STPointsByLocation implements CannedStatement {
+    locationCodes: string[];
+
+    constructor(locationCodes: string[]) {
+        this.locationCodes = locationCodes;
+    }
+
+    getCypher(): string {
+        const result = `
+            MATCH (l:Location)<-[:HAS_LANDING_ZONE]-(s:Sortie)
+            WHERE l.code IN {locationCodes}
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {locationCodes: this.locationCodes};
+    }
+}
+
