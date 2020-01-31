@@ -71,7 +71,7 @@ class KeplerView extends React.Component<AppProps> {
 
         return (
             <div>
-                <p>If only the control pane displays below, and the map does not
+                <p>If only the control pane displays below, and the map itself does not
                 display, check your internet connection.</p>
 
                 <p>Current counter value is {counter}</p>

@@ -11,6 +11,7 @@
     "@types/react-redux": "5.0.20",
     "@types/react-router-dom": "^5.1.2",
     "@types/uuid": "^3.4.5",
+    "@types/webpack-env": "^1.15.1",
     "antd": "^3.25.0",
     "axios": "^0.19.0",
     "formik": "^2.0.3",
@@ -41,7 +42,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-      "extends": ["react-app", "./my-eslint-config.js"]
+    "extends": [
+      "react-app",
+      "./my-eslint-config.js"
+    ]
   },
   "browserslist": {
     "production": [

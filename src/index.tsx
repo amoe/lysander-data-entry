@@ -23,6 +23,10 @@ import { enhanceReduxMiddleware } from 'kepler.gl/middleware';
 import { HashRouter } from 'react-router-dom';
 import App from './views/App';
 
+// Enable hot reload
+if (module.hot) {
+    module.hot.accept();
+}
 
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
