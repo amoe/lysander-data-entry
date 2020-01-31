@@ -75,6 +75,7 @@ const WANTED_PILOT = {
 
 interface AppState {
     selectedPilots: string[];
+    selectedLocations: string[];
     availablePilots: PilotIndex;
     availableLocations: LocationIndex;
 }
@@ -102,8 +103,6 @@ function indexLocations(records: Record[]): LocationIndex {
 }
 
 
-
-
 function QueryBuilderPanelFactory(
     Sidebar: any
 ) {
@@ -114,7 +113,8 @@ function QueryBuilderPanelFactory(
                 this.state = {
                     selectedPilots: [],
                     availablePilots: {},
-                    availableLocations: {}
+                    availableLocations: {},
+                    selectedLocations: []
                 }
             }
 
@@ -163,6 +163,11 @@ function QueryBuilderPanelFactory(
                 this.setState({selectedPilots: newItems});
             }
 
+            onSelectLocation(newItems: any) {
+                console.log("new items are: %o", newItems);
+                this.setState({selectedLocations: newItems});
+            }
+
             // This does not work well.  We want to get passed the c
             
             getPilotLabel(clusterId: string) {
@@ -191,9 +196,18 @@ function QueryBuilderPanelFactory(
                               onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         </SidePanelSection>
 
+                        <SidePanelSection>
+                          <PanelLabel>Select Locations</PanelLabel>
+                          <ItemSelector 
+                              options={Object.keys(this.state.availableLocations)}
+                              selectedItems={this.state.selectedLocations} 
+                              multiSelect={true}
+                              displayOption={(x: string) => this.state.availableLocations[x].description}
+                              getOptionValue={identity}
+                              onChange={this.onSelectLocation.bind(this)}></ItemSelector>
+                        </SidePanelSection>
 
                         <Button onClick={this.onClick.bind(this)}>Query</Button>
-
                       </Sidebar>
                     </div>
                 );
