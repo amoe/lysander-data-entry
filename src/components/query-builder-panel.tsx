@@ -73,7 +73,7 @@ interface AppState {
     availableLocations: Location[]
 }
 
-function blah(records: Record[]): PilotIndex {
+function indexPilots(records: Record[]): PilotIndex {
     const result: PilotIndex = {};
 
     for (let record of records) {
@@ -101,7 +101,7 @@ function QueryBuilderPanelFactory(
             componentDidMount() {
                 singletons.gateway.search(new GetDistinctPilots()).then(
                     ({records}) => {
-                        this.setState({availablePilots: blah(records)});
+                        this.setState({availablePilots: indexPilots(records)});
                     }
                 );
                 /* singletons.gateway.search(new GetDistinctLocations()).then(
@@ -163,8 +163,6 @@ function QueryBuilderPanelFactory(
 
             render() {
                 return (
-                    
-                    
                     <div>
                       <Sidebar width={300}
                                isOpen={true}
