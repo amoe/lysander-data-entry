@@ -88,7 +88,32 @@ export class STPointsByPilot implements CannedStatement {
     }
 }
 
-export class STPointsByPilotCluster implements CannedStatement {
+export class STPointsByMultiplePilotClusters implements CannedStatement {
+    clusters: string[];
+
+    constructor(clusters: string[]) {
+        this.clusters = clusters;
+    }
+
+    getCypher(): string {
+        const result = `
+            MATCH (pc:PersonCluster)-[:HAS_ROLE {type: 'pilot'}]->()
+            WHERE pc.id IN {clusters}
+            WITH DISTINCT pc AS pc
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
+            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {clusters: this.clusters};
+    }
+}
+
+export class STPointsBySinglePilotCluster implements CannedStatement {
     clusterId: string;
 
     constructor(clusterId: string) {

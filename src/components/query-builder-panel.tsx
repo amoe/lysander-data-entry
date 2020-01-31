@@ -18,7 +18,7 @@ import actionCreators from '../action-creators';
 import mockdata from '../mockdata';
 import singletons from '../singletons';
 import {
-    STPointsByPilotCluster,
+    STPointsByMultiplePilotClusters,
     GetDistinctPilots,
     GetDistinctLocations
 } from '../canned-statements';
@@ -29,6 +29,16 @@ interface Pilot {
     firstName: string[];
     lastName: string[];
 }
+
+interface Location {
+    code: string;
+    description: string;
+}
+
+interface LocationIndex {
+    [key: string]: Location;
+}
+
 
 interface PilotIndex {
     [key: string]: Pilot;
@@ -62,27 +72,37 @@ const WANTED_PILOT = {
     lastName: ['doe']
 };
 
-interface Location {
-    code: string;
-    description: string;
-}
 
 interface AppState {
     selectedPilots: string[];
     availablePilots: PilotIndex;
-    availableLocations: Location[]
+    availableLocations: LocationIndex;
 }
 
 function indexPilots(records: Record[]): PilotIndex {
     const result: PilotIndex = {};
 
     for (let record of records) {
-        const clusterId = record.get('clusterId');
-        result[clusterId] = record.toObject() as Pilot;
+        const id = record.get('clusterId');
+        result[id] = record.toObject() as Pilot;
         
     }
     return result;
 }
+
+function indexLocations(records: Record[]): LocationIndex {
+    const result: LocationIndex = {};
+
+    for (let record of records) {
+        const id = record.get('code');
+        result[id] = record.toObject() as Location;
+        
+    }
+    return result;
+}
+
+
+
 
 function QueryBuilderPanelFactory(
     Sidebar: any
@@ -94,7 +114,7 @@ function QueryBuilderPanelFactory(
                 this.state = {
                     selectedPilots: [],
                     availablePilots: {},
-                    availableLocations: []
+                    availableLocations: {}
                 }
             }
 
@@ -104,25 +124,17 @@ function QueryBuilderPanelFactory(
                         this.setState({availablePilots: indexPilots(records)});
                     }
                 );
-                /* singletons.gateway.search(new GetDistinctLocations()).then(
-                 *     ({records}) => {
-
-                 *         const locations = records.map(x => {
-                 *             return x.toObject() as Location
-                 *         });
-
-                 *         this.setState({availableLocations: locations});
-                 *     }
-                 * );*/
+                singletons.gateway.search(new GetDistinctLocations()).then(
+                    ({records}) => {
+                        this.setState({availableLocations: indexLocations(records)});
+                    }
+                );
             }
 
             onClick() {
-                /* const pilotCluster = this.state.selectedPilots[0];*/
-                const pilotCluster: any = this.state.selectedPilots;
+                const wantedClusters = this.state.selectedPilots;
 
-                console.log("I would search for cluster %o", pilotCluster);
-
-                singletons.gateway.search(new STPointsByPilotCluster(pilotCluster)).then(r => {
+                singletons.gateway.search(new STPointsByMultiplePilotClusters(wantedClusters)).then(r => {
                     console.log("record count is ", r.records.length);
                     const count = r.records.length;
                     if (count === 0) {
@@ -168,17 +180,17 @@ function QueryBuilderPanelFactory(
                                isOpen={true}
                                minifiedWidth={0}>
 
-
                         <SidePanelSection>
                           <PanelLabel>Select Pilots</PanelLabel>
                           <ItemSelector 
                               options={Object.keys(this.state.availablePilots)}
                               selectedItems={this.state.selectedPilots} 
-                              multiSelect={false}
+                              multiSelect={true}
                               displayOption={this.getPilotLabel.bind(this)}
                               getOptionValue={identity}
                               onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         </SidePanelSection>
+
 
                         <Button onClick={this.onClick.bind(this)}>Query</Button>
 
