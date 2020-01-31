@@ -12,9 +12,10 @@ import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
 
 import { QueryBuilderPanelFactory } from '../components/query-builder-panel';
+import mockdata from '../mockdata';
 
 const KeplerGl = injectComponents([
-    [SidePanelFactory, QueryBuilderPanelFactory]
+//    [SidePanelFactory, QueryBuilderPanelFactory]
 ]);
 
 function mapStateToProps(state: FullStateTree) {
@@ -49,6 +50,7 @@ class KeplerView extends React.Component<AppProps> {
         // if you just call the action creator that's imported, then stuff will
         // just silently die.
         const { counter, addDataToMap } = this.props;
+        addDataToMap(mockdata);
 
         const token = process.env.REACT_APP_MAPBOX_API_ACCESS_TOKEN;
         console.log("token is %o", token);
@@ -73,7 +75,8 @@ class KeplerView extends React.Component<AppProps> {
                 display, check your internet connection.</p>
 
                 <p>Current counter value is {counter}</p>
-                <Button onClick={this.props.increment}>foo</Button>
+                <Button onClick={this.props.increment}>Increment counter</Button>
+                <Button onClick={() => this.props.addDataToMap(mockdata)}>Add mock data</Button>
 
                 <KButton>Foo bar</KButton>
 
