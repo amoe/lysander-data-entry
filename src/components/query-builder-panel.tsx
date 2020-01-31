@@ -7,7 +7,9 @@ import { identity } from '../utility';
 import { 
     SidebarFactory,
     Button,
-    ItemSelector
+    ItemSelector,
+    PanelLabel,
+    SidePanelSection
 } from 'kepler.gl/components';
 
 import { FullStateTree, IncrementAction } from '../interfaces';
@@ -154,13 +156,21 @@ function QueryBuilderPanelFactory(
                       <Sidebar width={300}
                                isOpen={true}
                                minifiedWidth={0}>
-                        <ItemSelector options={this.state.availablePilots.map(x => x.clusterId)}
-                                      selectedItems={this.state.selectedPilots} 
-                                      multiSelect={false}
-                                      displayOption={this.getPilotLabel.bind(this)}
-                                      getOptionValue={identity}
-                                      onChange={this.onSelectPilot.bind(this)}></ItemSelector>
+
+
+                        <SidePanelSection>
+                          <PanelLabel>Select Pilots</PanelLabel>
+                          <ItemSelector 
+                              options={this.state.availablePilots.map(x => x.clusterId)}
+                              selectedItems={this.state.selectedPilots} 
+                              multiSelect={false}
+                              displayOption={this.getPilotLabel.bind(this)}
+                              getOptionValue={identity}
+                              onChange={this.onSelectPilot.bind(this)}></ItemSelector>
+                        </SidePanelSection>
+
                         <Button onClick={this.onClick.bind(this)}>Query</Button>
+
                       </Sidebar>
                     </div>
                 );
