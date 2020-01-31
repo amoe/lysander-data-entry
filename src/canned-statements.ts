@@ -113,30 +113,6 @@ export class STPointsByMultiplePilotClusters implements CannedStatement {
     }
 }
 
-export class STPointsBySinglePilotCluster implements CannedStatement {
-    clusterId: string;
-
-    constructor(clusterId: string) {
-        this.clusterId = clusterId;
-    }
-
-    getCypher(): string {
-        const result = `
-            MATCH (pc {id: {clusterId}})-[:HAS_ROLE {type: 'pilot'}]->()
-            WITH DISTINCT pc AS pc
-            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
-            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
-            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
-            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
-        `;
-        return result;
-    }
-
-    getParameters(): object {
-        return {clusterId: this.clusterId};
-    }
-}
-
 export class GetDistinctLocations implements CannedStatement {
     getCypher(): string {
         const result = `
@@ -205,5 +181,70 @@ export class STPointsByOperations implements CannedStatement {
 
     getParameters(): object {
         return {operationNames: this.operationNames};
+    }
+}
+
+
+export class STPointsBySinglePilotCluster implements CannedStatement {
+    clusterId: string;
+
+    constructor(clusterId: string) {
+        this.clusterId = clusterId;
+    }
+
+    getCypher(): string {
+        const result = `
+            MATCH (pc {id: {clusterId}})-[:HAS_ROLE {type: 'pilot'}]->()
+            WITH DISTINCT pc AS pc
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
+            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {clusterId: this.clusterId};
+    }
+}
+
+
+export class STPointsByCriteria implements CannedStatement {
+    clusterIds: string[];
+    locationCodes: string[];
+    operationNames: string[];
+
+    constructor(clusterIds: string[], locationCodes: string[], operationNames: string[]) {
+        this.clusterIds = clusterIds;
+        this.locationCodes = locationCodes;
+        this.operationNames = operationNames;
+    }
+
+    getCypher(): string {
+        const result = `
+            MATCH (pc:PersonCluster)-[:HAS_ROLE {type: 'pilot'}]->()
+            WHERE 
+                ({clusterIds} = [] OR pc.id IN {clusterIds})
+            WITH DISTINCT pc AS pc
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
+            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
+            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
+            MATCH (s)<-[:HAS_SORTIE]-(o:Operation)
+            WHERE 
+                ({operationNames} = [] OR o.name IN {operationNames})
+                AND
+                ({locationCodes} = [] OR l.code IN {locationCodes})
+            RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {
+            clusterIds: this.clusterIds,
+            locationCodes: this.locationCodes,
+            operationNames: this.operationNames
+        }
     }
 }
