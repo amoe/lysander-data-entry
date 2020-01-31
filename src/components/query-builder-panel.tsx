@@ -21,7 +21,8 @@ import {
     STPointsByMultiplePilotClusters,
     STPointsByLocation,
     GetDistinctPilots,
-    GetDistinctLocations
+    GetDistinctLocations,
+    GetDistinctOperations
 } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
 
@@ -36,6 +37,10 @@ interface Location {
     description: string;
 }
 
+interface Operation {
+    name: string;
+}
+
 interface LocationIndex {
     [key: string]: Location;
 }
@@ -43,6 +48,10 @@ interface LocationIndex {
 
 interface PilotIndex {
     [key: string]: Pilot;
+}
+
+interface OperationIndex {
+    [key: string]: Operation;
 }
 
 
@@ -67,18 +76,13 @@ const mapDispatchToProps = {
 const TANGMERE_LONGITUDE = -0.7063888888888888;
 const TANGMERE_LATITUDE = 50.84583333333333;
 
-// Filter the available flights so there's only one.
-const WANTED_PILOT = {
-    firstName: ['john', 'xavier'],
-    lastName: ['doe']
-};
-
-
 interface AppState {
     selectedPilots: string[];
     selectedLocations: string[];
+    selectedOperations: string[];
     availablePilots: PilotIndex;
     availableLocations: LocationIndex;
+    availableOperations: OperationIndex;
 }
 
 function indexPilots(records: Record[]): PilotIndex {
@@ -103,6 +107,17 @@ function indexLocations(records: Record[]): LocationIndex {
     return result;
 }
 
+function indexOperations(records: Record[]): OperationIndex {
+    const result: OperationIndex = {};
+
+    for (let record of records) {
+        const id = record.get('name');
+        result[id] = record.toObject() as Operation;
+        
+    }
+    return result;
+}
+
 
 function QueryBuilderPanelFactory(
     Sidebar: any
@@ -115,7 +130,9 @@ function QueryBuilderPanelFactory(
                     selectedPilots: [],
                     availablePilots: {},
                     availableLocations: {},
-                    selectedLocations: []
+                    selectedLocations: [],
+                    availableOperations: {},
+                    selectedOperations: []
                 }
             }
 
@@ -130,6 +147,12 @@ function QueryBuilderPanelFactory(
                         this.setState({availableLocations: indexLocations(records)});
                     }
                 );
+                singletons.gateway.search(new GetDistinctOperations()).then(
+                    ({records}) => {
+                        this.setState({availableOperations: indexOperations(records)});
+                    }
+                );
+
             }
 
             onClick() {
@@ -195,6 +218,10 @@ function QueryBuilderPanelFactory(
                 console.log("new items are: %o", newItems);
                 this.setState({selectedLocations: newItems});
             }
+            onSelectOperation(newItems: any) {
+                console.log("new items are: %o", newItems);
+                this.setState({selectedOperations: newItems});
+            }
 
             // This does not work well.  We want to get passed the c
             
@@ -235,7 +262,16 @@ function QueryBuilderPanelFactory(
                               onChange={this.onSelectLocation.bind(this)}></ItemSelector>
                         </SidePanelSection>
 
-                        {/* <Button onClick={this.doPilotQuery.bind(this)}>Query</Button> */}
+                        <SidePanelSection>
+                          <PanelLabel>Select Operations</PanelLabel>
+                          <ItemSelector 
+                              options={Object.keys(this.state.availableOperations)}
+                              selectedItems={this.state.selectedOperations} 
+                              multiSelect={true}
+                              displayOption={(x: string) => this.state.availableOperations[x].name}
+                              getOptionValue={identity}
+                              onChange={this.onSelectOperation.bind(this)}></ItemSelector>
+                        </SidePanelSection>
 
                         <Button onClick={this.doLocationQuery.bind(this)}>Query</Button>
                       </Sidebar>

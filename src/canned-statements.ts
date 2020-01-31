@@ -150,6 +150,19 @@ export class GetDistinctLocations implements CannedStatement {
     }
 }
 
+export class GetDistinctOperations implements CannedStatement {
+    getCypher(): string {
+        const result = `
+            MATCH (o:Operation) RETURN o.name AS name
+        `;
+        return result;
+    }
+
+    getParameters(): object {
+        return {};
+    }
+}
+
 
 export class STPointsByLocation implements CannedStatement {
     locationCodes: string[];
