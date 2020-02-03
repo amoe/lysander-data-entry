@@ -360,7 +360,6 @@ function QueryBuilderPanelFactory(
                                                       datasets={datasets}
                                                       filters={filters} />}
 
-
                         <SidePanelSection>
                           <PanelLabel>Select Pilots</PanelLabel>
                           <ItemSelector 

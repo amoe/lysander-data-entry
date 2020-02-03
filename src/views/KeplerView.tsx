@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
 import {
-    injectComponents, PanelHeaderFactory, SidePanelFactory, withState
+    injectComponents, SidePanelFactory, TimeRangeSliderFactory
 } from 'kepler.gl/components';
 import {Button as KButton } from 'kepler.gl/components';
 
@@ -11,11 +11,17 @@ import actionCreators from '../action-creators';
 import singletons from '../singletons';
 import { Button, notification, Row, Col, Divider } from 'antd';
 
-import { QueryBuilderPanelFactory } from '../components/query-builder-panel';
+import {
+    QueryBuilderPanelFactory,
+} from '../components/query-builder-panel';
+import { CustomTimeRangeSliderFactory } from '../components/custom-time-range-slider';
+
 import mockdata from '../mockdata';
 
+
 const KeplerGl = injectComponents([
-    [SidePanelFactory, QueryBuilderPanelFactory]
+    [SidePanelFactory, QueryBuilderPanelFactory],
+    [TimeRangeSliderFactory, CustomTimeRangeSliderFactory]
 ]);
 
 function mapStateToProps(state: FullStateTree) {
