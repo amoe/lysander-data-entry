@@ -11,7 +11,8 @@ import {
     Button,
     ItemSelector,
     PanelLabel,
-    SidePanelSection
+    SidePanelSection,
+    PanelTitleFactory
 } from 'kepler.gl/components';
 
 import { FullStateTree, IncrementAction } from '../interfaces';
@@ -125,7 +126,8 @@ function indexOperations(records: Record[]): OperationIndex {
 
 
 function QueryBuilderPanelFactory(
-    Sidebar: any
+    Sidebar: any,
+    PanelTitle: any
 ) {
     return connect(mapStateToProps, mapDispatchToProps)(
         class QueryBuilderPanel extends React.Component<any, AppState> {
@@ -302,6 +304,14 @@ function QueryBuilderPanelFactory(
                 const theLocation = this.state.availableLocations[locationId];
                 return theLocation.codename || theLocation.id;
             }
+            
+            clearCriteria(): void {
+                this.setState({
+                    selectedOperations: [],
+                    selectedPilots: [],
+                    selectedLocations: []
+                });
+            }
 
             render() {
                 const operationsSorted = Object.keys(this.state.availableOperations);
@@ -323,6 +333,11 @@ function QueryBuilderPanelFactory(
                       <Sidebar width={300}
                                isOpen={true}
                                minifiedWidth={0}>
+
+                        <PanelTitle className="side-panel__content__title">
+                          Query Builder
+                        </PanelTitle>
+
 
                         <SidePanelSection>
                           <PanelLabel>Select Pilots</PanelLabel>
@@ -358,6 +373,7 @@ function QueryBuilderPanelFactory(
                         </SidePanelSection>
 
                         <Button onClick={this.doQuery.bind(this)}>Query</Button>
+                        <Button onClick={this.clearCriteria.bind(this)} secondary>Clear Criteria</Button>
                       </Sidebar>
                     </div>
                 );
@@ -367,7 +383,8 @@ function QueryBuilderPanelFactory(
 }
 
 QueryBuilderPanelFactory.deps = [
-    SidebarFactory
+    SidebarFactory,
+    PanelTitleFactory
 ];
 
 export { QueryBuilderPanelFactory };
