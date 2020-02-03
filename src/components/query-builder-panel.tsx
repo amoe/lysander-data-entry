@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { notification } from 'antd';
 import { addDataToMap } from 'kepler.gl/actions';
+import { startCase } from 'lodash';
 import { identity } from '../utility';
 import { Record } from 'neo4j-driver/types/v1/index';
 
@@ -143,6 +144,7 @@ function QueryBuilderPanelFactory(
             componentDidMount() {
                 singletons.gateway.search(new GetDistinctPilots()).then(
                     ({records}) => {
+                        console.log("Pilots loaded: %o", records.length);
                         this.setState({availablePilots: indexPilots(records)});
                     }
                 );
@@ -288,14 +290,12 @@ function QueryBuilderPanelFactory(
                 this.setState({selectedOperations: newItems});
             }
 
-            // This does not work well.  We want to get passed the c
-            
             getPilotLabel(clusterId: string) {
                 const separator = ' ';
                 const thisCluster = this.state.availablePilots[clusterId];
                 const joinedFirstName = thisCluster.firstName.join(separator);
                 const joinedLastName = thisCluster.lastName.join(separator);
-                return `${joinedFirstName} ${joinedLastName}`;
+                return startCase(`${joinedFirstName} ${joinedLastName}`);
             }
 
             getLocationLabel(locationId: string): string {
@@ -304,6 +304,20 @@ function QueryBuilderPanelFactory(
             }
 
             render() {
+                const operationsSorted = Object.keys(this.state.availableOperations);
+                operationsSorted.sort((a, b) => a.localeCompare(b));
+
+                const pilotsSorted = Object.keys(this.state.availablePilots);
+                // check out lodash sortBy
+                pilotsSorted.sort((a, b) => {
+                    return this.getPilotLabel(a).localeCompare(this.getPilotLabel(b));
+                });
+
+                const locationsSorted = Object.keys(this.state.availableLocations);
+                locationsSorted.sort((a, b) => {
+                    return this.getLocationLabel(a).localeCompare(this.getLocationLabel(b));
+                })
+
                 return (
                     <div>
                       <Sidebar width={300}
@@ -313,7 +327,7 @@ function QueryBuilderPanelFactory(
                         <SidePanelSection>
                           <PanelLabel>Select Pilots</PanelLabel>
                           <ItemSelector 
-                              options={Object.keys(this.state.availablePilots)}
+                              options={pilotsSorted}
                               selectedItems={this.state.selectedPilots} 
                               multiSelect={true}
                               displayOption={this.getPilotLabel.bind(this)}
@@ -324,7 +338,7 @@ function QueryBuilderPanelFactory(
                         <SidePanelSection>
                           <PanelLabel>Select Locations</PanelLabel>
                           <ItemSelector 
-                              options={Object.keys(this.state.availableLocations)}
+                              options={locationsSorted}
                               selectedItems={this.state.selectedLocations} 
                               multiSelect={true}
                               displayOption={this.getLocationLabel.bind(this)}
@@ -335,7 +349,7 @@ function QueryBuilderPanelFactory(
                         <SidePanelSection>
                           <PanelLabel>Select Operations</PanelLabel>
                           <ItemSelector 
-                              options={Object.keys(this.state.availableOperations)}
+                              options={operationsSorted}
                               selectedItems={this.state.selectedOperations} 
                               multiSelect={true}
                               displayOption={(x: string) => this.state.availableOperations[x].name}
