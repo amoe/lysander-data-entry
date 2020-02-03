@@ -28,14 +28,31 @@ if (module.hot) {
     module.hot.accept();
 }
 
+const TANGMERE_LONGITUDE = -0.7063888888888888;
+const TANGMERE_LATITUDE = 50.84583333333333;
+
+
 // Custom state to disable the add data modal dialog.
 // See pattern from <https://github.com/keplergl/kepler.gl/blob/master/docs/api-reference/advanced-usages/custom-initial-state.md>
 const customKeplerReducer = keplerGlReducer.initialState({
     uiState: {
         currentModal: null,
-// Will hide the current side pane if true
+        // Will hide the current side pane if true
         //
         readOnly: false
+    },
+    mapState: {
+        pitch: 0,
+        bearing: 0,
+//        latitude: 37.75043,
+//        longitude: -122.34679,
+        longitude: -0.7063888888888888,
+        latitude: 50.84583333333333,
+        zoom: 9,
+              dragRotate: false,
+              width: 800,
+              height: 800,
+              isSplit: false
     }
 });
 
