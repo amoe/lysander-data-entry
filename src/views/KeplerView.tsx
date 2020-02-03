@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FullStateTree, IncrementAction } from '../interfaces';
 import {
-    injectComponents, SidePanelFactory, TimeRangeSliderFactory
+    injectComponents, SidePanelFactory, TimeRangeSliderFactory, KeplerGlFactory
 } from 'kepler.gl/components';
 import {Button as KButton } from 'kepler.gl/components';
 
@@ -15,7 +15,8 @@ import {
     QueryBuilderPanelFactory,
 } from '../components/query-builder-panel';
 //import { CustomTimeRangeSliderFactory } from '../components/custom-time-range-slider';
-import { SimpleHistogramUserFactory } from '../components/simple-histogram-user';
+//import { SimpleHistogramUserFactory } from '../components/simple-histogram-user';
+//import { RangeBrushUserFactory } from '../components/range-brush-user';
 
 import mockdata from '../mockdata';
 
@@ -23,7 +24,8 @@ import mockdata from '../mockdata';
 const KeplerGl = injectComponents([
     [SidePanelFactory, QueryBuilderPanelFactory],
     //    [TimeRangeSliderFactory, CustomTimeRangeSliderFactory]
-    [TimeRangeSliderFactory, SimpleHistogramUserFactory]
+//    [TimeRangeSliderFactory, SimpleHistogramUserFactory],
+//    [KeplerGlFactory, RangeBrushUserFactory]
 ]);
 
 function mapStateToProps(state: FullStateTree) {
