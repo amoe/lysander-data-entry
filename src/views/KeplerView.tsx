@@ -14,14 +14,16 @@ import { Button, notification, Row, Col, Divider } from 'antd';
 import {
     QueryBuilderPanelFactory,
 } from '../components/query-builder-panel';
-import { CustomTimeRangeSliderFactory } from '../components/custom-time-range-slider';
+//import { CustomTimeRangeSliderFactory } from '../components/custom-time-range-slider';
+import { SimpleHistogramUserFactory } from '../components/simple-histogram-user';
 
 import mockdata from '../mockdata';
 
 
 const KeplerGl = injectComponents([
     [SidePanelFactory, QueryBuilderPanelFactory],
-    [TimeRangeSliderFactory, CustomTimeRangeSliderFactory]
+    //    [TimeRangeSliderFactory, CustomTimeRangeSliderFactory]
+    [TimeRangeSliderFactory, SimpleHistogramUserFactory]
 ]);
 
 function mapStateToProps(state: FullStateTree) {
