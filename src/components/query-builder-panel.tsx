@@ -12,7 +12,8 @@ import {
     ItemSelector,
     PanelLabel,
     SidePanelSection,
-    PanelTitleFactory
+    PanelTitleFactory,
+    FilterManagerFactory
 } from 'kepler.gl/components';
 
 import { FullStateTree, IncrementAction } from '../interfaces';
@@ -127,7 +128,8 @@ function indexOperations(records: Record[]): OperationIndex {
 
 function QueryBuilderPanelFactory(
     Sidebar: any,
-    PanelTitle: any
+    PanelTitle: any,
+    FilterManager: any
 ) {
     return connect(mapStateToProps, mapDispatchToProps)(
         class QueryBuilderPanel extends React.Component<any, AppState> {
@@ -314,6 +316,20 @@ function QueryBuilderPanelFactory(
             }
 
             render() {
+                const { visStateActions, datasets, filters } = this.props;
+
+                const filterManagerActions = {
+                    addFilter: visStateActions.addFilter,
+                    removeFilter: visStateActions.removeFilter,
+                    setFilter: visStateActions.setFilter,
+//                    showDatasetTable: this._showDatasetTable,
+//                    showAddDataModal: this._showAddDataModal,
+                    toggleAnimation: visStateActions.toggleFilterAnimation,
+                    enlargeFilter: visStateActions.enlargeFilter
+                };
+
+                console.log("visstateactions = %o", this.props.visStateActions);
+
                 const operationsSorted = Object.keys(this.state.availableOperations);
                 operationsSorted.sort((a, b) => a.localeCompare(b));
 
@@ -328,6 +344,8 @@ function QueryBuilderPanelFactory(
                     return this.getLocationLabel(a).localeCompare(this.getLocationLabel(b));
                 })
 
+                const hadDataset = Object.keys(datasets).length;
+
                 return (
                     <div>
                       <Sidebar width={300}
@@ -337,6 +355,10 @@ function QueryBuilderPanelFactory(
                         <PanelTitle className="side-panel__content__title">
                           Query Builder
                         </PanelTitle>
+
+                        {hadDataset && <FilterManager {...filterManagerActions}
+                                                      datasets={datasets}
+                                                      filters={filters} />}
 
 
                         <SidePanelSection>
@@ -384,7 +406,8 @@ function QueryBuilderPanelFactory(
 
 QueryBuilderPanelFactory.deps = [
     SidebarFactory,
-    PanelTitleFactory
+    PanelTitleFactory,
+    FilterManagerFactory
 ];
 
 export { QueryBuilderPanelFactory };

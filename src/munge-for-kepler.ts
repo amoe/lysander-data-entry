@@ -25,18 +25,18 @@ function makeData(rows: any) {
 
 
 const myArc = {
-    "id": "zslehy",
-    "type": "arc",
-    "config": {
-        "dataId": "test_trip_data",
-        "label": ARC_NAME,
-        "columns": {
-            "lat0": "start_latitude",
-            "lng0": "start_longitude",
-            "lat1": "end_latitude",
-            "lng1": "end_longitude"
+    id: "zslehy",
+    type: "arc",
+    config: {
+        dataId: "test_trip_data",
+        label: ARC_NAME,
+        columns: {
+            lat0: "start_latitude",
+            lng0: "start_longitude",
+            lat1: "end_latitude",
+            lng1: "end_longitude"
         },
-        "isVisible": true,
+        isVisible: true,
     }
 };
 
