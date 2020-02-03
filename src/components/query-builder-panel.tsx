@@ -37,6 +37,7 @@ interface Pilot {
 interface Location {
     code: string;
     description: string;
+    codename: string;
 }
 
 interface Operation {
@@ -102,7 +103,7 @@ function indexLocations(records: Record[]): LocationIndex {
     const result: LocationIndex = {};
 
     for (let record of records) {
-        const id = record.get('code');
+        const id = record.get('id');
         result[id] = record.toObject() as Location;
         
     }
@@ -146,6 +147,7 @@ function QueryBuilderPanelFactory(
                 );
                 singletons.gateway.search(new GetDistinctLocations()).then(
                     ({records}) => {
+                        console.log("Discovered %o locations", records.length);
                         this.setState({availableLocations: indexLocations(records)});
                     }
                 );
@@ -312,14 +314,14 @@ function QueryBuilderPanelFactory(
                               getOptionValue={identity}
                               onChange={this.onSelectPilot.bind(this)}></ItemSelector>
                         </SidePanelSection>
-p
+
                         <SidePanelSection>
                           <PanelLabel>Select Locations</PanelLabel>
                           <ItemSelector 
                               options={Object.keys(this.state.availableLocations)}
                               selectedItems={this.state.selectedLocations} 
                               multiSelect={true}
-                              displayOption={(x: string) => this.state.availableLocations[x].description}
+                              displayOption={(x: string) => this.state.availableLocations[x].codename}
                               getOptionValue={identity}
                               onChange={this.onSelectLocation.bind(this)}></ItemSelector>
                         </SidePanelSection>

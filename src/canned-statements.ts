@@ -116,7 +116,7 @@ export class STPointsByMultiplePilotClusters implements CannedStatement {
 export class GetDistinctLocations implements CannedStatement {
     getCypher(): string {
         const result = `
-            MATCH (l:Location) RETURN l.code AS code, l.description AS description
+            MATCH (l:Location) RETURN l.id AS id, l.codename AS codename, l.description AS description
         `;
         return result;
     }
@@ -212,12 +212,12 @@ export class STPointsBySinglePilotCluster implements CannedStatement {
 
 export class STPointsByCriteria implements CannedStatement {
     clusterIds: string[];
-    locationCodes: string[];
+    locationIds: string[];
     operationNames: string[];
 
-    constructor(clusterIds: string[], locationCodes: string[], operationNames: string[]) {
+    constructor(clusterIds: string[], locationIds: string[], operationNames: string[]) {
         this.clusterIds = clusterIds;
-        this.locationCodes = locationCodes;
+        this.locationIds = locationIds;
         this.operationNames = operationNames;
     }
 
@@ -234,7 +234,7 @@ export class STPointsByCriteria implements CannedStatement {
             WHERE 
                 ({operationNames} = [] OR o.name IN {operationNames})
                 AND
-                ({locationCodes} = [] OR l.code IN {locationCodes})
+                ({locationIds} = [] OR l.id IN {locationIds})
             RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
         `;
         return result;
@@ -243,7 +243,7 @@ export class STPointsByCriteria implements CannedStatement {
     getParameters(): object {
         return {
             clusterIds: this.clusterIds,
-            locationCodes: this.locationCodes,
+            locationIds: this.locationIds,
             operationNames: this.operationNames
         }
     }
