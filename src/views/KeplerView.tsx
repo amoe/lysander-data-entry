@@ -15,7 +15,7 @@ import { QueryBuilderPanelFactory } from '../components/query-builder-panel';
 import mockdata from '../mockdata';
 
 const KeplerGl = injectComponents([
-//    [SidePanelFactory, QueryBuilderPanelFactory]
+    [SidePanelFactory, QueryBuilderPanelFactory]
 ]);
 
 function mapStateToProps(state: FullStateTree) {

@@ -172,6 +172,8 @@ function QueryBuilderPanelFactory(
                             message: 'Error',
                             description: 'No STPoints found.'
                         });
+
+                        return;
                     }
                     const newRows = r.records.map(x => {
                         return [
