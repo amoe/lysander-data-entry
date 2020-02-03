@@ -297,6 +297,10 @@ function QueryBuilderPanelFactory(
                 return `${joinedFirstName} ${joinedLastName}`;
             }
 
+            getLocationLabel(locationId: string): string {
+                return this.state.availableLocations[locationId].codename;
+            }
+
             render() {
                 return (
                     <div>
@@ -321,7 +325,7 @@ function QueryBuilderPanelFactory(
                               options={Object.keys(this.state.availableLocations)}
                               selectedItems={this.state.selectedLocations} 
                               multiSelect={true}
-                              displayOption={(x: string) => this.state.availableLocations[x].codename}
+                              displayOption={this.getLocationLabel.bind(this)}
                               getOptionValue={identity}
                               onChange={this.onSelectLocation.bind(this)}></ItemSelector>
                         </SidePanelSection>
