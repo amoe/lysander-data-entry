@@ -35,6 +35,7 @@ interface Pilot {
 }
 
 interface Location {
+    id: string;
     code: string;
     description: string;
     codename: string;
@@ -298,7 +299,8 @@ function QueryBuilderPanelFactory(
             }
 
             getLocationLabel(locationId: string): string {
-                return this.state.availableLocations[locationId].codename;
+                const theLocation = this.state.availableLocations[locationId];
+                return theLocation.codename || theLocation.id;
             }
 
             render() {
