@@ -223,14 +223,12 @@ export class STPointsByCriteria implements CannedStatement {
 
     getCypher(): string {
         const result = `
-            MATCH (pc:PersonCluster)-[:HAS_ROLE {type: 'pilot'}]->()
-            WHERE 
-                ({clusterIds} = [] OR pc.id IN {clusterIds})
-            WITH DISTINCT pc AS pc
-            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s1:Sortie)-[:HAS_LANDING_ZONE]->(l1:Location)
-            OPTIONAL MATCH (pc)-[:HAS_ROLE {type: 'pilot'}]->(s2:Sortie)-[:HAS_LANDING_ZONE]->(l2:Location)
-            WITH COALESCE(l1, l2) AS l, COALESCE(s1, s2) AS s
-            MATCH (s)<-[:HAS_SORTIE]-(o:Operation)
+            MATCH (s:Sortie)
+            OPTIONAL MATCH (s)-[:HAS_PLANE_SORTIE]->(:PlaneSortie)<-[:HAS_ROLE {type: 'pilot'}]-(pc1:PersonCluster)
+            OPTIONAL MATCH (s)<-[:HAS_ROLE {type: 'pilot'}]-(pc2:PersonCluster)
+            WITH COALESCE(pc1, pc2) AS pc, s AS s
+            WHERE size({clusterIds}) = 0 OR pc.id IN {clusterIds}
+            MATCH (s)<-[:HAS_SORTIE]-(o:Operation), (s)-[:HAS_LANDING_ZONE]->(l:Location)
             WHERE 
                 ({operationNames} = [] OR o.name IN {operationNames})
                 AND
