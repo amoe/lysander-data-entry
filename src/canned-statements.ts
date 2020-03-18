@@ -234,6 +234,7 @@ export class STPointsByCriteria implements CannedStatement {
                 AND
                 ({locationIds} = [] OR l.id IN {locationIds})
             RETURN s.nightOf AS nightOf, l.latitude AS latitude, l.longitude AS longitude
+            ORDER BY s.nightOf
         `;
         return result;
     }
