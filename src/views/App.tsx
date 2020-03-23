@@ -22,9 +22,9 @@ import {
 const { Header, Content, Footer } = Layout;
 
 const routes = {
-    "/about": [AboutView, "About"],
-    "/kepler-view": [KeplerView, "Map View"],
+    "/": [KeplerView, "Map View"],
     "/graph-view": [GraphView, "Graph View"],
+    "/about": [AboutView, "About"],
     "/advanced": [AdvancedView, "Advanced"],
     "/workspace": [Workspace, "Workspace"]
     //    "/formik-demo": [FormikDemo, "Formik Demo"],

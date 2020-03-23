@@ -83,9 +83,11 @@ class KeplerView extends React.Component<AppProps> {
                 <p>If only the control pane displays below, and the map itself does not
                 display, check your internet connection.</p>
 
-                <p>Current counter value is {counter}</p>
-                <Button onClick={this.props.increment}>Increment counter</Button>
-                <Button disabled onClick={() => this.props.addDataToMap(mockdata)}>Add mock data</Button>
+                {/* <p>Current counter value is {counter}</p> */}
+
+                {/* <Button onClick={this.props.increment}>Increment counter</Button> */}
+
+                {/* <Button disabled onClick={() => this.props.addDataToMap(mockdata)}>Add mock data</Button> */}
 
                 <Divider />
 
