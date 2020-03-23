@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link, Switch, HashRouter, Route, withRouter, RouteComponentProps } from 'react-router-dom';
+import { 
+    Link, Switch, HashRouter, Route, withRouter, RouteComponentProps 
+} from 'react-router-dom';
 
 
 // Our components
@@ -21,7 +23,7 @@ const { Header, Content, Footer } = Layout;
 const routes = {
     "/": [Workspace, "Workspace"],
     "/about": [AboutView, "About"],
-    "/kepler-view": [KeplerView, "Kepler View"],
+    "/kepler-view": [KeplerView, "Map View"],
     "/graph-view": [GraphView, "Graph View"],
     "/formik-demo": [FormikDemo, "Formik Demo"],
     "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"],

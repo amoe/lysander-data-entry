@@ -14,7 +14,6 @@ function mapStateToProps(state: FullStateTree) {
     };
 }
 
-// GET YER ACTION CREATORS HERE
 const mapDispatchToProps = {
 };
 
@@ -23,9 +22,12 @@ interface AppProps {
 
 }
 
-const ENTIRE_GRAPH_QUERY = `MATCH (n) OPTIONAL MATCH (n)-[r]->() RETURN n, r`;
+const ENTIRE_GRAPH_QUERY = `
+MATCH (n) OPTIONAL MATCH (n)-[r]->() RETURN n, r
+LIMIT 100
+`;
 
-class MyComponent extends React.Component<AppProps> {
+class GraphView extends React.Component<AppProps> {
     componentDidMount() {
         console.log("neovis is %o", Neovis);
 
@@ -39,7 +41,6 @@ class MyComponent extends React.Component<AppProps> {
             <div>
                 <Title level={2}>Graph view</Title>
 
-
                 <Paragraph>This view displays a visual representation of the
                 nodes and relationships currently stored in the graph database.</Paragraph>
 
@@ -50,5 +51,5 @@ class MyComponent extends React.Component<AppProps> {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(GraphView);
 
