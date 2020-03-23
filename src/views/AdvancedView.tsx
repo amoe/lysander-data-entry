@@ -37,10 +37,10 @@ class AdvancedView extends React.Component<AppProps> {
                 <Title level={2}>Advanced tools</Title>
 
 
-                <Paragraph>Stay away from these buttons.</Paragraph>
+                <Paragraph>These buttons allow direct manipulation of the graph.</Paragraph>
 
 
-                <Button onClick={() => this.handleClick()}>Clear graph</Button>
+                <Button disabled onClick={() => this.handleClick()}>Clear graph</Button>
             </div>
         );
     }
