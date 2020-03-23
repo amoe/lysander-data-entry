@@ -4,7 +4,6 @@ import { FullStateTree, IncrementAction } from '../interfaces';
 import {
     injectComponents, SidePanelFactory, TimeRangeSliderFactory, KeplerGlFactory
 } from 'kepler.gl/components';
-import {Button as KButton } from 'kepler.gl/components';
 
 import { addDataToMap } from 'kepler.gl/actions';
 import actionCreators from '../action-creators';
@@ -86,9 +85,7 @@ class KeplerView extends React.Component<AppProps> {
 
                 <p>Current counter value is {counter}</p>
                 <Button onClick={this.props.increment}>Increment counter</Button>
-                <Button onClick={() => this.props.addDataToMap(mockdata)}>Add mock data</Button>
-
-                <KButton>Foo bar</KButton>
+                <Button disabled onClick={() => this.props.addDataToMap(mockdata)}>Add mock data</Button>
 
                 <Divider />
 

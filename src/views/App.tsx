@@ -22,14 +22,14 @@ import {
 const { Header, Content, Footer } = Layout;
 
 const routes = {
-    "/": [Workspace, "Workspace"],
     "/about": [AboutView, "About"],
     "/kepler-view": [KeplerView, "Map View"],
     "/graph-view": [GraphView, "Graph View"],
-    "/advanced": [AdvancedView, "Advanced"]
-//    "/formik-demo": [FormikDemo, "Formik Demo"],
-//    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
-//    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
+    "/advanced": [AdvancedView, "Advanced"],
+    "/workspace": [Workspace, "Workspace"]
+    //    "/formik-demo": [FormikDemo, "Formik Demo"],
+    //    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
+    //    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
 const ABOUT_TEXT = "Lysander Project, 2019-2020";
