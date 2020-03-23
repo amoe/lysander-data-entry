@@ -6,13 +6,14 @@ import {
 
 // Our components
 import Workspace from './Workspace';
-import FormikDemo from './FormikDemo';
 import GraphView from './GraphView';
-import AntdComponentDemo from './AntdComponentDemo';
 import KeplerView from './KeplerView';
-import FormikAntdView from './FormikAntdView';
 import AdvancedView from './AdvancedView';
 import AboutView from './AboutView';
+
+//import FormikDemo from './FormikDemo';
+//import FormikAntdView from './FormikAntdView';
+//import AntdComponentDemo from './AntdComponentDemo';
 
 import {
     Layout, Menu, Breadcrumb,
@@ -25,10 +26,10 @@ const routes = {
     "/about": [AboutView, "About"],
     "/kepler-view": [KeplerView, "Map View"],
     "/graph-view": [GraphView, "Graph View"],
-    "/formik-demo": [FormikDemo, "Formik Demo"],
-    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"],
-    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
-    "/advanced": [AdvancedView, "Advanced View"]
+    "/advanced": [AdvancedView, "Advanced"]
+//    "/formik-demo": [FormikDemo, "Formik Demo"],
+//    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
+//    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
 };
 
 const ABOUT_TEXT = "Lysander Project, 2019-2020";
