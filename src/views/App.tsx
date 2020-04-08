@@ -10,6 +10,7 @@ import GraphView from './GraphView';
 import KeplerView from './KeplerView';
 import AdvancedView from './AdvancedView';
 import AboutView from './AboutView';
+import ButterworthAboutView from './ButterworthAboutView';
 
 //import FormikDemo from './FormikDemo';
 //import FormikAntdView from './FormikAntdView';
@@ -26,7 +27,8 @@ const routes = {
     "/graph-view": [GraphView, "Graph View"],
     "/about": [AboutView, "About"],
     "/advanced": [AdvancedView, "Advanced"],
-    "/workspace": [Workspace, "Workspace"]
+    "/workspace": [Workspace, "Workspace"],
+    "/alex-butterworth": [ButterworthAboutView, "Alex Butterworth"]
     //    "/formik-demo": [FormikDemo, "Formik Demo"],
     //    "/formik-antd": [FormikAntdView, "Formik Antd Demo"],
     //    "/antd-component-demo": [AntdComponentDemo, "Antd Component Demo"]
