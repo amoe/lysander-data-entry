@@ -192,6 +192,13 @@ export class Neo4jGateway {
         return this.session!.run(query.getCypher(), query.getParameters());
     }
 
+    getGroupLinkages(): Result {
+        this.checkInitialized();
+        return this.session!.run(
+            "MATCH (n1)-[:INVOLVED_IN]->(n2) RETURN n1, n2", {}
+        );
+    }
+
     markAsProcessed(rowId: string): Result {
         return this.session!.run(
             "MATCH (s:SourceRow {id: {id}}) SET s.processed = TRUE", { id: rowId }
