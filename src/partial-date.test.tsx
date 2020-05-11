@@ -25,7 +25,7 @@ it('allows ordering partial dates', () => {
     const d3 = new PartialDate(1940, 6, 9);
 
     const allDates = [d3, d2, d1];
-    
+
     allDates.sort(comparePartialDates);
 
     // Unknown points should be filled with zeros, and compared
