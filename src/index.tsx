@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {EventSequenceView} from './event-sequence-view';
 import * as serviceWorker from './serviceWorker';
 
-function MyComponent() {
-    return (
-        <h1>Hello React</h1>
-    );
-}
 
 ReactDOM.render(
-    (<div><MyComponent /></div>),
+    (<div><EventSequenceView /></div>),
     document.getElementById('root')
 );
 
@@ -18,4 +14,3 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
