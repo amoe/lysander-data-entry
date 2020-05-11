@@ -40,7 +40,7 @@ class PartialDate {
     }
 
     getEarliestMonth(): number {
-        return this.year === undefined ? 1 : this.year;
+        return this.month === undefined ? 1 : this.month;
     }
 
     getEarliestDay(): number {
