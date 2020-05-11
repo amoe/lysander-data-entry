@@ -1,4 +1,4 @@
-import {compareAsc} from 'date-fns';
+import {compareAsc, endOfMonth, endOfYear, endOfDay} from 'date-fns';
 
 //    If compareFunction(a, b) returns less than 0, sort a to an index lower than b (i.e. a comes first).
 //    If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements. Note: the ECMAscript standard does not guarantee this behavior, thus, not all browsers (e.g. Mozilla versions dating back to at least 2003) respect this.
@@ -47,6 +47,16 @@ class PartialDate {
         return this.day === undefined ? 1 : this.day;
     }
 
+
+    toLatestDate(): Date {
+        if (this.month === undefined && this.day === undefined) {
+            return endOfYear(new Date(this.year, 1, 1));
+        } else if (this.day === undefined) {
+            return endOfMonth(new Date(this.year, this.month!, 1));
+        } else {
+            return endOfDay(new Date(this.year, this.month!, this.day));
+        }
+    }
 }
 
 
