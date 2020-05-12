@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, ChangeEvent} from 'react';
 import {
     DragDropContext, Droppable, Draggable,
     DropResult, DroppableProvided, DroppableStateSnapshot, DraggableRubric, 
@@ -38,6 +38,7 @@ function makeDroppableChildren(items: PartialDate[]) {
 
 export function DndDemo(props: AppProps) {
     const [items, setItems] = useState(props.items);
+    const [year, setYear] = useState("");
 
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result.destination)  return;    // invalid drop
@@ -59,9 +60,20 @@ export function DndDemo(props: AppProps) {
         setItems(newItemsValue);
     };
 
+    const handleYearChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setYear(event.currentTarget.value);
+    }
+
+    const handleAdd = () => {
+        const yearNum = parseInt(year);
+        const newItemsValue = clone(items);
+        newItemsValue.push(new PartialDate(yearNum))
+        setItems(newItemsValue);
+    };
+
     return (
         <div>
-          <h1>Hello</h1>
+          <h1>Sequence</h1>
 
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="main" isDropDisabled={false}>
@@ -70,6 +82,13 @@ export function DndDemo(props: AppProps) {
           </DragDropContext>
 
           <button onClick={handleClick}>Sort</button>
+
+          <p>Val is {year}</p>
+
+          <label>Year only:</label>
+          <input value={year} onChange={handleYearChange} />
+
+          <button onClick={handleAdd}>Add</button>
         </div>
     );
 }
