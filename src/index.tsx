@@ -9,6 +9,7 @@ import {RbdSample} from './rbd-sample';
 ReactDOM.render(
     (<div>
       <RbdSample />
+      
       <EventSequenceView />
     </div>),
     document.getElementById('root')

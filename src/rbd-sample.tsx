@@ -3,14 +3,15 @@ import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // fake data generator
-const getItems = count =>
-    Array.from({ length: count }, (v, k) => k).map(k => ({
+function getItems(count: any) {
+    return Array.from({ length: count }, (v, k) => k).map(k => ({
         id: `item-${k}`,
         content: `item ${k}`
     }));
+}
 
 // a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
+function reorder(list: any, startIndex: number, endIndex: number) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -20,35 +21,43 @@ const reorder = (list, startIndex, endIndex) => {
 
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: "none",
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
+function getItemStyle(isDragging: any, draggableStyle: any) {
+    return {
+        // some basic styles to make the items look a bit nicer
+        userSelect: "none",
+        padding: grid * 2,
+        margin: `0 0 ${grid}px 0`,
 
-    // change background colour if dragging
-    background: isDragging ? "lightgreen" : "grey",
+        // change background colour if dragging
+        background: isDragging ? "lightgreen" : "grey",
 
-    // styles we need to apply on draggables
-    ...draggableStyle
-});
+        // styles we need to apply on draggables
+        ...draggableStyle
+    };
+}
 
-const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: grid,
-    width: 250
-});
+function getListStyle(isDraggingOver: any) {
+    return {
+        background: isDraggingOver ? "lightblue" : "lightgrey",
+        padding: grid,
+        width: 250
+    };
+}
 
-export class RbdSample extends Component {
-    constructor(props) {
+type AppProps = any;
+type AppState = any;
+
+export class RbdSample extends Component<AppProps, AppState> {
+    constructor(props: any) {
         super(props);
         this.state = {
             items: getItems(10)
         };
+        console.log("state is %o", this.state);
         this.onDragEnd = this.onDragEnd.bind(this);
     }
 
-    onDragEnd(result) {
+    onDragEnd(result: any) {
         // dropped outside the list
         if (!result.destination) {
             return;
@@ -77,7 +86,7 @@ export class RbdSample extends Component {
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
                         >
-                      {this.state.items.map((item, index) => (
+                      {this.state.items.map((item: any, index: number) => (
                           <Draggable key={item.id} draggableId={item.id} index={index}>
                             {(provided, snapshot) => (
                                 <div
