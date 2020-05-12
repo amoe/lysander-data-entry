@@ -4,13 +4,12 @@ import './index.css';
 import {EventSequenceView} from './event-sequence-view';
 import * as serviceWorker from './serviceWorker';
 import {RbdSample} from './rbd-sample';
+import {DndDemo} from './dnd-demo';
 
 
 ReactDOM.render(
     (<div>
-      <RbdSample />
-      
-      <EventSequenceView />
+      <DndDemo />
     </div>),
     document.getElementById('root')
 );
