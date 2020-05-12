@@ -2,26 +2,23 @@ import React from 'react';
 import {
     DragDropContext, Droppable, Draggable,
     DropResult, DroppableProvided, DroppableStateSnapshot, DraggableRubric, 
-    DraggableStateSnapshot, DraggableProvided
+    DraggableStateSnapshot, DraggableProvided, ResponderProvided
 } from 'react-beautiful-dnd';
 
 interface AppProps {
 };
 
-function onDragEnd(result: DropResult, provided: any) {
+function onDragEnd(result: DropResult, provided: ResponderProvided) {
     console.log("ondragend called");
 }
 
-function draggableChildren(
-    provided: DraggableProvided, snapshot: DraggableStateSnapshot,
-    rubric: DraggableRubric
-) {
-
-    return (
-        <li ref={provided.innerRef} 
-            {...provided.dragHandleProps}
-            {...provided.draggableProps}>Fry</li>
-    );
+function makeDraggableChildren(value: string) {
+    return (provided: DraggableProvided,
+            snapshot: DraggableStateSnapshot,
+            rubric: DraggableRubric) => 
+                <li ref={provided.innerRef} 
+                     {...provided.dragHandleProps}
+                     {...provided.draggableProps}>{value}</li>
 }
 
 function droppableChildren(
@@ -35,7 +32,7 @@ function droppableChildren(
               <Draggable draggableId={i.toString()}
                          index={i}
                          key={i}>
-                {draggableChildren}
+                {makeDraggableChildren(value)}
               </Draggable>
           ))}
           {provided.placeholder}
