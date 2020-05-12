@@ -4,20 +4,22 @@ import {
     DropResult, DroppableProvided, DroppableStateSnapshot, DraggableRubric, 
     DraggableStateSnapshot, DraggableProvided, ResponderProvided
 } from 'react-beautiful-dnd';
+import {PartialDate} from './partial-date';
 
 interface AppProps {
+    items: PartialDate[]
 };
 
-function makeDraggableChildren(value: string) {
+function makeDraggableChildren(value: PartialDate) {
     return (provided: DraggableProvided,
             snapshot: DraggableStateSnapshot,
             rubric: DraggableRubric) => 
                 <li ref={provided.innerRef} 
                      {...provided.dragHandleProps}
-                     {...provided.draggableProps}>{value}</li>;
+                     {...provided.draggableProps}>{value.toString()}</li>;
 }
 
-function makeDroppableChildren(items: string[]) {
+function makeDroppableChildren(items: PartialDate[]) {
     return (provided: DroppableProvided, 
             snapshot: DroppableStateSnapshot) =>
                 <ul ref={provided.innerRef}>
@@ -34,7 +36,7 @@ function makeDroppableChildren(items: string[]) {
 }
 
 export function DndDemo(props: AppProps) {
-    const [items, setItems] = useState(['fry', 'bender', 'leela']);
+    const [items, setItems] = useState(props.items);
 
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result.destination)  return;    // invalid drop

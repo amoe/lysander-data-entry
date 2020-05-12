@@ -20,6 +20,21 @@ class PartialDate {
         this.day = day;
     }
 
+    toString(): string {
+        var result = this.year.toString();
+        if (this.month !== undefined) {
+            result += " ";
+            result += this.month.toString().padStart(2, '0');
+        }
+
+        if (this.day !== undefined) {
+            result += " ";
+            result += this.day.toString().padStart(2, '0');
+        }
+
+        return result;
+    }
+
     toEarliestDate(): Date {
         const dateConstructorArguments: DateConstructorArguments = [
             this.getEarliestYear(),
