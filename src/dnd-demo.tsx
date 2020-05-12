@@ -4,7 +4,8 @@ import {
     DropResult, DroppableProvided, DroppableStateSnapshot, DraggableRubric, 
     DraggableStateSnapshot, DraggableProvided, ResponderProvided
 } from 'react-beautiful-dnd';
-import {PartialDate} from './partial-date';
+import {PartialDate, comparePartialDates} from './partial-date';
+import {clone} from 'lodash';
 
 interface AppProps {
     items: PartialDate[]
@@ -52,6 +53,12 @@ export function DndDemo(props: AppProps) {
         console.log("start index is %o, end index is %o", startIndex, endIndex);
     };
 
+    const handleClick = () => {
+        const newItemsValue = clone(items);
+        newItemsValue.sort(comparePartialDates);
+        setItems(newItemsValue);
+    };
+
     return (
         <div>
           <h1>Hello</h1>
@@ -61,6 +68,8 @@ export function DndDemo(props: AppProps) {
               {makeDroppableChildren(items)}
             </Droppable>
           </DragDropContext>
+
+          <button onClick={handleClick}>Sort</button>
         </div>
     );
 }
