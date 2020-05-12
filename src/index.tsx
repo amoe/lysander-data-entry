@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {EventSequenceView} from './event-sequence-view';
 import * as serviceWorker from './serviceWorker';
+import {RbdSample} from './rbd-sample';
+import {DndDemo} from './dnd-demo';
 
 
 ReactDOM.render(
-    (<div><EventSequenceView /></div>),
+    (<div>
+      <DndDemo />
+    </div>),
     document.getElementById('root')
 );
 
