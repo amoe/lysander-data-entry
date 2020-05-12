@@ -1,5 +1,7 @@
 #! /bin/sh
 
+deployment_location=/srv/http/event-authoring
+
 export NODE_OPTIONS="--max-old-space-size=4096"
 
 set -eu
@@ -17,4 +19,4 @@ if [ "$#" -gt 0 ]; then
 fi
 
 
-rsync $maybe_limit -azPv --delete "${build_dir}/" visarend.solasistim.net:/srv/http/lysander/
+rsync $maybe_limit -azPv --delete "${build_dir}/" visarend.solasistim.net:"$deployment_location"
