@@ -2,7 +2,8 @@ import React, {useState, ChangeEvent} from 'react';
 import {
     DragDropContext, Droppable, Draggable,
     DropResult, DroppableProvided, DroppableStateSnapshot, DraggableRubric, 
-    DraggableStateSnapshot, DraggableProvided, ResponderProvided
+    DraggableStateSnapshot, DraggableProvided, ResponderProvided,
+    DragUpdate, OnDragUpdateResponder
 } from 'react-beautiful-dnd';
 import {PartialDate, comparePartialDates} from './partial-date';
 import {clone} from 'lodash';
@@ -36,11 +37,36 @@ function makeDroppableChildren(items: PartialDate[]) {
                 </ul>;
 }
 
+
 export function DndDemo(props: AppProps) {
     const [items, setItems] = useState(props.items);
     const [year, setYear] = useState("");
+    const [isDropDisabled, setDropDisabled] = useState(false);
+
+    const onDragUpdate: OnDragUpdateResponder = (u, p) => {
+        console.log("update is %o", u);
+
+        const d = u.destination;
+
+        if (!u.destination) {
+            console.log("no destination, drop allowed");
+            // Drag to nowhere
+            //setDropDisabled(true);
+        } else if (u.destination.index === 0) {
+            console.log("disallowed");
+            setDropDisabled(true);
+        } else {
+            console.log("non zero destination, drop allowed");
+            setDropDisabled(false);
+            // Allowed
+        }
+
+//        setDropDisabled(true);
+    };
+
 
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+        setDropDisabled(false);
         if (!result.destination)  return;    // invalid drop
 
         const startIndex = result.source.index;
@@ -75,8 +101,9 @@ export function DndDemo(props: AppProps) {
         <div>
           <h1>Sequence</h1>
 
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="main" isDropDisabled={false}>
+          <DragDropContext onDragEnd={onDragEnd}
+                           onDragUpdate={onDragUpdate}>
+            <Droppable droppableId="main" isDropDisabled={isDropDisabled}>
               {makeDroppableChildren(items)}
             </Droppable>
           </DragDropContext>
