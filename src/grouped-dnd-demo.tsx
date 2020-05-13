@@ -45,6 +45,8 @@ export function GroupedDndDemo(props: AppProps) {
 
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         console.log("ondragend called");
+
+        console.log("dropresult is %o", result);
     };
 
     return (

@@ -1,8 +1,15 @@
+@import-normalize;
+
 body {
     
 }
 
 code {
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 /*li { border: 1px solid black; margin: 16px; }*/
