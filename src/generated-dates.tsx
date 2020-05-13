@@ -1,5 +1,5 @@
-import React from 'react';
-import {PartialDate} from './partial-date';
+import React, {useState} from 'react';
+import {PartialDate, comparePartialDates} from './partial-date';
 import {random} from 'lodash';
 import {getDaysInMonth, isBefore, isAfter, isEqual} from 'date-fns';
 
@@ -33,6 +33,8 @@ class DateCollection {
 
             this.contents.push(x);
         }
+
+        this.contents.sort(comparePartialDates);
     }
 
     canMove(sourceIndex: number, targetIndex: number) {
@@ -57,16 +59,42 @@ class DateCollection {
 }
 
 
+const coll = new DateCollection();
+coll.populate();
+
+
+
 export function GeneratedDates() {
-    const coll = new DateCollection();
-    coll.populate();
+    const [canMoveHovered, setCanMoveHovered] = useState(Array(10).fill(false));
+
+    for (var i = 0; i < coll.contents.length; i++) {
+        
+    }
+
+    const onMouseEnter = (sourceIndex: number, e: MouseEvent) => {
+        console.log("mouse enter is %o", e);
+        
+        const newCanMove = [];
+
+        for (var targetIndex = 0; targetIndex < 10; targetIndex++) {
+            newCanMove.push(coll.canMove(sourceIndex, targetIndex));
+        }
+        
+
+        console.log("recalculated move matrix");
+        setCanMoveHovered(newCanMove);
+    };
 
     return (
         <div>
-          <h1>Foo</h1>
+          <h1>Sequence Move Rules</h1>
 
           <ul>
-            {coll.contents.map(x => <li>{x.toString()}</li>)}
+            {coll.contents.map((x, i) => 
+                <span key={i}>
+                  <li onMouseEnter={(e: any) => onMouseEnter(i, e)}>{x.toString()} ({canMoveHovered[i] ? "✓" : "✗"})</li>
+                </span>
+            )}
           </ul>
         </div>
     );
