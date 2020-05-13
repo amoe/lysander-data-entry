@@ -21,12 +21,12 @@ function makeDraggableChildren(value: string) {
                      {...provided.draggableProps}>{value.toString()}</li>;
 }
 
-function makeDroppableChildren(items: string[]) {
+function makeDroppableChildren(idPrefix: string, items: string[]) {
     return (provided: DroppableProvided, 
             snapshot: DroppableStateSnapshot) =>
                 <ul ref={provided.innerRef}>
                   {items.map((value, i) => (
-                      <Draggable draggableId={i.toString()}
+                      <Draggable draggableId={idPrefix + i.toString()}
                                  index={i}
                                  key={i}
                                  isDragDisabled={false}>
@@ -52,8 +52,14 @@ export function GroupedDndDemo(props: AppProps) {
           <h1>Sequence</h1>
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="main">
-              {makeDroppableChildren(characters)}
+            <Droppable droppableId="characters">
+              {makeDroppableChildren('characters', characters)}
+            </Droppable>
+            <Droppable droppableId="variables">
+              {makeDroppableChildren('variables', variables)}
+            </Droppable>
+            <Droppable droppableId="cryptoUsers">
+              {makeDroppableChildren('cryptoUsers', cryptoUsers)}
             </Droppable>
           </DragDropContext>
         </div>
