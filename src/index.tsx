@@ -7,21 +7,11 @@ import {RbdSample} from './rbd-sample';
 import {DndDemo} from './dnd-demo';
 import {GroupedDndDemo} from './grouped-dnd-demo';
 import {PartialDate} from './partial-date';
-
-/*
-const d1 = new PartialDate(1940);
-const d2 = new PartialDate(1940, 6);
-const d3 = new PartialDate(1940, 6, 9);
-
-const allDates = [d3, d2, d1];
-*/
-
-
-
+import {GeneratedDates} from './generated-dates'
 
 ReactDOM.render(
     (<div>
-      <GroupedDndDemo/>
+      <GeneratedDates/>
     </div>),
     document.getElementById('root')
 );
