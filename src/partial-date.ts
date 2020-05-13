@@ -1,21 +1,25 @@
 import {compareAsc, endOfMonth, endOfYear, endOfDay} from 'date-fns';
 
-//    If compareFunction(a, b) returns less than 0, sort a to an index lower than b (i.e. a comes first).
-//    If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements. Note: the ECMAscript standard does not guarantee this behavior, thus, not all browsers (e.g. Mozilla versions dating back to at least 2003) respect this.
-//    If compareFunction(a, b) returns greater than 0, sort b to an index lower than a (i.e. b comes first).
-//    compareFunction(a, b) must always return the same value when given a specific pair of elements a and b as its two arguments. If inconsistent results are returned, then the sort order is undefined.
-
 type DateConstructorArguments = 
     [number, number, number, number, number, number, number];
 
-
+// This API expects 1-based dates, not the 'monthIndex' zero-based value
+// specified by the JavaScript Date constructor.
 class PartialDate {
     year: number;
     month: number | undefined;
     day: number | undefined;
 
+
     constructor(year: number, month?: number, day?: number) {
         this.year = year;
+
+        if (month !== undefined) {
+            if (month === 0 || month > 12) {
+                throw new Error('invalid value for month: ' + month);
+            }
+        }
+
         this.month = month;
         this.day = day;
     }
@@ -55,7 +59,7 @@ class PartialDate {
     }
 
     getEarliestMonth(): number {
-        return this.month === undefined ? 1 : this.month;
+        return (this.month === undefined ? 1 : this.month) - 1;
     }
 
     getEarliestDay(): number {
@@ -67,9 +71,9 @@ class PartialDate {
         if (this.month === undefined && this.day === undefined) {
             return endOfYear(new Date(this.year, 1, 1));
         } else if (this.day === undefined) {
-            return endOfMonth(new Date(this.year, this.month!, 1));
+            return endOfMonth(new Date(this.year, this.month! + 1, 1));
         } else {
-            return endOfDay(new Date(this.year, this.month!, this.day));
+            return endOfDay(new Date(this.year, this.month! + 1, this.day));
         }
     }
 }
