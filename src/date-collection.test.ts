@@ -9,6 +9,7 @@ it('works', () => {
         new PartialDate(1940)
     ];
 
+    console.log(DateCollection);
     const coll = DateCollection.fromArray(ordering);
 
 //    expect(

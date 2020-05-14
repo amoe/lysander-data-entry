@@ -2,20 +2,22 @@ import React, {useState} from 'react';
 import {PartialDate, comparePartialDates} from './partial-date';
 import {random} from 'lodash';
 import {getDaysInMonth, isBefore, isAfter, isEqual} from 'date-fns';
-import {DateCollection} from './date-collection';
 
-
-class DateCollection {
+export class DateCollection {
     contents: PartialDate[];
-    size: number;
 
-    constructor(size: number) {
-        this.size = size;
+    constructor() {
         this.contents = [];
     }
 
-    populate() {
-        for (var i = 0; i < this.size; i++) {
+    static fromArray(contents: PartialDate[]) {
+        const result = new DateCollection();
+        result.contents = contents;
+        return result;
+    }
+
+    populate(size: number) {
+        for (var i = 0; i < size; i++) {
             const extraElements = random(0, 2);
 
             var x;

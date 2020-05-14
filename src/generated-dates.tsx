@@ -6,8 +6,8 @@ import {DateCollection} from './date-collection';
 
 
 const DATE_COLLECTION_SIZE = 10;
-const coll = new DateCollection(DATE_COLLECTION_SIZE);
-coll.populate();
+const coll = new DateCollection();
+coll.populate(DATE_COLLECTION_SIZE);
 /*
 coll.contents.push(new PartialDate(1939));
 coll.contents.push(new PartialDate(1939, 1));
@@ -23,7 +23,7 @@ export function GeneratedDates() {
         
         const newCanMove = [];
 
-        for (var targetIndex = 0; targetIndex < coll.size; targetIndex++) {
+        for (var targetIndex = 0; targetIndex < coll.contents.length; targetIndex++) {
             newCanMove.push(coll.canMove(sourceIndex, targetIndex));
         }
         
