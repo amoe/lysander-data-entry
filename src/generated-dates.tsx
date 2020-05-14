@@ -8,6 +8,8 @@ import {DateCollection} from './date-collection';
 const DATE_COLLECTION_SIZE = 10;
 const coll = new DateCollection();
 coll.populate(DATE_COLLECTION_SIZE);
+
+
 /*
 coll.contents.push(new PartialDate(1939));
 coll.contents.push(new PartialDate(1939, 1));
