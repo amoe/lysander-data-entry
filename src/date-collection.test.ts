@@ -1,0 +1,7 @@
+import {DateCollection} from './date-collection';
+
+it('works', () => {
+    expect(2 + 2).toBe(4);
+});
+
+
