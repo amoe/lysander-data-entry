@@ -71,9 +71,9 @@ class PartialDate {
         if (this.month === undefined && this.day === undefined) {
             return endOfYear(new Date(this.year, 1, 1));
         } else if (this.day === undefined) {
-            return endOfMonth(new Date(this.year, this.month! + 1, 1));
+            return endOfMonth(new Date(this.year, this.month! - 1, 1));
         } else {
-            return endOfDay(new Date(this.year, this.month! + 1, this.day));
+            return endOfDay(new Date(this.year, this.month! - 1, this.day));
         }
     }
 }

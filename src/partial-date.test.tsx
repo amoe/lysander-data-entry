@@ -34,3 +34,12 @@ it('allows ordering partial dates', () => {
 });
 
 
+
+it('derives a latest date properly', () => {
+    const d1 = new PartialDate(1939, 11, 20);
+    const ld = d1.toLatestDate();
+
+    expect(ld.getFullYear()).toBe(1939);
+    expect(ld.getMonth()).toBe(10);  // zero offset
+    expect(ld.getDate()).toBe(20);
+});
