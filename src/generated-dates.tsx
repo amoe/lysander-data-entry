@@ -5,13 +5,15 @@ import {getDaysInMonth, isBefore, isAfter, isEqual} from 'date-fns';
 
 class DateCollection {
     contents: PartialDate[];
+    size: number;
 
-    constructor() {
+    constructor(size: number) {
+        this.size = size;
         this.contents = [];
     }
 
     populate() {
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < this.size; i++) {
             const extraElements = random(0, 2);
 
             var x;
@@ -58,25 +60,25 @@ class DateCollection {
     }
 }
 
-
-const coll = new DateCollection();
+const DATE_COLLECTION_SIZE = 10;
+const coll = new DateCollection(DATE_COLLECTION_SIZE);
 coll.populate();
-
-
+/*
+coll.contents.push(new PartialDate(1939));
+coll.contents.push(new PartialDate(1939, 1));
+coll.contents.push(new PartialDate(1939, 11, 20));
+coll.contents.push(new PartialDate(1940));
+*/
 
 export function GeneratedDates() {
-    const [canMoveHovered, setCanMoveHovered] = useState(Array(10).fill(false));
-
-    for (var i = 0; i < coll.contents.length; i++) {
-        
-    }
+    const [canMoveHovered, setCanMoveHovered] = useState(Array(DATE_COLLECTION_SIZE).fill(false));
 
     const onMouseEnter = (sourceIndex: number, e: MouseEvent) => {
         console.log("mouse enter is %o", e);
         
         const newCanMove = [];
 
-        for (var targetIndex = 0; targetIndex < 10; targetIndex++) {
+        for (var targetIndex = 0; targetIndex < coll.size; targetIndex++) {
             newCanMove.push(coll.canMove(sourceIndex, targetIndex));
         }
         

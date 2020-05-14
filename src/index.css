@@ -12,4 +12,6 @@ ul {
     margin-bottom: 0px;
 }
 
+li:hover { color:green; font-weight: bold;}
+
 /*li { border: 1px solid black; margin: 16px; }*/
