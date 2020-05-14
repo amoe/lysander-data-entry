@@ -73,14 +73,14 @@ export class DateCollection {
 
             const isValid = isAfter(x, y) || isEqual(x, y);
 
-            return isValid && this.canMove(sourceIndex + 1, targetIndex);
+            return isValid && this.canMove(sourceIndex, targetIndex - 1);
         } else if (sourceIndex > targetIndex) {    // Moving backward
             const x = source.toEarliestDate();
             const y = target.toLatestDate();
 
             const isValid = isBefore(x, y) || isEqual(x, y);
 
-            return isValid && this.canMove(sourceIndex, targetIndex);
+            return isValid && this.canMove(sourceIndex, targetIndex + 1);
         } else {
             return true;    // base case, same event can always be swapped
         }
