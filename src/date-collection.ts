@@ -45,11 +45,17 @@ export class DateCollection {
 
     canMove(sourceIndex: number, targetIndex: number) {
         const source = this.contents[sourceIndex];
+        console.log("source is %o", source);
+        
         const target = this.contents[targetIndex];
 
         if (sourceIndex < targetIndex) {    // We are moving the event forward
+            console.log("forward branch");
+
             const x = source.toLatestDate();
             const y = target.toEarliestDate();
+
+            console.log("x = %o, y = %o", x, y);
 
             return isAfter(x, y) || isEqual(x, y);
         } else if (sourceIndex > targetIndex)  {// We are moving the event backward
