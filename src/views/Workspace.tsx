@@ -8,6 +8,7 @@ import { Button } from 'antd';
 import singletons from '../singletons';
 import { notification } from 'antd';
 import { Typography, InputNumber, Divider } from 'antd';
+import {isString} from 'lodash';
 
 const { Title, Paragraph } = Typography;
 
@@ -126,13 +127,16 @@ class MyComponent extends React.Component<AppProps, AppState> {
 
     }
 
-    updateLatitude(value: number | undefined): void {
+    updateLatitude(value: string | number | undefined): void {
+        if (isString(value)) throw new Error("inputnumber weirdness");
+
         if (value === undefined) throw new Error("fail");
 
         this.setState({ coordinateLatitude: value })
     }
 
-    updateLongitude(value: number | undefined): void {
+    updateLongitude(value: string | number | undefined): void {
+        if (isString(value)) throw new Error("inputnumber weirdness");
         if (value === undefined) throw new Error("fail");
         this.setState({ coordinateLongitude: value })
     }
