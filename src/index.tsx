@@ -9,10 +9,11 @@ import {GroupedDndDemo} from './grouped-dnd-demo';
 import {PartialDate} from './partial-date';
 import {GeneratedDates} from './generated-dates'
 import {DateAuthoringDemo} from './date-authoring-demo';
+import {SwitchDemo} from './switch-demo';
 
 ReactDOM.render(
     (<div>
-      <DateAuthoringDemo/>
+      <SwitchDemo/>
     </div>),
     document.getElementById('root')
 );

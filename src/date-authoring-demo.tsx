@@ -86,23 +86,11 @@ export function DateAuthoringDemo() {
         setCurrentDate(new PartialDate(y, m, d));
     }
 
-
     const addDate = (e: MouseEvent) => {
         if (currentDate !== undefined) {
             setDates([...dates, currentDate]);
         }
     };
-
-    /* const maybeMaxDaysProp = () => {
-     *     return month === undefined ? undefined : daysFromMonthNumber(year, month);
-
-     *     if (month === undefined) {
-     *         return {'max': };
-     *     } else {
-     *         return {'max': daysFromMonthNumber(year, month!)}
-     *     }
-     * };*/
-
 
     return (
         <div>
