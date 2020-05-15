@@ -5,14 +5,18 @@ import {PartialDate} from './partial-date';
 import {clone} from 'lodash';
 
 // not sure how to type the onchange handler
-function OptionalNumber(props: {value: number, onChange: any, label: string}) {
+function OptionalNumber(props: {value: number | undefined, onChange: any, label: string}) {
     const [isEnabled, setEnabled] = useState(true);
 
     console.log("enabled value is %o", isEnabled);
 
     const onCheckboxChange = (e: any) => {
         console.log("checkbox changed");
-        setEnabled(e.target.checked);
+
+        const newEnabledValue = e.target.checked;
+
+        setEnabled(newEnabledValue);
+        if (!newEnabledValue) props.onChange(undefined);
     };
 
 
@@ -29,7 +33,7 @@ function OptionalNumber(props: {value: number, onChange: any, label: string}) {
 
 export function DateAuthoringDemo() {
     const [year, setYear] = useState(1939);
-    const [month, setMonth] = useState(1);
+    const [month, setMonth] = useState<number | undefined>(1);
     const [day, setDay] = useState(2);
 
     const [dates, setDates] = useState<PartialDate[]>([]);
