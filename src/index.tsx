@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'antd/dist/antd.css';
 import {EventSequenceView} from './event-sequence-view';
 import * as serviceWorker from './serviceWorker';
 import {RbdSample} from './rbd-sample';
@@ -10,10 +11,11 @@ import {PartialDate} from './partial-date';
 import {GeneratedDates} from './generated-dates'
 import {DateAuthoringDemo} from './date-authoring-demo';
 import {SwitchDemo} from './switch-demo';
+import {LocationAuthoringDemo} from './location-authoring-demo';
 
 ReactDOM.render(
     (<div>
-      <SwitchDemo/>
+      <LocationAuthoringDemo/>
     </div>),
     document.getElementById('root')
 );
