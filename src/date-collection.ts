@@ -3,6 +3,12 @@ import {PartialDate, comparePartialDates} from './partial-date';
 import {random} from 'lodash';
 import {getDaysInMonth, isBefore, isAfter, isEqual} from 'date-fns';
 
+
+// month is 1-based
+export function daysFromMonthNumber(year: number, month: number): number {
+    return getDaysInMonth(new Date(year, month - 1));
+}
+
 export class DateCollection {
     contents: PartialDate[];
 
@@ -23,11 +29,8 @@ export class DateCollection {
             var x;
 
             const randomYear = random(1939, 1945);
-            const randomMonth = random(1, 12);   // becaues of monthIndex semantics
-            
-            const someDate = new Date(randomYear, randomMonth - 1);
-            const randomDay = random(1, getDaysInMonth(someDate));
-
+            const randomMonth = random(1, 12);
+            const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
 
             if (extraElements === 0) {
                 x = new PartialDate(randomYear)
