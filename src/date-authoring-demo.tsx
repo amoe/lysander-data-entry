@@ -39,18 +39,58 @@ function OptionalNumber(props: {
     );
 }
 
+type DateChangeHandler = (year: number, month: number | undefined, day: number | undefined) => void;
 
-export function DateAuthoringDemo() {
+
+function DateAuthoringComponent(props: {onChange: DateChangeHandler}) {
     const [year, setYear] = useState(1939);
     const [month, setMonth] = useState<number | undefined>(1);
     const [day, setDay] = useState(2);
 
+    function makeUpdater(setValue: Function) {
+        return (x: string | number | undefined) => {
+            setValue(x);
+            console.log("about to fire onchange");
+            props.onChange(year, month, day);
+        }
+    }
+
+    return (
+        <span>
+        <OptionalNumber value={year}
+                        onChange={makeUpdater(setYear)}
+                        label="Year"
+                        min={1930}
+                        max={1950}/>
+        <OptionalNumber value={month}
+                        onChange={makeUpdater(setMonth)}
+                        label="Month"
+                        min={1}
+                        max={12}/>
+        <OptionalNumber value={day}
+                        onChange={makeUpdater(setDay)}
+                        label="Day"
+                        min={1}
+                        max={month === undefined ? undefined : daysFromMonthNumber(year, month)}/>
+        </span>
+    );
+}
+
+
+
+export function DateAuthoringDemo() {
     const [dates, setDates] = useState<PartialDate[]>([]);
+    const [currentDate, setCurrentDate] = useState<PartialDate | undefined>(undefined)
+
+    const onChangeDate: DateChangeHandler = (y, m, d) => {
+        setCurrentDate(new PartialDate(y, m, d));
+    }
+
 
     const addDate = (e: MouseEvent) => {
-        const obj = new PartialDate(year, month, day);
-
-        setDates([...dates, obj]);
+        if (currentDate !== undefined) {
+            setDates([...dates, currentDate]);
+        }
     };
 
     /* const maybeMaxDaysProp = () => {
@@ -68,22 +108,8 @@ export function DateAuthoringDemo() {
         <div>
           <h1>Date authoring demo</h1>
           
-          <OptionalNumber value={year}
-                          onChange={setYear}
-                          label="Year"
-                          min={1930}
-                          max={1950}/>
-          <OptionalNumber value={month}
-                          onChange={setMonth}
-                          label="Month"
-                          min={1}
-                          max={12}/>
-          <OptionalNumber value={day}
-                          onChange={setDay}
-                          label="Day"
-                          min={1}
-                          max={month === undefined ? undefined : daysFromMonthNumber(year, month)}/>
-
+ 
+          <DateAuthoringComponent onChange={onChangeDate}/>
 
             <ul>
             {dates.map((x, i) => <li>{x.toString()}</li>)}
