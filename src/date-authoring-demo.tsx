@@ -10,25 +10,34 @@ function OptionalNumber(props: {value: number, onChange: any, label: string}) {
 
     console.log("enabled value is %o", isEnabled);
 
+    const onCheckboxChange = (e: any) => {
+        console.log("checkbox changed");
+        setEnabled(e.target.checked);
+    };
+
 
     return (
         <div>
           
-          <Checkbox checked={isEnabled} onChange={e => setEnabled(e.target.checked)} />
+          <Checkbox checked={isEnabled} onChange={onCheckboxChange} />
           <InputNumber value={props.value} onChange={props.onChange} 
                        disabled={!isEnabled}/>
         </div>
     );
 }
 
+
 export function DateAuthoringDemo() {
     const [year, setYear] = useState(1939);
     const [month, setMonth] = useState(1);
+    const [day, setDay] = useState(2);
 
     const [dates, setDates] = useState<PartialDate[]>([]);
 
     const addDate = (e: MouseEvent) => {
-        setDates([...dates, new PartialDate(1939)]);
+        const obj = new PartialDate(year, month, day);
+
+        setDates([...dates, obj]);
     };
 
     return (
@@ -37,6 +46,7 @@ export function DateAuthoringDemo() {
           
           <OptionalNumber value={year} onChange={setYear} label="Year"/>
           <OptionalNumber value={month} onChange={setMonth} label="Month"/>
+          <OptionalNumber value={day} onChange={setDay} label="Day"/>
 
 
           <ul>
