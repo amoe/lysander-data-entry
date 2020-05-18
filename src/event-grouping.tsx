@@ -46,6 +46,22 @@ function isSingleEvent(x: any): x is SingleEvent {
 
 type MoveHandler = (eventId: string) => void;
 
+function SingleEventView(props: {value: SingleEvent, onMove: MoveHandler, viewMode: ViewMode}) {
+    return (
+        <div>
+          {props.viewMode === ViewMode.MOVE && "YES"}
+          
+          <div key={props.value.id} className="event-summary">
+            <div className="event-description">
+              {props.value.description}
+            </div>
+            <div className="event-date">{props.value.date}</div>
+            <button onClick={(e) => props.onMove(props.value.id)}>Move</button>
+          </div>
+        </div>
+    );
+}
+
 
 function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode, onMove: MoveHandler}) {
     if (isEventGroup(props.value)) {
@@ -58,22 +74,12 @@ function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode, onMov
         );        
     } else if (isSingleEvent(props.value)) {
         // Must re-bind it so that the type guard applies, otherwise we can't use
+
         // it in callbacks.
         const event = props.value;
-
-        return (
-            <div>
-              {props.viewMode === ViewMode.MOVE && "YES"}
-              
-              <div key={props.value.id} className="event-summary">
-                <div className="event-description">
-                  {props.value.description}
-                </div>
-                <div className="event-date">{props.value.date}</div>
-                <button onClick={(e) => props.onMove(event.id)}>Move</button>
-              </div>
-            </div>
-        );
+        return <SingleEventView value={event}
+                                onMove={props.onMove} 
+                                viewMode={props.viewMode}/>
     } else {
         throw new Error("no");
     }
