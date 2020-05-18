@@ -8,8 +8,12 @@ function GroupingIcon() {
 }
 
 export function EventGrouping() {
-    const events = ['fry', 'bender', 'leela'];
-
+    const events = [
+        {date: 'Bartholomew I of Constantinople issues a formal decree granting independence to the Orthodox Church of Ukraine from the Russian Orthodox Church.', description: '2019-01-05'}
+        {date: '', description: ''}
+        {date: '', description: ''}
+        {date: '', description: ''}
+    ];
 
     return (
         <div>
@@ -18,11 +22,9 @@ export function EventGrouping() {
 
             <div className="event-summary">
               <div className="event-description">
-                Bartholomew I of Constantinople issues a formal decree granting
-                independence to the Orthodox Church of Ukraine from the Russian Orthodox
-                Church.
+                
               </div>
-              <div className="event-date">2019-01-05</div>
+              <div className="event-date"></div>
             </div>
 
             <GroupingIcon />
