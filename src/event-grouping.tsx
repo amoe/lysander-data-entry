@@ -65,10 +65,12 @@ function SingleEventView(props: {value: SingleEvent, onMove: MoveHandler, viewMo
 
 function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode, onMove: MoveHandler}) {
     if (isEventGroup(props.value)) {
-        // What's the key in this case???
+        // What's the key in this case???  This fatally undermines the shiz.
+        // We probably need to do a class hierarchy instead.
         return (
             <div>
               <h2>Group Begin</h2>
+              {props.value.map(x => <SingleEventView value={x} onMove={props.onMove} viewMode={props.viewMode}/>)}
               <h2>Group End</h2>
             </div>
         );        
