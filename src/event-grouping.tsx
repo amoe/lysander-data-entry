@@ -40,10 +40,20 @@ function isEventGroup(x: any): x is EventGroup {
     return Array.isArray(x);
 }
 
-function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode}) {
+function isSingleEvent(x: any): x is SingleEvent {
+    return (x as SingleEvent).id !== undefined;
+}
+
+type MoveHandler = (eventId: string) => void;
+
+function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode, onMove: MoveHandler}) {
     if (isEventGroup(props.value)) {
         return <h2>A group</h2>;
-    } else {
+    } else if (isSingleEvent(props.value)) {
+        // Must re-bind it so that the type guard applies, otherwise we can't use
+        // it in callbacks.
+        const event = props.value;
+
         return (
             <div>
               {props.viewMode === ViewMode.MOVE && "YES"}
@@ -53,10 +63,12 @@ function SequenceMember(props: {value: SequenceMember, viewMode: ViewMode}) {
                   {props.value.description}
                 </div>
                 <div className="event-date">{props.value.date}</div>
-                <button onClick={(e) => doMove(e, props.value.id)}>Move</button>
+                <button onClick={(e) => props.onMove(event.id)}>Move</button>
               </div>
             </div>
         );
+    } else {
+        throw new Error("no");
     }
 }
 
@@ -71,14 +83,12 @@ export function EventGrouping() {
         {id: 'e4', description: 'A series of bomb attacks occur at eight locations in Sri Lanka, including three churches, four hotels and one housing complex in Colombo, on Easter Sunday, leaving 259 people dead and over 500 injured. It is the first major terrorist attack in the country since the Sri Lankan Civil War ended in 2009.', date: '2019-04-21'}
     ];
 
-    const doMove = (e: MouseEvent<HTMLButtonElement>, eventId: string) => {
+    const doMove = (eventId: string) => {
         setViewMode(ViewMode.MOVE);
     };
 
     // Note that it's clear that if we use index as the key, reordering is not
     // going to work.
-
-
     return (
         <div>
           <h1>Event grouping</h1>
@@ -86,7 +96,7 @@ export function EventGrouping() {
           <p>View mode: {viewMode}</p>
 
           <div className="event-sequence">
-            {events.map((event, i) => <SequenceMember value={event} viewMode={viewMode} />)}
+            {events.map((event, i) => <SequenceMember value={event} viewMode={viewMode} onMove={doMove} />)}
 
             <GroupingIcon />
             <div>Current state: Linked</div>
