@@ -7,4 +7,6 @@ type EventGroup = SingleEvent[];
 
 type SequenceMember = SingleEvent | EventGroup;
 
+type EventSequence = SequenceMember[]
+
 
