@@ -17,7 +17,7 @@ import {ReducerDemo} from './reducer-demo';
 
 ReactDOM.render(
     (<div>
-      <ReducerDemo/>
+      <EventGrouping/>
     </div>),
     document.getElementById('root')
 );
