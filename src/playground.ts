@@ -9,4 +9,6 @@ type SequenceMember = SingleEvent | EventGroup;
 
 type EventSequence = SequenceMember[]
 
+export function meaningOfLife() { return 42; }
+
 
