@@ -13,10 +13,11 @@ import {DateAuthoringDemo} from './date-authoring-demo';
 import {SwitchDemo} from './switch-demo';
 import {LocationAuthoringDemo} from './location-authoring-demo';
 import {EventGrouping} from './event-grouping';
+import {ReducerDemo} from './reducer-demo';
 
 ReactDOM.render(
     (<div>
-      <EventGrouping/>
+      <ReducerDemo/>
     </div>),
     document.getElementById('root')
 );
