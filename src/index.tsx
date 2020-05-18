@@ -12,10 +12,11 @@ import {GeneratedDates} from './generated-dates'
 import {DateAuthoringDemo} from './date-authoring-demo';
 import {SwitchDemo} from './switch-demo';
 import {LocationAuthoringDemo} from './location-authoring-demo';
+import {EventGrouping} from './event-grouping';
 
 ReactDOM.render(
     (<div>
-      <LocationAuthoringDemo/>
+      <EventGrouping/>
     </div>),
     document.getElementById('root')
 );
