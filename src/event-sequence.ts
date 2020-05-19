@@ -27,6 +27,10 @@ export class FlightEvent implements SequenceMember {
     getDescription() {
         return this.description;
     }
+
+    getDateString(): string {
+        return this.date.toString();
+    }
 }
 
 export class EventGroup implements SequenceMember {
