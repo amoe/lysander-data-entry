@@ -3,6 +3,7 @@
 import {PartialDate} from './partial-date';
 
 interface SequenceMember {
+    getDescription(): string;
 }
 
 export class FlightEvent implements SequenceMember {
@@ -12,6 +13,10 @@ export class FlightEvent implements SequenceMember {
     constructor(description: string, date: PartialDate) {
         this.description = description;
         this.date = date;
+    }
+
+    getDescription() {
+        return this.description;
     }
 }
 
@@ -37,5 +42,9 @@ export class EventSequence {
 
     isEmpty(): boolean {
         return this.size() === 0;
+    }
+
+    map(f: (x: SequenceMember) => any): any[] {
+        return this.contents.map(f);
     }
 };
