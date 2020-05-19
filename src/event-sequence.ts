@@ -1,5 +1,4 @@
 // An eventsequence exposes a more restricted api than an array.
-
 import {PartialDate} from './partial-date';
 
 export interface SequenceMember {
@@ -30,6 +29,7 @@ export class EventGroup implements SequenceMember {
     getDescription(): string {
         throw new Error("cannot call getdescription on event group");
     }
+
 }
 
 

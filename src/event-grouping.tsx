@@ -2,11 +2,9 @@ import React, {MouseEvent, useState} from 'react';
 import plusIcon from './plus.svg';
 import { PartialDate } from './partial-date';
 import { EventSequence, FlightEvent, SequenceMember, EventGroup } from './event-sequence';
+import { SequenceMemberView } from './sequence-member-renderer';
+import { ViewMode, MoveHandler } from './interfaces2';
 
-enum ViewMode {
-    VIEW = 'view',
-    MOVE = 'move'
-};
 
 // This could just be a fixed width div with a border
 function MovePlace() {
@@ -20,15 +18,6 @@ function GroupingIcon() {
         <img src={plusIcon} className="grouping-icon" alt=""/>  
     )
 }
-
-type MoveHandler = (eventId: string) => void;
-
-function SequenceMemberView(
-    props: {value: SequenceMember, viewMode: ViewMode, onMove: MoveHandler}
-) {
-    return <div><h2>Sequence member</h2></div>;
-}
-
 
 export function EventGrouping() {
     const [viewMode, setViewMode] = useState(ViewMode.VIEW);
