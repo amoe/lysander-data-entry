@@ -1,5 +1,8 @@
 // An eventsequence exposes a more restricted api than an array.
 import {PartialDate} from './partial-date';
+import {uniqueId} from 'lodash';
+
+const SEQUENCE_PREFIX = 'sequenceMember_';
 
 export interface SequenceMember {
     getDescription(): string;
@@ -8,10 +11,12 @@ export interface SequenceMember {
 export class FlightEvent implements SequenceMember {
     private description: string;
     private date: PartialDate;
+    private id: string;
 
     constructor(description: string, date: PartialDate) {
         this.description = description;
         this.date = date;
+        this.id = uniqueId(SEQUENCE_PREFIX);
     }
 
     getDescription() {
@@ -21,9 +26,11 @@ export class FlightEvent implements SequenceMember {
 
 export class EventGroup implements SequenceMember {
     private contents: FlightEvent[];
+    private id: string;
 
     constructor(e1: FlightEvent, e2: FlightEvent) {
         this.contents = [e1, e2];
+        this.id = uniqueId(SEQUENCE_PREFIX);
     }
     
     getDescription(): string {
