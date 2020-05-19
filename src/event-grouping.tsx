@@ -10,9 +10,7 @@ enum ViewMode {
 // This could just be a fixed width div with a border
 function MovePlace() {
     return (
-        <div>
-          <p>Move placeholder</p>
-        </div>
+        <div className="drop-location"></div>
     );
 }
 
@@ -109,6 +107,8 @@ export function EventGrouping() {
     return (
         <div>
           <h1>Event grouping</h1>
+
+          <MovePlace />
           
           <p>View mode: {viewMode}</p>
 

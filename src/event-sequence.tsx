@@ -22,6 +22,14 @@ export class FlightEvent implements SequenceMember {
 
 export class EventGroup implements SequenceMember {
     private contents: FlightEvent[];
+
+    constructor(e1: FlightEvent, e2: FlightEvent) {
+        this.contents = [e1, e2];
+    }
+    
+    getDescription(): string {
+        throw new Error("cannot call getdescription on event group");
+    }
 }
 
 
