@@ -2,7 +2,7 @@
 
 import {PartialDate} from './partial-date';
 
-interface SequenceMember {
+export interface SequenceMember {
     getDescription(): string;
 }
 
