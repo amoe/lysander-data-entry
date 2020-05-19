@@ -52,9 +52,10 @@ export function EventGrouping() {
           <p>View mode: {viewMode}</p>
 
           <div className="event-sequence">
-            {events.map((event) => <SequenceMemberView value={event}
-                                                       viewMode={viewMode}
-                                                       onMove={doMove} />)}
+            {events.map((sequenceMember) => <SequenceMemberView key={sequenceMember.getId()}
+                                                                value={sequenceMember}
+                                                                viewMode={viewMode}
+                                                                onMove={doMove} />)}
 
             <GroupingIcon />
             <div>Current state: Linked</div>

@@ -6,6 +6,7 @@ const SEQUENCE_PREFIX = 'sequenceMember_';
 
 export interface SequenceMember {
     getDescription(): string;
+    getId(): string;
 }
 
 export class FlightEvent implements SequenceMember {
@@ -17,6 +18,10 @@ export class FlightEvent implements SequenceMember {
         this.description = description;
         this.date = date;
         this.id = uniqueId(SEQUENCE_PREFIX);
+    }
+
+    getId() {
+        return this.id;
     }
 
     getDescription() {
@@ -32,6 +37,11 @@ export class EventGroup implements SequenceMember {
         this.contents = [e1, e2];
         this.id = uniqueId(SEQUENCE_PREFIX);
     }
+
+    getId() {
+        return this.id;
+    }
+
     
     getDescription(): string {
         throw new Error("cannot call getdescription on event group");
