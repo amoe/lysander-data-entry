@@ -17,9 +17,13 @@ export function FormsDemo() {
             <Form.Item label="Event Type" name="eventType"><Input/></Form.Item>
             <Form.Item label="Status" name="status"><Input/></Form.Item>
 
+            <Form.Item>
+            <Input.Group compact>
             <Form.Item label="Method/Role" name="methodRole"><Input/></Form.Item>
             <Form.Item label="Relation" name=""><Input/></Form.Item>
             <Form.Item label="Status" name="status"><Input/></Form.Item>
+            </Input.Group>
+            </Form.Item>
 
             
             <Form.Item label="Notes" name="notes"><Input/></Form.Item>
