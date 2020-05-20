@@ -42,7 +42,9 @@ once. For purposes of understanding the three columns, imagine that the top two
 rows are consistent across
 
 Dave  09:36
-So am I right to say that these options will only be visible in event-form mode (in column 1) in practice?
+So am I right to say that these options will only be visible in event-form mode
+(in column 1) in practice?
+
 
 Alex  09:36
 
