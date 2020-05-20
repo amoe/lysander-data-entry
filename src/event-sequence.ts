@@ -100,6 +100,12 @@ export class EventSequence {
             // First group absorbs second group.
             throw new Error("not implemented");
         }
+
+        // But now there becomes a problem, because how do you unlink?
+        // Now you can't just say, unlink at position x.  You have a whole
+        // system of virtual IDs and virtual indexes which starts to get really
+        // stupidly complicated.  We should really do this as a linked-list style
+        // instead.
     }
 
     addEvent(e: FlightEvent) {
