@@ -37,25 +37,36 @@ A confusing thing is the top two layers of column 2 and 3.
 
 
 Alex  09:35
-Yes - I explained at the time … the images are doing two different things at once. For purposes of understanding the three columns, imagine that the top two rows are consistent across
+Yes - I explained at the time … the images are doing two different things at
+once. For purposes of understanding the three columns, imagine that the top two
+rows are consistent across
 
 Dave  09:36
 So am I right to say that these options will only be visible in event-form mode (in column 1) in practice?
 
 Alex  09:36
-The differences in the top two rows are unrelated to what happens below them! Confusing, I know - just to save me having to draw lots of columns
+
+The differences in the top two rows are unrelated to what happens below them!
+Confusing, I know - just to save me having to draw lots of columns
+
 09:36
 tht wasn’t the answer t your most rescent q
 
 09:39
-All three top pairs of rows represent top-level configurations for authoring events. In column 1, the events refer to an AircraftSortie (which is itself an Event, within a hierarchy of events: Operation/Sortie/AircraftSortie). In Column 2, the events are linked to a Person, in Column 3 to an Organisation
+
+All three top pairs of rows represent top-level configurations for authoring
+events. In column 1, the events refer to an AircraftSortie (which is itself an
+Event, within a hierarchy of events: Operation/Sortie/AircraftSortie). In Column
+2, the events are linked to a Person, in Column 3 to an Organisation
 
 Dave  09:40
 Given that there are 2 interface modes (event-form and events-summary) -- does
 this header actually appear in both modes?
 
 Alex  09:40
-My plan is to start with authoring AircraftSortie events, but using a form that can accommodate these other types too. << cont of previous (not answer0
+My plan is to start with authoring AircraftSortie events, but using a form that
+can accommodate these other types too. << cont of previous (not answer0
+
 09:41
 Yes, they appear in both.
 
