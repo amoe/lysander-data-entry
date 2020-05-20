@@ -16,9 +16,11 @@ import {LocationAuthoringDemo} from './location-authoring-demo';
 import {EventGrouping} from './event-grouping';
 import {ReducerDemo} from './reducer-demo';
 
+import {FormsDemo} from './forms-demo';
+
 ReactDOM.render(
     (<div>
-      <EventGrouping/>
+      <FormsDemo/>
     </div>),
     document.getElementById('root')
 );
