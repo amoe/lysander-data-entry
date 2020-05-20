@@ -1,14 +1,36 @@
 import React from 'react';
-import {Button} from 'antd';
+import {Button, Layout, Select, Form, Row, Col} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
+
+const { Header, Footer, Sider, Content } = Layout;
+
+function Foo() {
+    return (
+        <div>
+        <Form.Item label="Theme">
+          <Select>
+            <Select.Option value="lt">Event</Select.Option>
+            <Select.Option value="eq">Person</Select.Option>
+            <Select.Option value="gt">Organization</Select.Option>
+          </Select>
+        </Form.Item>
+        <Button icon={<PlusOutlined/>}></Button>
+        </div>
+    )
+        
+}
 
 export function ThemePanel() {
     return (
-        <div>
-          <h1>My Component</h1>
-
-          <Button icon={<PlusOutlined/>}></Button>
-        </div>
+        <Layout>
+          <Content>
+            <Row>
+              <Col span={12} offset={4}>
+                <Foo />
+              </Col>
+            </Row>
+          </Content>
+        </Layout>
     );
 }
 
