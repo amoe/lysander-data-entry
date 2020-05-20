@@ -14,8 +14,10 @@ function FlightEventView(props: {value: FlightEvent, onMove: MoveHandler}) {
     </div>
 }
 
-function EventGroupView() {
-    return <div><h2>An event group</h2></div>;
+function EventGroupView(props: {value: EventGroup}) {
+    return <div>
+      {props.value.map(x => <h1>Event</h1>)}
+    </div>;
 }
 
 export function SequenceMemberView(
@@ -26,7 +28,7 @@ export function SequenceMemberView(
     if (val instanceof FlightEvent) {
         return <FlightEventView value={val} onMove={props.onMove}/>
     } else if (val instanceof EventGroup) {
-        return <EventGroupView />
+        return <EventGroupView value={val} />
     } else {
         throw new Error("unexpected sequence member type");
     }

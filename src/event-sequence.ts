@@ -1,6 +1,6 @@
 // An eventsequence exposes a more restricted api than an array.
 import {PartialDate} from './partial-date';
-import {uniqueId} from 'lodash';
+import {uniqueId, isEqual} from 'lodash';
 
 const SEQUENCE_PREFIX = 'sequenceMember_';
 
@@ -51,6 +51,20 @@ export class EventGroup implements SequenceMember {
         throw new Error("cannot call getdescription on event group");
     }
 
+    
+    map<T>(f: (x: FlightEvent, i?: number) => T): T[] {
+        return this.contents.map(f);
+    }
+}
+
+function typeIdentifier(x: SequenceMember): string {
+    if (x instanceof FlightEvent) {
+        return 'FE';
+    } else if (x instanceof EventGroup) {
+        return 'EG';
+    } else {
+        throw new Error("no");
+    }
 }
 
 
@@ -59,6 +73,33 @@ export class EventSequence {
 
     constructor() {
         this.contents = [];
+    }
+
+    link(index1: number, index2: number) {
+
+        const e1 = this.contents[index1];
+        const e2 = this.contents[index2];
+
+        if (e1 === undefined || e2 === undefined) {
+            throw new Error("attempt to group nonexistent indices");
+        }
+
+        const typeConfiguration = [typeIdentifier(e1), typeIdentifier(e2)];
+
+        if (isEqual(typeConfiguration, ['FE', 'FE'])) {
+            // Both indexes removed.  Group created and inserted at index1.
+            const newGroup = new EventGroup(e1 as FlightEvent, e2 as FlightEvent);
+            this.contents.splice(index1, 2, newGroup);
+        } else if (isEqual(typeConfiguration, ['FE', 'EG'])) {
+            // Group at index2 absorbs index1.
+            throw new Error("not implemented");
+        } else if (isEqual(typeConfiguration, ['EG', 'FE'])) {
+            // Group at index1 absorbs index2.
+            throw new Error("not implemented");
+        } else if (isEqual(typeConfiguration, ['EG', 'EG'])) {
+            // First group absorbs second group.
+            throw new Error("not implemented");
+        }
     }
 
     addEvent(e: FlightEvent) {
@@ -73,7 +114,7 @@ export class EventSequence {
         return this.size() === 0;
     }
 
-    map(f: (x: SequenceMember) => any): any[] {
+    map(f: (x: SequenceMember, i?: number) => any): any[] {
         return this.contents.map(f);
     }
 };

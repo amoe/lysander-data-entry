@@ -37,6 +37,8 @@ export function EventGrouping() {
     events.addEvent(e3);
     events.addEvent(e4);
 
+    events.link(1, 2);
+
     const doMove = (eventId: string) => {
         setViewMode(ViewMode.MOVE);
     };
