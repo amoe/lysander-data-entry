@@ -17,10 +17,11 @@ import {EventGrouping} from './event-grouping';
 import {ReducerDemo} from './reducer-demo';
 
 import {FormsDemo} from './forms-demo';
+import {ThemePanel} from './theme-panel';
 
 ReactDOM.render(
     (<div>
-      <FormsDemo/>
+      <ThemePanel/>
     </div>),
     document.getElementById('root')
 );
