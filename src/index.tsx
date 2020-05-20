@@ -15,13 +15,14 @@ import {SwitchDemo} from './switch-demo';
 import {LocationAuthoringDemo} from './location-authoring-demo';
 import {EventGrouping} from './event-grouping';
 import {ReducerDemo} from './reducer-demo';
-
 import {FormsDemo} from './forms-demo';
 import {ThemePanel} from './theme-panel';
 
+import {EventAuthoringApp} from './event-authoring-app';
+
 ReactDOM.render(
     (<div>
-      <ThemePanel/>
+      <EventAuthoringApp/>
     </div>),
     document.getElementById('root')
 );

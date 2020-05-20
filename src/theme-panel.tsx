@@ -1,10 +1,8 @@
 import React from 'react';
-import {Button, Layout, Select, Form, Row, Col} from 'antd';
-import {PlusOutlined} from '@ant-design/icons';
-import {LoremIpsum} from './lorem-ipsum';
-const { Header, Footer, Sider, Content } = Layout;
+import {Button, Select, Form, Row, Col} from 'antd';
+import {PlusOutlined, RightOutlined, SaveOutlined} from '@ant-design/icons';
 
-function Foo() {
+export function ThemePanel() {
     return (
         <Row>
           <Col span={12}>
@@ -17,37 +15,12 @@ function Foo() {
             </Form.Item>
           </Col>
           <Col span={6} offset={3}>
+            <Button icon={<RightOutlined/>}></Button>
             <Button icon={<PlusOutlined/>}></Button>
+            <Button icon={<SaveOutlined/>}></Button>
           </Col>
         </Row>
     )
         
-}
-
-function Bar() {
-    return (
-        <Row>
-          <Col span={12}>
-            <LoremIpsum/>
-          </Col>
-          <Col span={12}>
-            <LoremIpsum/>
-          </Col>
-        </Row>
-    );
-}
-
-export function ThemePanel() {
-    return (
-        <Layout>
-          <Content>
-            <Row>
-              <Col span={12} offset={6}>
-                <Foo />
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
-    );
 }
 
