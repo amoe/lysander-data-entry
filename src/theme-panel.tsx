@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Layout, Select, Form, Row, Col} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
-
+import {LoremIpsum} from './lorem-ipsum';
 const { Header, Footer, Sider, Content } = Layout;
 
 function Foo() {
@@ -25,8 +25,8 @@ export function ThemePanel() {
         <Layout>
           <Content>
             <Row>
-              <Col span={12} offset={4}>
-                <Foo />
+              <Col span={12} offset={6}>
+                <LoremIpsum />
               </Col>
             </Row>
           </Content>
