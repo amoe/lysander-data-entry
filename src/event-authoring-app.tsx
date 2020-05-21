@@ -13,7 +13,7 @@ function Field(props: FieldSpecification) {
                       name={props.fieldName}><Input/></Form.Item>
 }
 
-const AVAILABLE_THEMES = [Entity.PERSON];
+const AVAILABLE_THEMES = [Entity.PERSON, Entity.ORGANIZATION];
 
 
 
@@ -30,12 +30,17 @@ export function EventAuthoringApp() {
         setEvent(values);
     }
 
+    function handleThemeChange(value: any) {
+        setSelectedTheme(value);
+    }
+
     return (
         <Layout>
           <Content>
             <Row>
               <Col span={12} offset={6}>
-                <ThemePanel availableThemes={AVAILABLE_THEMES}/>
+                <ThemePanel onChange={handleThemeChange} 
+                            availableThemes={AVAILABLE_THEMES}/>
                 <SubjectPanel />
 
                 <Form onFinish={handleFinish}>
