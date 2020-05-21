@@ -20,6 +20,7 @@ interface AppState {
 }
 
 
+// XXX: event should be typed
 type Action = {type: 'addEvent', event: any};
 
 
