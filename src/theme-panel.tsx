@@ -1,16 +1,17 @@
 import React from 'react';
 import {Button, Select, Form, Row, Col} from 'antd';
 import {PlusOutlined, RightOutlined, SaveOutlined} from '@ant-design/icons';
+import {Entity} from './schema';
 
-export function ThemePanel() {
+
+
+export function ThemePanel(props: {availableThemes: Entity[]}) {
     return (
         <Row>
           <Col span={12}>
             <Form.Item label="Theme">
               <Select>
-                <Select.Option value="lt">Event</Select.Option>
-                <Select.Option value="eq">Person</Select.Option>
-                <Select.Option value="gt">Organization</Select.Option>
+                {props.availableThemes.map((x, i) => <Select.Option key={i} value={x}>{x}</Select.Option>)}
               </Select>
             </Form.Item>
           </Col>

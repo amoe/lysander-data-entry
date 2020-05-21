@@ -16,9 +16,15 @@ import {LocationAuthoringDemo} from './location-authoring-demo';
 import {EventGrouping} from './event-grouping';
 import {ReducerDemo} from './reducer-demo';
 import {FormsDemo} from './forms-demo';
+import {BasicAntdFormDemo} from './basic-antd-form-demo';
 import {ThemePanel} from './theme-panel';
 
 import {EventAuthoringApp} from './event-authoring-app';
+
+
+//<BasicAntdFormDemo />
+
+
 
 ReactDOM.render(
     (<div>

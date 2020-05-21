@@ -34,3 +34,7 @@ export const SCHEMA: EntitySchema = {
         {label: 'AssociatedWith', fieldName: 'association'}
     ]
 }
+
+
+
+//organisation		Date	Time	event	Status	method/role	by/for (Person/object)	Op/Org/Circuit	Location (Name)	Source	Notes	Quotes/MediaRef	AssociatedWith	Association
