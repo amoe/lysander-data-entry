@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useReducer} from 'react';
 import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
 import {SubjectPanel} from './subject-panel';
@@ -15,9 +15,28 @@ function Field(props: FieldSpecification) {
 
 const AVAILABLE_THEMES = [Entity.PERSON, Entity.ORGANIZATION];
 
+interface AppState {
+    allEvents: any[];
+}
+
+
+type Action = {type: 'addEvent', event: any};
+
+
+function reducer(state: AppState, action: Action): AppState {
+    switch (action.type) {
+        case 'addEvent':
+            return {...state, allEvents: [...state.allEvents, action.event]};
+        default:
+            throw new Error("no");
+    }
+}
+
+
 
 
 export function EventAuthoringApp() {
+    const [state, dispatch] = useReducer(reducer, {allEvents: []});
     const [selectedTheme, setSelectedTheme] = useState(Entity.PERSON);
     const [event, setEvent] = useState({});
 
@@ -28,6 +47,7 @@ export function EventAuthoringApp() {
     function handleFinish(values: Store) {
         console.log("values are %o", values);
         setEvent(values);
+        dispatch({type: 'addEvent', event: values});
     }
 
     function handleThemeChange(value: any) {
@@ -48,6 +68,10 @@ export function EventAuthoringApp() {
                   
                     <Button htmlType="submit">Submit</Button>
                 </Form>
+
+                <ul>
+                  {state.allEvents.map((x, i) => <li key={i}>{JSON.stringify(x)}</li>)}
+                </ul>
               </Col>
             </Row>
           </Content>
