@@ -37,11 +37,44 @@ function reducer(state: AppState, action: Action): AppState {
     }
 }
 
+function FormView(
+    props: {
+        fields: FieldSpecification[],
+        onFinish: (values: Store) => void
+    }
+) {
+    return (
+        <Form onFinish={props.onFinish}>
+          {props.fields.map(x => <Field key={x.fieldName} {...x}/>)}
+          
+          <Button htmlType="submit">Submit</Button>
+        </Form>
+    );
+}
+
+function SequenceView(props: {allEvents: any[]}) {
+    return (
+        <div>
+        <h1>Sequence</h1>
+
+        <ul>
+          {props.allEvents.map((x, i) => <li key={i}>{JSON.stringify(x)}</li>)}
+        </ul>
+        </div>
+    );
+}
+
+enum ViewState {
+    FORM = 'form',
+    SEQUENCE = 'sequence'
+};
+
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {allEvents: []});
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
     const [event, setEvent] = useState({});
+    const [viewState, setViewState] = useState(ViewState.FORM);
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
 
@@ -57,24 +90,25 @@ export function EventAuthoringApp() {
         setSelectedTheme(value);
     }
 
+    function handleCollapse() {
+        if (viewState !== ViewState.FORM)
+            throw new Error("bad transition");
+            
+        setViewState(ViewState.SEQUENCE);
+    }
+
     return (
         <Layout>
           <Content>
             <Row>
               <Col span={12} offset={6}>
                 <ThemePanel onChange={handleThemeChange} 
-                            availableThemes={AVAILABLE_THEMES}/>
+                            onCollapse={handleCollapse}
+                            availableThemes={AVAILABLE_THEMES}
+                            collapseEnabled={viewState === ViewState.FORM}/>
                 <SubjectPanel />
 
-                <Form onFinish={handleFinish}>
-                {fields.map(x => <Field key={x.fieldName} {...x}/>)}
-                  
-                    <Button htmlType="submit">Submit</Button>
-                </Form>
-
-                <ul>
-                  {state.allEvents.map((x, i) => <li key={i}>{JSON.stringify(x)}</li>)}
-                </ul>
+                {viewState === ViewState.FORM ? <FormView fields={fields} onFinish={handleFinish}/> : <SequenceView allEvents={state.allEvents}/>}
               </Col>
             </Row>
           </Content>

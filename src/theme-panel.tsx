@@ -7,7 +7,9 @@ import {SelectValue} from 'antd/lib/select';
 export function ThemePanel(
     props: {
         availableThemes: EventTheme[],
-        onChange: (value: any) => void
+        onChange: (value: any) => void,
+        onCollapse: () => void,
+        collapseEnabled: boolean
     }
 ) {
     return (
@@ -21,7 +23,9 @@ export function ThemePanel(
           </Col>
           <Col span={6} offset={3}>
             <Tooltip title="Collapse">
-              <Button icon={<RightOutlined/>}></Button>
+              <Button icon={<RightOutlined/>}
+                      disabled={!props.collapseEnabled}
+                      onClick={props.onCollapse}></Button>
             </Tooltip>
 
             <Tooltip title="New Event">
