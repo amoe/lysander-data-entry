@@ -2,7 +2,7 @@ import React, {useState, useReducer} from 'react';
 import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
 import {SubjectPanel} from './subject-panel';
-import {SCHEMA, Entity, FieldSpecification} from './schema';
+import {SCHEMA, EventTheme, FieldSpecification} from './schema';
 import {Form, Input, Button} from 'antd';
 import {Store} from 'antd/lib/form/interface';
 
@@ -13,7 +13,9 @@ function Field(props: FieldSpecification) {
                       name={props.fieldName}><Input/></Form.Item>
 }
 
-const AVAILABLE_THEMES = [Entity.PERSON, Entity.ORGANIZATION];
+const AVAILABLE_THEMES = [
+    EventTheme.PERSON, EventTheme.FLIGHT, EventTheme.ORGANIZATION
+];
 
 interface AppState {
     allEvents: any[];
@@ -38,7 +40,7 @@ function reducer(state: AppState, action: Action): AppState {
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {allEvents: []});
-    const [selectedTheme, setSelectedTheme] = useState(Entity.PERSON);
+    const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
     const [event, setEvent] = useState({});
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];

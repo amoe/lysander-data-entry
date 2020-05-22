@@ -1,12 +1,12 @@
 import React from 'react';
-import {Button, Select, Form, Row, Col} from 'antd';
+import {Button, Select, Form, Row, Col, Tooltip} from 'antd';
 import {PlusOutlined, RightOutlined, SaveOutlined} from '@ant-design/icons';
-import {Entity} from './schema';
+import {EventTheme} from './schema';
 import {SelectValue} from 'antd/lib/select';
 
 export function ThemePanel(
     props: {
-        availableThemes: Entity[],
+        availableThemes: EventTheme[],
         onChange: (value: any) => void
     }
 ) {
@@ -20,9 +20,16 @@ export function ThemePanel(
             </Form.Item>
           </Col>
           <Col span={6} offset={3}>
-            <Button icon={<RightOutlined/>}></Button>
-            <Button icon={<PlusOutlined/>}></Button>
-            <Button icon={<SaveOutlined/>}></Button>
+            <Tooltip title="Collapse">
+              <Button icon={<RightOutlined/>}></Button>
+            </Tooltip>
+
+            <Tooltip title="New Event">
+            <Button disabled={true} icon={<PlusOutlined/>}></Button>
+            </Tooltip>
+            <Tooltip title="Save">
+              <Button icon={<SaveOutlined/>}></Button>
+            </Tooltip>
           </Col>
         </Row>
     )
