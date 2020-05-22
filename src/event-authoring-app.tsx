@@ -8,8 +8,10 @@ import {Store} from 'antd/lib/form/interface';
 import {FormInstance} from 'antd/lib/form';
 import {EventBlob, EntityCache} from './interfaces2';
 import singletons from './singletons';
-import {GetDistinctPilots} from './canned-statements';
 import {reducer, ActionType} from './reducer';
+import {
+    GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
+} from './canned-statements';
 const { Header, Footer, Sider, Content } = Layout;
 
 function Field(props: FieldSpecification) {
@@ -63,7 +65,11 @@ function emptyCache(): EntityCache {
 
 const CACHE_FILLERS = [
     {key: 'pilots',
-     statement: GetDistinctPilots}
+     statement: GetDistinctPilots},
+    {key: 'locations',
+     statement: GetDistinctLocations},
+    {key: 'operations',
+     statement: GetDistinctOperations}
 ];
 
 
@@ -81,6 +87,7 @@ export function EventAuthoringApp() {
         CACHE_FILLERS.forEach(({key, statement}) => {
             singletons.gateway.search(new statement()).then(
                 ({records}) => {
+                    console.log("callback for %o", key);
                     dispatch({type: ActionType.SET_ENTITY_CACHE,
                               entityType: key,
                               payload: records.map(x => x.toObject())});

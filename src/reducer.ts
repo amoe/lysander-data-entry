@@ -19,7 +19,13 @@ export function reducer(state: AppState, action: Action): AppState {
         case ActionType.ADD_EVENT:
             return {...state, allEvents: [...state.allEvents, action.event]};
         case ActionType.SET_ENTITY_CACHE:
-            return {...state, entityCache: {pilots: action.payload}}
+            return {
+                ...state,
+                entityCache: {
+                    ...state.entityCache,
+                    [action.entityType]: action.payload
+                }
+            }
         default:
             throw new Error("no");
     }
