@@ -19,14 +19,16 @@ interface AppState {
     allEvents: any[];
 }
 
+enum ActionType {
+    ADD_EVENT = 'addEvent'
+};
 
-// XXX: event should be typed
-type Action = {type: 'addEvent', event: any};
 
+type Action = {type: ActionType.ADD_EVENT, event: any};
 
 function reducer(state: AppState, action: Action): AppState {
     switch (action.type) {
-        case 'addEvent':
+        case ActionType.ADD_EVENT:
             return {...state, allEvents: [...state.allEvents, action.event]};
         default:
             throw new Error("no");
@@ -48,7 +50,7 @@ export function EventAuthoringApp() {
     function handleFinish(values: Store) {
         console.log("values are %o", values);
         setEvent(values);
-        dispatch({type: 'addEvent', event: values});
+        dispatch({type: ActionType.ADD_EVENT, event: values});
     }
 
     function handleThemeChange(value: any) {
