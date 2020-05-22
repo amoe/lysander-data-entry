@@ -55,6 +55,21 @@ export const SCHEMA: EntitySchema = {
     ]
 }
 
+const SUBJECT_PANEL_FIELDS = {
+    [EventTheme.FLIGHT]: [
+        {fieldName: 'Date',
+         searcher: 'dates'},
+        {fieldName: 'Pilot Name',
+         searcher: 'pilots'}
+    ],
+    [EventTheme.PERSON]: [
+//        'Surname', 'Forename'
+    ],
+    [EventTheme.ORGANIZATION]: [
+//        'Type', 'Name'
+    ]
+};
+
 
 
 //organisation		Date	Time	event	Status	method/role	by/for (Person/object)	Op/Org/Circuit	Location (Name)	Source	Notes	Quotes/MediaRef	AssociatedWith	Association

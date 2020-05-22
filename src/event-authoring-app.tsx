@@ -1,4 +1,4 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useReducer, useEffect} from 'react';
 import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
 import {SubjectPanel} from './subject-panel';
@@ -8,6 +8,7 @@ import {Store} from 'antd/lib/form/interface';
 import {FormInstance} from 'antd/lib/form';
 import {EventBlob} from './interfaces2';
 import singletons from './singletons';
+import {GetDistinctPilots} from './canned-statements';
 const { Header, Footer, Sider, Content } = Layout;
 
 function Field(props: FieldSpecification) {
@@ -19,21 +20,30 @@ const AVAILABLE_THEMES = [
     EventTheme.PERSON, EventTheme.FLIGHT, EventTheme.ORGANIZATION
 ];
 
+interface EntityCache {
+    pilots: any;
+}
+
 interface AppState {
     allEvents: any[];
+    entityCache: EntityCache;
 }
 
 enum ActionType {
-    ADD_EVENT = 'addEvent'
+    ADD_EVENT = 'addEvent',
+    SET_ENTITY_CACHE = 'setEntityCache'
 };
 
 
-type Action = {type: ActionType.ADD_EVENT, event: any};
+type Action = {type: ActionType.ADD_EVENT, event: any} | 
+              {type: ActionType.SET_ENTITY_CACHE};
 
 function reducer(state: AppState, action: Action): AppState {
     switch (action.type) {
         case ActionType.ADD_EVENT:
             return {...state, allEvents: [...state.allEvents, action.event]};
+        case ActionType.SET_ENTITY_CACHE:
+            return {...state, entityCache: {pilots: ['foo']}}
         default:
             throw new Error("no");
     }
@@ -73,12 +83,33 @@ enum ViewState {
 };
 
 
+function emptyCache(): EntityCache {
+    return {
+        pilots: []
+    }
+}
+
+
 export function EventAuthoringApp() {
-    const [state, dispatch] = useReducer(reducer, {allEvents: []});
+    const [state, dispatch] = useReducer(reducer, {
+        allEvents: [],
+        entityCache: emptyCache()
+    });
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
     const [event, setEvent] = useState({});
     const [viewState, setViewState] = useState(ViewState.FORM);
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        singletons.gateway.search(new GetDistinctPilots()).then(
+            ({records}) => {
+                console.log("Pilots loaded: %o", records);
+                dispatch({type: ActionType.SET_ENTITY_CACHE});
+                // Need ot dispatch things
+                /* setEntityCache({...entityCache, pilots: ['foo']});*/
+            }
+        );
+    }, []);
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
 
@@ -127,20 +158,22 @@ export function EventAuthoringApp() {
           <Content>
             <Row>
               <Col span={12} offset={6}>
-                <ThemePanel onChange={handleThemeChange} 
-                            onCollapse={handleCollapse}
-                            onSave={handleSave}
-                            availableThemes={AVAILABLE_THEMES}
-                            collapseEnabled={viewState === ViewState.FORM}/>
-                <SubjectPanel />
+                <textarea value={JSON.stringify(state.entityCache)}></textarea>
+                  
+                  <ThemePanel onChange={handleThemeChange} 
+                  onCollapse={handleCollapse}
+                  onSave={handleSave}
+                  availableThemes={AVAILABLE_THEMES}
+                  collapseEnabled={viewState === ViewState.FORM}/>
+                  <SubjectPanel />
 
-                {viewState === ViewState.FORM
-                 ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
-                 : <SequenceView allEvents={state.allEvents}/>}
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
+                  {viewState === ViewState.FORM
+                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
+                  : <SequenceView allEvents={state.allEvents}/>}
+                  </Col>
+                  </Row>
+                  </Content>
+                  </Layout>
     );
 }
 

@@ -45,7 +45,7 @@ export class GetDistinctPilots implements CannedStatement {
     getCypher(): string {
         const result = `
             MATCH (pc:PersonCluster)-[:HAS_PERSON]->(p:Person),
-                  (pc)-[:HAS_ROLE {type: 'pilot'}]->()
+                  (pc)-[:HAS_ROLE {type: 'pilots'}]->()
             WITH pc AS pc, p AS p
             ORDER BY pc.id, p.id    
             WITH pc AS pc, COLLECT(p)[0] AS firstPerson
