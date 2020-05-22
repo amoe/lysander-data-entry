@@ -11,4 +11,24 @@ export interface EventBlob {
 
 export interface EntityCache {
     pilots: any;
+    locations: any;
+    operations: any;
+}
+
+
+export interface Pilot {
+    clusterId: string;
+    firstName: string[];
+    lastName: string[];
+}
+
+export interface Location {
+    id: string;
+    code: string;
+    description: string;
+    codename: string;
+}
+
+export interface Operation {
+    name: string;
 }

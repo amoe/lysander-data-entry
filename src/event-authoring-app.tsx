@@ -59,7 +59,9 @@ enum ViewState {
 
 function emptyCache(): EntityCache {
     return {
-        pilots: []
+        pilots: [],
+        locations: [],
+        operations: []
     }
 }
 
@@ -143,14 +145,13 @@ export function EventAuthoringApp() {
           <Content>
             <Row>
               <Col span={12} offset={6}>
-                <textarea value={JSON.stringify(state.entityCache)}></textarea>
-                  
+                <textarea value={JSON.stringify(state.entityCache)} readOnly></textarea>
                   <ThemePanel onChange={handleThemeChange} 
-                  onCollapse={handleCollapse}
-                  onSave={handleSave}
-                  availableThemes={AVAILABLE_THEMES}
-                  collapseEnabled={viewState === ViewState.FORM}/>
-                  <SubjectPanel />
+                              onCollapse={handleCollapse}
+                              onSave={handleSave}
+                              availableThemes={AVAILABLE_THEMES}
+                              collapseEnabled={viewState === ViewState.FORM}/>
+                  <SubjectPanel entityCache={state.entityCache}/>
 
                   {viewState === ViewState.FORM
                   ? <FormView fields={fields} onFinish={handleFinish} form={form}/>

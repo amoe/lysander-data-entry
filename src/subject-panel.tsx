@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
 import {Input, Row, Form, Col, AutoComplete} from 'antd';
+import {EntityCache} from './interfaces2';
 
-export function SubjectPanel() {
+function toOptions(x: any): any {
+    return x.map((y: any) => ({value: y.firstName + " " + y.lastName}));
+}
+
+export function SubjectPanel(props: {entityCache: EntityCache}) {
     const availableDates = [
         {value: '1939-01-01'},
         {value: '1940-01-01'},
@@ -25,7 +30,8 @@ export function SubjectPanel() {
             </Col>
 
             <Col span={12}>
-              <Form.Item label="Pilot Name" name="pilotName"><Input/></Form.Item>
+              <AutoComplete placeholder="Pilot Name"
+                            options={toOptions(props.entityCache.pilots)}></AutoComplete>
             </Col>
           </Row>
         </Form>

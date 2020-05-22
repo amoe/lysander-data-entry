@@ -30,23 +30,8 @@ import {
     GetDistinctOperations
 } from '../canned-statements';
 import { makeKeplerData } from '../munge-for-kepler';
+import { Pilot, Location, Operation } from '../interfaces2';
 
-interface Pilot {
-    clusterId: string;
-    firstName: string[];
-    lastName: string[];
-}
-
-interface Location {
-    id: string;
-    code: string;
-    description: string;
-    codename: string;
-}
-
-interface Operation {
-    name: string;
-}
 
 interface LocationIndex {
     [key: string]: Location;
