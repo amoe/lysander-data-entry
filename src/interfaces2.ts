@@ -4,3 +4,7 @@ export enum ViewMode {
 };
 
 export type MoveHandler = (eventId: string) => void;
+
+export interface EventBlob {
+    [key: string]: any
+};

@@ -6,7 +6,7 @@ import {
 import { QUERY_DEFINITIONS } from './cypher';
 import { CannedStatement } from './canned-statements';
 import uuidv4 from 'uuid/v4';
-
+import {EventBlob} from './interfaces2';
 import { LOC_1_LONGITUDE, LOC_1_LATITUDE } from './sample-data';
 
 const INSERT_SOURCE_ROW = `
@@ -259,6 +259,14 @@ export class Neo4jGateway {
         );
     }
 
+    saveEvent(e: EventBlob): Result {
+        this.checkInitialized();
+        return this.session!.run(
+            `CREATE (e:Event {value: {value}})`,
+            {value: JSON.stringify(e)}
+        );
+    }
+
     destroy(): void {
         if (this.session !== null) {
             this.session.close();
@@ -268,4 +276,6 @@ export class Neo4jGateway {
             this.driver.close();
         }
     }
+
+    
 }

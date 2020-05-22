@@ -3,13 +3,15 @@ import {Button, Select, Form, Row, Col, Tooltip} from 'antd';
 import {PlusOutlined, RightOutlined, SaveOutlined} from '@ant-design/icons';
 import {EventTheme} from './schema';
 import {SelectValue} from 'antd/lib/select';
+import {Neo4jGateway} from './neo4j-gateway';
 
 export function ThemePanel(
     props: {
         availableThemes: EventTheme[],
         onChange: (value: any) => void,
         onCollapse: () => void,
-        collapseEnabled: boolean
+        collapseEnabled: boolean,
+        onSave: () => void
     }
 ) {
     return (
@@ -29,10 +31,12 @@ export function ThemePanel(
             </Tooltip>
 
             <Tooltip title="New Event">
-            <Button disabled={true} icon={<PlusOutlined/>}></Button>
+              <Button disabled={true}
+                      icon={<PlusOutlined/>}></Button>
             </Tooltip>
             <Tooltip title="Save">
-              <Button icon={<SaveOutlined/>}></Button>
+              <Button onClick={props.onSave}
+                      icon={<SaveOutlined/>}></Button>
             </Tooltip>
           </Col>
         </Row>

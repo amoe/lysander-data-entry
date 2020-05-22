@@ -3,9 +3,11 @@ import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
 import {SubjectPanel} from './subject-panel';
 import {SCHEMA, EventTheme, FieldSpecification} from './schema';
-import {Form, Input, Button} from 'antd';
+import {Form, Input, Button, notification} from 'antd';
 import {Store} from 'antd/lib/form/interface';
-
+import {FormInstance} from 'antd/lib/form';
+import {EventBlob} from './interfaces2';
+import singletons from './singletons';
 const { Header, Footer, Sider, Content } = Layout;
 
 function Field(props: FieldSpecification) {
@@ -40,11 +42,12 @@ function reducer(state: AppState, action: Action): AppState {
 function FormView(
     props: {
         fields: FieldSpecification[],
-        onFinish: (values: Store) => void
+        onFinish: (values: Store) => void,
+        form: FormInstance
     }
 ) {
     return (
-        <Form onFinish={props.onFinish}>
+        <Form onFinish={props.onFinish} form={props.form}>
           {props.fields.map(x => <Field key={x.fieldName} {...x}/>)}
           
           <Button htmlType="submit">Submit</Button>
@@ -75,6 +78,7 @@ export function EventAuthoringApp() {
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
     const [event, setEvent] = useState({});
     const [viewState, setViewState] = useState(ViewState.FORM);
+    const [form] = Form.useForm();
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
 
@@ -97,6 +101,27 @@ export function EventAuthoringApp() {
         setViewState(ViewState.SEQUENCE);
     }
 
+    function handleSave() {
+        console.log("saving");
+
+
+        const values = {} as EventBlob;
+        for (let x of fields) {
+            const {fieldName} = x;
+            const y = form.getFieldValue(fieldName);
+            console.log(y);
+            values[fieldName] = y;
+        }
+
+        singletons.gateway.saveEvent(values).then(r => {
+            notification.success({
+                message: 'Success',
+                description: 'Added event to database.'
+            });
+        });
+        ;
+    }
+
     return (
         <Layout>
           <Content>
@@ -104,11 +129,14 @@ export function EventAuthoringApp() {
               <Col span={12} offset={6}>
                 <ThemePanel onChange={handleThemeChange} 
                             onCollapse={handleCollapse}
+                            onSave={handleSave}
                             availableThemes={AVAILABLE_THEMES}
                             collapseEnabled={viewState === ViewState.FORM}/>
                 <SubjectPanel />
 
-                {viewState === ViewState.FORM ? <FormView fields={fields} onFinish={handleFinish}/> : <SequenceView allEvents={state.allEvents}/>}
+                {viewState === ViewState.FORM
+                 ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
+                 : <SequenceView allEvents={state.allEvents}/>}
               </Col>
             </Row>
           </Content>
