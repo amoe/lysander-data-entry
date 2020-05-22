@@ -36,8 +36,6 @@ function reducer(state: AppState, action: Action): AppState {
 }
 
 
-
-
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {allEvents: []});
     const [selectedTheme, setSelectedTheme] = useState(Entity.PERSON);

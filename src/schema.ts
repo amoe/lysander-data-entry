@@ -36,7 +36,7 @@ export const SCHEMA: EntitySchema = {
         {label: 'Association', fieldName: 'association'}
     ],
     [Entity.ORGANIZATION]: [
-        {label: 'Organization', fieldName: 'person'},
+        {label: 'Organization', fieldName: 'organization'},
         {label: 'Date', fieldName: 'date'},
         {label: 'Time', fieldName: 'time'},
         {label: 'Event', fieldName: 'event'},
