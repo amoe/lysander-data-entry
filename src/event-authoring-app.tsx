@@ -61,6 +61,11 @@ function emptyCache(): EntityCache {
     }
 }
 
+const CACHE_FILLERS = [
+    {key: 'pilots',
+     statement: GetDistinctPilots}
+];
+
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
@@ -73,18 +78,15 @@ export function EventAuthoringApp() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        singletons.gateway.search(new GetDistinctPilots()).then(
-            ({records}) => {
-                console.log("Pilots loaded: %o", records);
-                dispatch(
-                    {type: ActionType.SET_ENTITY_CACHE, 
-                     entityType: 'pilots',
-                     payload: records.map(x => x.toObject())}
-                );
-                // Need ot dispatch things
-                /* setEntityCache({...entityCache, pilots: ['foo']});*/
-            }
-        );
+        CACHE_FILLERS.forEach(({key, statement}) => {
+            singletons.gateway.search(new statement()).then(
+                ({records}) => {
+                    dispatch({type: ActionType.SET_ENTITY_CACHE,
+                              entityType: key,
+                              payload: records.map(x => x.toObject())});
+                }
+            );
+        });
     }, []);
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
