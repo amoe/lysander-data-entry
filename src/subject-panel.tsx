@@ -39,6 +39,7 @@ export function SubjectPanel(
 
             <Col span={12}>
               <AutoComplete placeholder="Pilot Name"
+                            style={ {width: '100%'} }
                             onChange={handlePilotNameChange}
                             value={selectedPilotName}
                             options={toOptions(props.entityCache.pilots)}></AutoComplete>

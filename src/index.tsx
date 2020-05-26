@@ -23,13 +23,13 @@ import {EventAuthoringApp} from './event-authoring-app';
 
 
 //<BasicAntdFormDemo />
-//<EventAuthoringApp/>
+
 
 
 
 ReactDOM.render(
     (<div>
-      <AutocompleteDemo/>
+      <EventAuthoringApp/>
     </div>),
     document.getElementById('root')
 );
