@@ -23,12 +23,12 @@ export class FlightEventPilotNames implements CannedStatement {
         const result = `
             MATCH (pc:PersonCluster)-[:HAS_PERSON]->(p:Person),
                   (pc)-[:HAS_ROLE {type: 'pilots'}]->(ps:PlaneSortie)
-            WITH pc AS pc, p AS p
+            WITH pc AS pc, p AS p, ps AS ps
             ORDER BY pc.id, p.id    
             WITH pc AS pc, COLLECT(p)[0] AS firstPerson, COLLECT(DISTINCT ps.name) AS planeSortieNames
-            RETURN pc.id AS clusterId,
-                   firstPerson.firstName AS firstName, 
-                   firstPerson.lastName AS lastName
+            RETURN firstPerson.firstName AS firstName, 
+                   firstPerson.lastName AS lastName,
+                   planeSortieNames AS planeSortieNames
         `;
         return result;
     }

@@ -1,9 +1,14 @@
 import React from 'react';
 import singletons from './singletons';
-import {FlightEventDates} from './statements/subject-filter';
+import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
 
 export function SmartSubjectPicker() {
     singletons.gateway.search(new FlightEventDates()).then(
+        ({records}) => {
+            console.log("callback for %o", records.map(x => x.toObject()));
+        }
+    );
+    singletons.gateway.search(new FlightEventPilotNames()).then(
         ({records}) => {
             console.log("callback for %o", records.map(x => x.toObject()));
         }
