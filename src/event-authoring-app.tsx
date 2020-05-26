@@ -42,10 +42,16 @@ function FormView(
 }
 
 function SequenceView(props: {allEvents: any[], onExpand: (index: number) => void}) {
+    const [sequenceName, setSequenceName] = useState("Untitled sequence" as string | undefined);
 
     return (
         <div>
           <h1>Sequence</h1>
+
+
+          <Form.Item label="Sequence name">
+            <Input value={sequenceName} onChange={(e) => setSequenceName(e.target.value)}/>
+          </Form.Item>
 
           <ul>
             {props.allEvents.map((x, i) => 
