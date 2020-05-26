@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {Input, Row, Form, Col, AutoComplete} from 'antd';
-import {EntityCache} from './interfaces2';
+import {EntityCache, SubjectData} from './interfaces2';
 
 function toOptions(x: any): any {
     return x.map((y: any) => ({value: y.firstName + " " + y.lastName}));
 }
 
 export function SubjectPanel(
-    props: {entityCache: EntityCache},
+    props: {entityCache: EntityCache, onChange: Function, value: SubjectData},
 ) {
     const availableDates = [
         {value: '1939-01-01'},
@@ -15,34 +15,24 @@ export function SubjectPanel(
         {value: '1940-06-01'}
     ];
 
-    const [selectedDate, setSelectedDate] = useState(undefined as string | undefined);
-    const [selectedPilotName, setSelectedPilotName] = useState(undefined as string | undefined);
-
-    const handlePilotNameChange = (data: string) => {
-        setSelectedPilotName(data);
-    }
-
-    const handleChange = (data: string) => {
-        console.log("selected is %o", data);
-        setSelectedDate(data);
-    };
-
     return (
         <Form layout="horizontal">
           <Row>
             <Col span={12}>
-              <AutoComplete placeholder="Date" 
+              <Form.Item label="Date">
+              <AutoComplete style={{width: '100%'}}
                             options={availableDates}
-                            value={selectedDate}
-                            onChange={handleChange}></AutoComplete>
+                            value={props.value.date}
+                            onChange={x => props.onChange({...props.value, date: x})}></AutoComplete>
+              </Form.Item>
             </Col>
 
             <Col span={12}>
-              <AutoComplete placeholder="Pilot Name"
-                            style={ {width: '100%'} }
-                            onChange={handlePilotNameChange}
-                            value={selectedPilotName}
+              <Form.Item label="Pilot Name">
+              <AutoComplete onChange={x => props.onChange({...props.value, pilotName: x})}
+                            value={props.value.pilotName}
                             options={toOptions(props.entityCache.pilots)}></AutoComplete>
+              </Form.Item>
             </Col>
           </Row>
         </Form>

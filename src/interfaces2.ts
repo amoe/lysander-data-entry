@@ -32,3 +32,9 @@ export interface Location {
 export interface Operation {
     name: string;
 }
+
+
+export interface SubjectData {
+    date: string | undefined;
+    pilotName: string | undefined;
+};

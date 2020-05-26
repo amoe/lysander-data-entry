@@ -6,7 +6,7 @@ import {SCHEMA, EventTheme, FieldSpecification} from './schema';
 import {Form, Input, Button, notification} from 'antd';
 import {Store} from 'antd/lib/form/interface';
 import {FormInstance} from 'antd/lib/form';
-import {EventBlob, EntityCache} from './interfaces2';
+import {EventBlob, EntityCache, SubjectData} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
 import {
@@ -75,6 +75,7 @@ const CACHE_FILLERS = [
 ];
 
 
+
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
         allEvents: [],
@@ -84,6 +85,7 @@ export function EventAuthoringApp() {
     const [event, setEvent] = useState({});
     const [viewState, setViewState] = useState(ViewState.FORM);
     const [form] = Form.useForm();
+    const [subject, setSubject] = useState({date: undefined, pilotName: undefined} as SubjectData);
 
     useEffect(() => {
         CACHE_FILLERS.forEach(({key, statement}) => {
@@ -140,6 +142,11 @@ export function EventAuthoringApp() {
         ;
     }
 
+    function handleSubjectChange(newValue: SubjectData) {
+        console.log("subject change requested");
+        setSubject(newValue);
+    }
+
     return (
         <Layout>
           <Content>
@@ -151,7 +158,10 @@ export function EventAuthoringApp() {
                               onSave={handleSave}
                               availableThemes={AVAILABLE_THEMES}
                               collapseEnabled={viewState === ViewState.FORM}/>
-                  <SubjectPanel entityCache={state.entityCache}/>
+                  <SubjectPanel entityCache={state.entityCache}
+                                onChange={handleSubjectChange}
+                                value={subject}/>
+
 
                   {viewState === ViewState.FORM
                   ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
