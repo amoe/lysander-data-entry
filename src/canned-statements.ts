@@ -1,12 +1,7 @@
 // canned-statements
 
 import log from 'loglevel';
-
-export interface CannedStatement {
-    getCypher(): string;
-    getParameters(): object;
-}
-
+import {CannedStatement} from './interfaces';
 
 export class FuzzySearchStatement implements CannedStatement {
     nodeLabel: string;

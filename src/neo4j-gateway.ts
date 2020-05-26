@@ -1,10 +1,9 @@
 import neo4j from 'neo4j-driver';
 import { Driver, Session, Result, StatementResult } from 'neo4j-driver/types/v1/index'
 import {
-    INTERFACES_FILE_VERSION, ModelInsert, ModelInsertSpec
+    INTERFACES_FILE_VERSION, ModelInsert, ModelInsertSpec, CannedStatement
 } from './interfaces';
 import { QUERY_DEFINITIONS } from './cypher';
-import { CannedStatement } from './canned-statements';
 import uuidv4 from 'uuid/v4';
 import {EventBlob} from './interfaces2';
 import { LOC_1_LONGITUDE, LOC_1_LATITUDE } from './sample-data';

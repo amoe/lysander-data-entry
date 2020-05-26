@@ -102,3 +102,9 @@ export interface LysanderState {
 
 // Stupid hack to make webpack reload the interfaces properly
 export const INTERFACES_FILE_VERSION = 1;
+
+
+export interface CannedStatement {
+    getCypher(): string;
+    getParameters(): object;
+}

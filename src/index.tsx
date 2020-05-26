@@ -20,7 +20,7 @@ import {BasicAntdFormDemo} from './basic-antd-form-demo';
 import {ThemePanel} from './theme-panel';
 import {AutocompleteDemo} from './autocomplete-demo';
 import {EventAuthoringApp} from './event-authoring-app';
-
+import {SmartSubjectPicker} from './smart-subject-picker';
 
 //<BasicAntdFormDemo />
 
@@ -29,7 +29,7 @@ import {EventAuthoringApp} from './event-authoring-app';
 
 ReactDOM.render(
     (<div>
-      <EventAuthoringApp/>
+      <SmartSubjectPicker/>
     </div>),
     document.getElementById('root')
 );

@@ -48,7 +48,6 @@ function SequenceView(props: {allEvents: any[], onExpand: (index: number) => voi
         <div>
           <h1>Sequence</h1>
 
-
           <Form.Item label="Sequence name">
             <Input value={sequenceName} onChange={(e) => setSequenceName(e.target.value)}/>
           </Form.Item>
