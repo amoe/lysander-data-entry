@@ -29,8 +29,6 @@ const commonFields = [
         {label: 'Location', fieldName: 'location'},
         {label: 'Source', fieldName: 'source'},
         {label: 'Note', fieldName: 'note'},
-        {label: 'AssociatedWith', fieldName: 'associatedWith'},
-        {label: 'Association', fieldName: 'association'}
 ];
 
 export const SCHEMA: EntitySchema = {

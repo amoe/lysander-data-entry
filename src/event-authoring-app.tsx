@@ -9,6 +9,8 @@ import {FormInstance} from 'antd/lib/form';
 import {EventBlob, EntityCache, SubjectData} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
+import {LeftOutlined} from '@ant-design/icons';
+
 import {
     GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
 } from './canned-statements';
@@ -39,14 +41,20 @@ function FormView(
     );
 }
 
-function SequenceView(props: {allEvents: any[]}) {
+function SequenceView(props: {allEvents: any[], onExpand: (index: number) => void}) {
+
     return (
         <div>
-        <h1>Sequence</h1>
+          <h1>Sequence</h1>
 
-        <ul>
-          {props.allEvents.map((x, i) => <li key={i}>{JSON.stringify(x)}</li>)}
-        </ul>
+          <ul>
+            {props.allEvents.map((x, i) => 
+                <li key={i}>
+                  <Button icon={<LeftOutlined/>}
+                          onClick={(e) => props.onExpand(i)}></Button>
+                  {JSON.stringify(x)}
+                </li>)}
+          </ul>
         </div>
     );
 }
@@ -147,29 +155,35 @@ export function EventAuthoringApp() {
         setSubject(newValue);
     }
 
+    const handleExpand = (index: number) => {
+        console.log("expand requested");
+        form.setFieldsValue(state.allEvents[index]);
+        setViewState(ViewState.FORM);
+    }
+
     return (
         <Layout>
           <Content>
             <Row>
               <Col span={12} offset={6}>
                 <textarea value={JSON.stringify(state.entityCache)} readOnly></textarea>
-                  <ThemePanel onChange={handleThemeChange} 
-                              onCollapse={handleCollapse}
-                              onSave={handleSave}
-                              availableThemes={AVAILABLE_THEMES}
-                              collapseEnabled={viewState === ViewState.FORM}/>
-                  <SubjectPanel entityCache={state.entityCache}
-                                onChange={handleSubjectChange}
-                                value={subject}/>
+                <ThemePanel onChange={handleThemeChange} 
+                            onCollapse={handleCollapse}
+                            onSave={handleSave}
+                            availableThemes={AVAILABLE_THEMES}
+                            collapseEnabled={viewState === ViewState.FORM}/>
+                <SubjectPanel entityCache={state.entityCache}
+                              onChange={handleSubjectChange}
+                              value={subject}/>
 
 
-                  {viewState === ViewState.FORM
-                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
-                  : <SequenceView allEvents={state.allEvents}/>}
-                  </Col>
-                  </Row>
-                  </Content>
-                  </Layout>
+                {viewState === ViewState.FORM
+                 ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
+                 : <SequenceView allEvents={state.allEvents} onExpand={handleExpand}/>}
+              </Col>
+            </Row>
+          </Content>
+        </Layout>
     );
 }
 
