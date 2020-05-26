@@ -6,13 +6,21 @@ function toOptions(x: any): any {
     return x.map((y: any) => ({value: y.firstName + " " + y.lastName}));
 }
 
-export function SubjectPanel(props: {entityCache: EntityCache}) {
+export function SubjectPanel(
+    props: {entityCache: EntityCache},
+) {
     const availableDates = [
         {value: '1939-01-01'},
         {value: '1940-01-01'},
         {value: '1940-06-01'}
     ];
+
     const [selectedDate, setSelectedDate] = useState(undefined as string | undefined);
+    const [selectedPilotName, setSelectedPilotName] = useState(undefined as string | undefined);
+
+    const handlePilotNameChange = (data: string) => {
+        setSelectedPilotName(data);
+    }
 
     const handleChange = (data: string) => {
         console.log("selected is %o", data);
@@ -31,6 +39,8 @@ export function SubjectPanel(props: {entityCache: EntityCache}) {
 
             <Col span={12}>
               <AutoComplete placeholder="Pilot Name"
+                            onChange={handlePilotNameChange}
+                            value={selectedPilotName}
                             options={toOptions(props.entityCache.pilots)}></AutoComplete>
             </Col>
           </Row>

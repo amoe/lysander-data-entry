@@ -18,17 +18,18 @@ import {ReducerDemo} from './reducer-demo';
 import {FormsDemo} from './forms-demo';
 import {BasicAntdFormDemo} from './basic-antd-form-demo';
 import {ThemePanel} from './theme-panel';
-
+import {AutocompleteDemo} from './autocomplete-demo';
 import {EventAuthoringApp} from './event-authoring-app';
 
 
 //<BasicAntdFormDemo />
+//<EventAuthoringApp/>
 
 
 
 ReactDOM.render(
     (<div>
-      <EventAuthoringApp/>
+      <AutocompleteDemo/>
     </div>),
     document.getElementById('root')
 );
