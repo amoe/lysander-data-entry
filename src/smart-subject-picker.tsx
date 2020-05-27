@@ -1,7 +1,11 @@
 import React, {useState} from 'react';
 import singletons from './singletons';
 import {Select} from 'antd';
-import {SubjectPanelFilter, FieldChange, FilterConfiguration} from './subject-panel/interfaces';
+import {
+    SubjectPanelFilter, FieldChange, FilterConfiguration
+} from './subject-panel/interfaces';
+import {buildIndex} from './subject-panel/functions';
+import {intersection} from 'lodash';
 
 
 function getOptions(filter: SubjectPanelFilter) {
@@ -45,8 +49,22 @@ function Pinpoint(props: {
     configuration: FilterConfiguration,
     criteria: {[key: string]: any}
 }) {
+    const index = buildIndex(props.configuration);
+
+    var soFar = undefined;
+
+    for (let [k, v] of Object.entries(props.criteria)) {
+        const thisSet = index[k].data[v];
+
+        if (soFar === undefined) {
+            soFar = thisSet;
+        } else {
+            soFar = intersection(soFar, thisSet);
+        }
+    }
+    
     return (
-        <div></div>
+        <div>{JSON.stringify(soFar)}</div>
     );
 }
 
