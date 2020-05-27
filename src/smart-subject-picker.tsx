@@ -5,7 +5,7 @@ import {Select} from 'antd';
 
 function narrow(source: any, date: string): Set<String> {
     const result = new Set<String>();
-    source[date].planeSortieNames.forEach(x => result.add(x));
+    source[date].planeSortieNames.forEach((x: any) => result.add(x));
     return result;
 }
 
