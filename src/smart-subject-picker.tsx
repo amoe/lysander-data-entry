@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import singletons from './singletons';
 import {Select} from 'antd';
-import {SubjectPanelFilter, FieldChange, ConfigurationIndex} from './subject-panel/interfaces';
+import {SubjectPanelFilter, FieldChange, FilterConfiguration} from './subject-panel/interfaces';
 
 
 function getOptions(filter: SubjectPanelFilter) {
@@ -42,18 +42,9 @@ function SubjectPanel(
 
 
 function Pinpoint(props: {
-    configuration: SubjectPanelFilter[],
+    configuration: FilterConfiguration,
     criteria: {[key: string]: any}
 }) {
-    const index: ConfigurationIndex = props.configuration.reduce((acc, x) => ({...acc, [x.name]: x}), {});
-    for (let [k, v] of Object.entries(props.criteria)) {
-        const foo = index[k].data;
-
-        // XXX: linear search here is wrong
-        // We need to convert
-        console.log("foo is %o", foo);
-    }
-
     return (
         <div></div>
     );
@@ -78,20 +69,23 @@ export function SmartSubjectPicker() {
     ];
 
 
-    const configuration = [
-        {name: 'date',
-         key: 'nightOf',
-         data: mockDates},
-        {name: 'pilot',
-         key: 'name',
-         data: mockPilots}
-    ];
-
+    const configuration: FilterConfiguration = {
+        targetField: 'planeSortieNames',
+        filters: [
+            {name: 'date',
+             key: 'nightOf',
+             data: mockDates},
+            {name: 'pilot',
+             key: 'name',
+             data: mockPilots}
+        ]
+    };
+        
     return (
         <div>
           {JSON.stringify(state)}
 
-          <SubjectPanel configuration={configuration}
+          <SubjectPanel configuration={configuration.filters}
                         onChange={handleChange}/>
 
 
