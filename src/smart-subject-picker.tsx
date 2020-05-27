@@ -1,17 +1,35 @@
 import React, {useState} from 'react';
 import singletons from './singletons';
-import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
 import {Select} from 'antd';
 
-function narrow(source: any, date: string): Set<String> {
-    const result = new Set<String>();
-    source[date].planeSortieNames.forEach((x: any) => result.add(x));
-    return result;
+
+interface SubjectPanelFilter {
+    name: string;
+    key: string;
+    data: any[]
+}
+
+function SingleFilter() {
+    return (<Select style={{width: '100%'}}/>)
+}
+
+
+function SubjectPanel(
+    props: {
+        configuration: SubjectPanelFilter[],
+        onChange: () => void
+    }) {
+    return (
+        <div>
+          <h1>My Component</h1>
+
+
+          {props.configuration.map(x => <SingleFilter key={x.name}/>)}
+        </div>
+    );
 }
 
 export function SmartSubjectPicker() {
-    const [date, setDate] = useState(undefined as string | undefined);
-    
     const mockDates = [
         {nightOf: '1940', planeSortieNames: ['A', 'B']},
         {nightOf: '1941', planeSortieNames: ['C', 'D']},
@@ -27,17 +45,19 @@ export function SmartSubjectPicker() {
         console.log("change happened");
     };
 
-    const result = narrow(mockDates, date);
-
+    const configuration = [
+        {name: 'date',
+         key: 'nightOf',
+         data: mockDates},
+        {name: 'pilot',
+         key: 'name',
+         data: mockPilots}
+    ];
 
     return (
         <div>
-          <h1>My Component</h1>
-
-
-          <Select options={mockDates.map(x=>({value: x.nightOf}))} 
-                  onChange={handleChange} style={{width: '100%'}}/> 
+          <SubjectPanel configuration={configuration}
+                        onChange={handleChange}/>
         </div>
     );
 }
-
