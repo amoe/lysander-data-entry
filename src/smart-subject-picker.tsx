@@ -1,13 +1,8 @@
 import React, {useState} from 'react';
 import singletons from './singletons';
 import {Select} from 'antd';
+import {SubjectPanelFilter, FieldChange, ConfigurationIndex} from './subject-panel/interfaces';
 
-
-interface SubjectPanelFilter {
-    name: string;
-    key: string;
-    data: {[key: string]: any}[]
-}
 
 function getOptions(filter: SubjectPanelFilter) {
     return filter.data.map(x => ({value: x[filter.key]}));
@@ -25,15 +20,13 @@ function SingleFilter(props: {
 }
 
 
+
 function SubjectPanel(
     props: {
         configuration: SubjectPanelFilter[],
-        onChange: () => void
+        onChange: (x: FieldChange) => void
     }) {
-    const handleChange = (change: {name: string, value: any}) => {
-        console.log("change happened %o", change);
-        
-    };
+
 
     return (
         <div>
@@ -42,12 +35,37 @@ function SubjectPanel(
 
           {props.configuration.map(f => <SingleFilter key={f.name} 
                                                       filter={f}
-                                                      onChange={handleChange}/>)}
+                                                      onChange={props.onChange}/>)}
         </div>
     );
 }
 
+
+function Pinpoint(props: {
+    configuration: SubjectPanelFilter[],
+    criteria: {[key: string]: any}
+}) {
+    const index: ConfigurationIndex = props.configuration.reduce((acc, x) => ({...acc, [x.name]: x}), {});
+    for (let [k, v] of Object.entries(props.criteria)) {
+        const foo = index[k].data;
+
+        // XXX: linear search here is wrong
+        // We need to convert
+        console.log("foo is %o", foo);
+    }
+
+    return (
+        <div></div>
+    );
+}
+
 export function SmartSubjectPicker() {
+    const [state, setState] = useState({});
+    const handleChange = (change: {name: string, value: any}) => {
+        console.log("change happened %o", change);
+        setState({...state, [change.name]: change.value});
+    };
+
     const mockDates = [
         {nightOf: '1940', planeSortieNames: ['A', 'B']},
         {nightOf: '1941', planeSortieNames: ['C', 'D']},
@@ -59,9 +77,6 @@ export function SmartSubjectPicker() {
         {name: 'Grimm', planeSortieNames: ['F', 'B']}
     ];
 
-    const handleChange = () => {
-        console.log("change happened");
-    };
 
     const configuration = [
         {name: 'date',
@@ -74,8 +89,14 @@ export function SmartSubjectPicker() {
 
     return (
         <div>
+          {JSON.stringify(state)}
+
           <SubjectPanel configuration={configuration}
                         onChange={handleChange}/>
+
+
+          <Pinpoint configuration={configuration}
+                    criteria={state}/>
         </div>
     );
 }
