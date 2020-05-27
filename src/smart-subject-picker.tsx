@@ -13,9 +13,15 @@ function getOptions(filter: SubjectPanelFilter) {
     return filter.data.map(x => ({value: x[filter.key]}));
 }
 
-function SingleFilter(props: {filter: SubjectPanelFilter}) {
+
+function SingleFilter(props: {
+    filter: SubjectPanelFilter,
+    onChange: (x: any) => void
+}) {
+
     return (<Select style={{width: '100%'}}
-                    options={getOptions(props.filter)}/>)
+                    options={getOptions(props.filter)}
+                    onChange={(x: any) => props.onChange({name: props.filter.name, value: x})}/>);
 }
 
 
@@ -24,12 +30,19 @@ function SubjectPanel(
         configuration: SubjectPanelFilter[],
         onChange: () => void
     }) {
+    const handleChange = (change: {name: string, value: any}) => {
+        console.log("change happened %o", change);
+        
+    };
+
     return (
         <div>
           <h1>My Component</h1>
 
 
-          {props.configuration.map(f => <SingleFilter key={f.name} filter={f}/>)}
+          {props.configuration.map(f => <SingleFilter key={f.name} 
+                                                      filter={f}
+                                                      onChange={handleChange}/>)}
         </div>
     );
 }
