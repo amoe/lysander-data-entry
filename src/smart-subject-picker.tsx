@@ -6,11 +6,16 @@ import {Select} from 'antd';
 interface SubjectPanelFilter {
     name: string;
     key: string;
-    data: any[]
+    data: {[key: string]: any}[]
 }
 
-function SingleFilter() {
-    return (<Select style={{width: '100%'}}/>)
+function getOptions(filter: SubjectPanelFilter) {
+    return filter.data.map(x => ({value: x[filter.key]}));
+}
+
+function SingleFilter(props: {filter: SubjectPanelFilter}) {
+    return (<Select style={{width: '100%'}}
+                    options={getOptions(props.filter)}/>)
 }
 
 
@@ -24,7 +29,7 @@ function SubjectPanel(
           <h1>My Component</h1>
 
 
-          {props.configuration.map(x => <SingleFilter key={x.name}/>)}
+          {props.configuration.map(f => <SingleFilter key={f.name} filter={f}/>)}
         </div>
     );
 }
