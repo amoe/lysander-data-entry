@@ -1,23 +1,23 @@
 import React, {useState, useReducer, useEffect} from 'react';
 import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
-import {SubjectPanel} from './subject-panel';
-import {SCHEMA, EventTheme, FieldSpecification} from './schema';
-import {Form, Input, Button, notification} from 'antd';
+import {SmartSubjectPicker} from './smart-subject-picker';
+import {FormView} from './form-view';
+import {EventTheme, SCHEMA, FieldSpecification} from './schema';
+import {Form, notification} from 'antd';
 import {Store} from 'antd/lib/form/interface';
-import {FormInstance} from 'antd/lib/form';
 import {EventBlob, EntityCache, SubjectData} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
-import {LeftOutlined} from '@ant-design/icons';
-import {SmartSubjectPicker} from './smart-subject-picker';
-import {FormView} from './form-view';
 
 import {
     GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
 } from './canned-statements';
 import {FilterConfiguration, SubjectPanelData} from './subject-panel/interfaces';
 import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
+
+import {SequenceView} from './sequence-view';
+
 const { Header, Footer, Sider, Content } = Layout;
 
 const AVAILABLE_THEMES = [
@@ -25,28 +25,6 @@ const AVAILABLE_THEMES = [
 ];
 
 
-function SequenceView(props: {allEvents: any[], onExpand: (index: number) => void}) {
-    const [sequenceName, setSequenceName] = useState("Untitled sequence" as string | undefined);
-
-    return (
-        <div>
-          <h1>Sequence</h1>
-
-          <Form.Item label="Sequence name">
-            <Input value={sequenceName} onChange={(e) => setSequenceName(e.target.value)}/>
-          </Form.Item>
-
-          <ul>
-            {props.allEvents.map((x, i) => 
-                <li key={i}>
-                  <Button icon={<LeftOutlined/>}
-                          onClick={(e) => props.onExpand(i)}></Button>
-                  {JSON.stringify(x)}
-                </li>)}
-          </ul>
-        </div>
-    );
-}
 
 enum ViewState {
     FORM = 'form',
