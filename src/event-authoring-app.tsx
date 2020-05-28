@@ -10,6 +10,8 @@ import {EventBlob, EntityCache, SubjectData} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
 import {LeftOutlined} from '@ant-design/icons';
+import {SmartSubjectPicker} from './smart-subject-picker';
+
 
 import {
     GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
@@ -177,10 +179,7 @@ export function EventAuthoringApp() {
                             onSave={handleSave}
                             availableThemes={AVAILABLE_THEMES}
                             collapseEnabled={viewState === ViewState.FORM}/>
-                <SubjectPanel entityCache={state.entityCache}
-                              onChange={handleSubjectChange}
-                              value={subject}/>
-
+                <SmartSubjectPicker/>
 
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
