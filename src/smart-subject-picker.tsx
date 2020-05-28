@@ -14,11 +14,13 @@ function getOptions(filter: SubjectPanelFilter) {
 
 
 function SingleFilter(props: {
+    enabled: boolean,
     filter: SubjectPanelFilter,
     onChange: (x: any) => void
 }) {
 
-    return (<Select style={{width: '100%'}}
+    return (<Select disabled={!props.enabled}
+                    style={{width: '100%'}}
                     options={getOptions(props.filter)}
                     onChange={(x: any) => props.onChange({name: props.filter.name, value: x})}/>);
 }
@@ -27,6 +29,7 @@ function SingleFilter(props: {
 
 function SubjectPanel(
     props: {
+        enabled: boolean,
         configuration: SubjectPanelFilter[],
         onChange: (x: FieldChange) => void
     }) {
@@ -36,6 +39,7 @@ function SubjectPanel(
         <div>
           {props.configuration.map(f => <SingleFilter key={f.name} 
                                                       filter={f}
+                                                      enabled={props.enabled}
                                                       onChange={props.onChange}/>)}
         </div>
     );
@@ -65,7 +69,7 @@ function Pinpoint(props: {
     );
 }
 
-export function SmartSubjectPicker(props: {configuration: FilterConfiguration}) {
+export function SmartSubjectPicker(props: {enabled: boolean, configuration: FilterConfiguration}) {
     const [state, setState] = useState({});
     const handleChange = (change: {name: string, value: any}) => {
         console.log("change happened %o", change);
@@ -78,7 +82,8 @@ export function SmartSubjectPicker(props: {configuration: FilterConfiguration}) 
           <h1>Subject</h1>
           <p>Selected criteria: {JSON.stringify(state)}</p>
 
-          <SubjectPanel configuration={props.configuration.filters}
+          <SubjectPanel enabled={props.enabled}
+                        configuration={props.configuration.filters}
                         onChange={handleChange}/>
 
 

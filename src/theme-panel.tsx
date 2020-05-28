@@ -11,7 +11,9 @@ export function ThemePanel(
         onChange: (value: any) => void,
         onCollapse: () => void,
         collapseEnabled: boolean,
-        onSave: () => void
+        onSave: () => void,
+        newEventEnabled: boolean,
+        onNewEvent: () => void
     }
 ) {
     return (
@@ -31,7 +33,8 @@ export function ThemePanel(
             </Tooltip>
 
             <Tooltip title="New Event">
-              <Button disabled={true}
+              <Button disabled={!props.newEventEnabled}
+                      onClick={props.onNewEvent}
                       icon={<PlusOutlined/>}></Button>
             </Tooltip>
             <Tooltip title="Save">

@@ -192,6 +192,11 @@ export function EventAuthoringApp() {
         ]
     };
 
+    const handleNewEvent = () => {
+        console.log("new event was clicked");
+        form.resetFields();
+        setViewState(ViewState.FORM);
+    }
 
     return (
         <Layout>
@@ -202,8 +207,11 @@ export function EventAuthoringApp() {
                             onCollapse={handleCollapse}
                             onSave={handleSave}
                             availableThemes={AVAILABLE_THEMES}
-                            collapseEnabled={viewState === ViewState.FORM}/>
-                <SmartSubjectPicker configuration={subjectPanelConfiguration}/>
+                            collapseEnabled={viewState === ViewState.FORM}
+                            newEventEnabled={viewState === ViewState.SEQUENCE}
+                            onNewEvent={handleNewEvent}/>
+                <SmartSubjectPicker enabled={viewState === ViewState.FORM}
+                                    configuration={subjectPanelConfiguration}/>
 
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
