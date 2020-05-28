@@ -1,3 +1,37 @@
+const ALLOWED_EVENT_TYPE_FOR_FLIGHT = [
+    'Operation commissioner',
+    'Sortie arranged',
+    'Sortie postponed',
+    'Sortie arranged',
+    'Person travels',
+    'Take Off',
+    'Over Coast',
+    'Wayfinding Point',
+    'Meteo',
+    'Searchlight',
+    'Enemy Encounter',
+    'Evasive action',
+    'Aircraft descends',
+    'Rendezvous',
+    'Target Area Arrive',
+    'Target Area Visibility',
+    'Lights seen',
+    'Seek lights',
+    'Wayfinding Point',
+    'Seek lights',
+    'Lights seen',
+    'Pilot Signal',
+    'Ground Signal',
+    'LZ Landing',
+    'Impeded',
+    'Pilot leaves plane',
+    'Observed',
+    'LZ Take Off',
+    'Return Landing',
+    'Debrief'
+];
+
+
 export enum EventTheme {
     PERSON = 'person',
     ORGANIZATION = 'organization',
@@ -49,7 +83,14 @@ export const SCHEMA: EntitySchema = {
     [EventTheme.FLIGHT]: [
         {label: 'SuperEvent: AirSortie', fieldName: 'superEvent', typeSpec: {fieldType: FieldType.INPUT}},
         {label: 'Pilot', fieldName: 'pilot', typeSpec: {fieldType: FieldType.INPUT}},
-        {label: 'Event', fieldName: 'event', typeSpec: {fieldType: FieldType.SELECT, options: ['foo']}},
+        {
+            label: 'Event',
+            fieldName: 'event',
+            typeSpec: {
+                fieldType: FieldType.SELECT,
+                options: ALLOWED_EVENT_TYPE_FOR_FLIGHT
+            }
+        },
        ...commonFields,
         {label: 'Relative Loc', fieldName: 'relativeLoc', typeSpec: {fieldType: FieldType.INPUT}},
         {label: 'Distance', fieldName: 'distance', typeSpec: {fieldType: FieldType.INPUT}},
@@ -81,35 +122,3 @@ const SUBJECT_PANEL_FIELDS = {
 
 
 
-const ALLOWED_EVENT_TYPE_FOR_FLIGHT = [
-    'Operation commissioner',
-    'Sortie arranged',
-    'Sortie postponed',
-    'Sortie arranged',
-    'Person travels',
-    'Take Off',
-    'Over Coast',
-    'Wayfinding Point',
-    'Meteo',
-    'Searchlight',
-    'Enemy Encounter',
-    'Evasive action',
-    'Aircraft descends',
-    'Rendezvous',
-    'Target Area Arrive',
-    'Target Area Visibility',
-    'Lights seen',
-    'Seek lights',
-    'Wayfinding Point',
-    'Seek lights',
-    'Lights seen',
-    'Pilot Signal',
-    'Ground Signal',
-    'LZ Landing',
-    'Impeded',
-    'Pilot leaves plane',
-    'Observed',
-    'LZ Take Off',
-    'Return Landing',
-    'Debrief'
-];
