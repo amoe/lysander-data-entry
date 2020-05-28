@@ -134,6 +134,11 @@ export function EventAuthoringApp() {
         console.log("values are %o", values);
         setEvent(values);
         dispatch({type: ActionType.ADD_EVENT, event: values});
+
+        notification.success({
+            message: 'Success',
+            description: 'Added event to sequence..'
+        });
     }
 
     function handleThemeChange(value: any) {
@@ -162,7 +167,7 @@ export function EventAuthoringApp() {
         singletons.gateway.saveEvent(values).then(r => {
             notification.success({
                 message: 'Success',
-                description: 'Added event to database.'
+                description: 'Wrote event sequence to database.'
             });
         });
         ;
