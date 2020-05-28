@@ -11,6 +11,7 @@ import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
 import {LeftOutlined} from '@ant-design/icons';
 import {SmartSubjectPicker} from './smart-subject-picker';
+import {FormView} from './form-view';
 
 import {
     GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
@@ -19,31 +20,10 @@ import {FilterConfiguration, SubjectPanelData} from './subject-panel/interfaces'
 import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
 const { Header, Footer, Sider, Content } = Layout;
 
-
-function Field(props: FieldSpecification) {
-    return <Form.Item label={props.label}
-                      name={props.fieldName}><Input/></Form.Item>
-}
-
 const AVAILABLE_THEMES = [
     EventTheme.PERSON, EventTheme.FLIGHT, EventTheme.ORGANIZATION
 ];
 
-function FormView(
-    props: {
-        fields: FieldSpecification[],
-        onFinish: (values: Store) => void,
-        form: FormInstance
-    }
-) {
-    return (
-        <Form onFinish={props.onFinish} form={props.form}>
-          {props.fields.map(x => <Field key={x.fieldName} {...x}/>)}
-          
-          <Button htmlType="submit">Submit</Button>
-        </Form>
-    );
-}
 
 function SequenceView(props: {allEvents: any[], onExpand: (index: number) => void}) {
     const [sequenceName, setSequenceName] = useState("Untitled sequence" as string | undefined);
