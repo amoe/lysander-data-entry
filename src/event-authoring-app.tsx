@@ -209,7 +209,8 @@ export function EventAuthoringApp() {
                             availableThemes={AVAILABLE_THEMES}
                             collapseEnabled={viewState === ViewState.FORM}
                             newEventEnabled={viewState === ViewState.SEQUENCE}
-                            onNewEvent={handleNewEvent}/>
+                            onNewEvent={handleNewEvent}
+                            selectedThemeValue={selectedTheme}/>
                 <SmartSubjectPicker enabled={viewState === ViewState.FORM}
                                     configuration={subjectPanelConfiguration}/>
 

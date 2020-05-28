@@ -13,14 +13,15 @@ export function ThemePanel(
         collapseEnabled: boolean,
         onSave: () => void,
         newEventEnabled: boolean,
-        onNewEvent: () => void
+        onNewEvent: () => void,
+        selectedThemeValue: string
     }
 ) {
     return (
         <Row>
           <Col span={12}>
             <Form.Item label="Theme">
-              <Select onChange={props.onChange}>
+              <Select onChange={props.onChange} value={props.selectedThemeValue}>
                 {props.availableThemes.map((x, i) => <Select.Option key={i} value={x}>{x}</Select.Option>)}
               </Select>
             </Form.Item>
