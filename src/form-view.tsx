@@ -1,13 +1,26 @@
 import React from 'react';
-import {Form, Button, Input} from 'antd';
-import {FieldSpecification} from './schema';
+import {Form, Button, Input, Select} from 'antd';
+import {FieldSpecification, FieldType} from './schema';
 import {Store} from 'antd/lib/form/interface';
 import {FormInstance} from 'antd/lib/form';
+
+function FieldWidget(props: FieldSpecification) {
+    console.log("field type is %o", props.typeSpec.fieldType);
+    switch (props.typeSpec.fieldType) {
+        case FieldType.INPUT:
+            return (<Input/>);
+        case FieldType.SELECT:
+            return (<Select style={{width: '100%'}} 
+                options={props.typeSpec.options.map(x => ({value: x}))}/>);
+        default:
+            throw new Error("not implemented");
+    }
+}
 
 
 function Field(props: FieldSpecification) {
     return <Form.Item label={props.label}
-                      name={props.fieldName}><Input/></Form.Item>
+                      name={props.fieldName}><FieldWidget {...props}/></Form.Item>
 }
 
 export function FormView(

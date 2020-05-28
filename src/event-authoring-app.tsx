@@ -90,7 +90,7 @@ export function EventAuthoringApp() {
         entityCache: emptyCache(),
         subjectPanelData: {byDate: [], byPilot: []}
     });
-    const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
+    const [selectedTheme, setSelectedTheme] = useState(EventTheme.FLIGHT);
     const [event, setEvent] = useState({});
     const [viewState, setViewState] = useState(ViewState.FORM);
     const [form] = Form.useForm();
