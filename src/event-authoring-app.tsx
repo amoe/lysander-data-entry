@@ -12,11 +12,13 @@ import {reducer, ActionType} from './reducer';
 import {LeftOutlined} from '@ant-design/icons';
 import {SmartSubjectPicker} from './smart-subject-picker';
 
-
 import {
     GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
 } from './canned-statements';
+import {FilterConfiguration, SubjectPanelData} from './subject-panel/interfaces';
+import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
 const { Header, Footer, Sider, Content } = Layout;
+
 
 function Field(props: FieldSpecification) {
     return <Form.Item label={props.label}
@@ -89,12 +91,24 @@ const CACHE_FILLERS = [
      statement: GetDistinctOperations}
 ];
 
+const mockDates = [
+    {nightOf: '1940', planeSortieNames: ['A', 'B']},
+    {nightOf: '1941', planeSortieNames: ['C', 'D']},
+    {nightOf: '1942', planeSortieNames: ['E', 'F']}
+];
+
+const mockPilots = [
+    {name: 'Murray', planeSortieNames: ['A', 'D']},
+    {name: 'Grimm', planeSortieNames: ['F', 'B']}
+];
+
 
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
         allEvents: [],
-        entityCache: emptyCache()
+        entityCache: emptyCache(),
+        subjectPanelData: {byDate: [], byPilot: []}
     });
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.PERSON);
     const [event, setEvent] = useState({});
@@ -113,6 +127,23 @@ export function EventAuthoringApp() {
                 }
             );
         });
+    }, []);
+
+    useEffect(() => {
+        singletons.gateway.search(new FlightEventDates()).then(
+            ({records}) => {
+                console.log("inside flightevents callback");
+                dispatch({type: ActionType.SET_SUBJECT_PANEL_DATA, key: 'byDate', payload: records.map(x => x.toObject())});
+            }
+        );
+
+        singletons.gateway.search(new FlightEventPilotNames()).then(
+            ({records}) => {
+                console.log("inside flightevents callback");
+                dispatch({type: ActionType.SET_SUBJECT_PANEL_DATA, key: 'byPilot', payload: records.map(x => x.toObject())});
+            }
+        );
+
     }, []);
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
@@ -168,18 +199,31 @@ export function EventAuthoringApp() {
         setViewState(ViewState.FORM);
     }
 
+
+    const subjectPanelConfiguration: FilterConfiguration = {
+        targetField: 'planeSortieNames',
+        filters: [
+            {name: 'date',
+             key: 'nightOf',
+             data: state.subjectPanelData.byDate},
+            {name: 'pilot',
+             key: 'name',
+             data: state.subjectPanelData.byPilot}
+        ]
+    };
+
+
     return (
         <Layout>
           <Content>
             <Row>
               <Col span={12} offset={6}>
-                <textarea value={JSON.stringify(state.entityCache)} readOnly></textarea>
                 <ThemePanel onChange={handleThemeChange} 
                             onCollapse={handleCollapse}
                             onSave={handleSave}
                             availableThemes={AVAILABLE_THEMES}
                             collapseEnabled={viewState === ViewState.FORM}/>
-                <SmartSubjectPicker/>
+                <SmartSubjectPicker configuration={subjectPanelConfiguration}/>
 
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>

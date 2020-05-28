@@ -34,9 +34,6 @@ function SubjectPanel(
 
     return (
         <div>
-          <h1>My Component</h1>
-
-
           {props.configuration.map(f => <SingleFilter key={f.name} 
                                                       filter={f}
                                                       onChange={props.onChange}/>)}
@@ -68,46 +65,24 @@ function Pinpoint(props: {
     );
 }
 
-export function SmartSubjectPicker() {
+export function SmartSubjectPicker(props: {configuration: FilterConfiguration}) {
     const [state, setState] = useState({});
     const handleChange = (change: {name: string, value: any}) => {
         console.log("change happened %o", change);
         setState({...state, [change.name]: change.value});
     };
 
-    const mockDates = [
-        {nightOf: '1940', planeSortieNames: ['A', 'B']},
-        {nightOf: '1941', planeSortieNames: ['C', 'D']},
-        {nightOf: '1942', planeSortieNames: ['E', 'F']}
-    ];
-
-    const mockPilots = [
-        {name: 'Murray', planeSortieNames: ['A', 'D']},
-        {name: 'Grimm', planeSortieNames: ['F', 'B']}
-    ];
-
-
-    const configuration: FilterConfiguration = {
-        targetField: 'planeSortieNames',
-        filters: [
-            {name: 'date',
-             key: 'nightOf',
-             data: mockDates},
-            {name: 'pilot',
-             key: 'name',
-             data: mockPilots}
-        ]
-    };
         
     return (
         <div>
-          {JSON.stringify(state)}
+          <h1>Subject</h1>
+          <p>Selected criteria: {JSON.stringify(state)}</p>
 
-          <SubjectPanel configuration={configuration.filters}
+          <SubjectPanel configuration={props.configuration.filters}
                         onChange={handleChange}/>
 
 
-          <Pinpoint configuration={configuration}
+          <Pinpoint configuration={props.configuration}
                     criteria={state}/>
         </div>
     );
