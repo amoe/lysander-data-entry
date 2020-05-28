@@ -6,7 +6,7 @@ import {FormView} from './form-view';
 import {EventTheme, SCHEMA, FieldSpecification} from './schema';
 import {Form, notification} from 'antd';
 import {Store} from 'antd/lib/form/interface';
-import {EventBlob, EntityCache, SubjectData} from './interfaces2';
+import {EventBlob, EntityCache, SubjectData, EventDatum} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
 
@@ -23,8 +23,6 @@ const { Header, Footer, Sider, Content } = Layout;
 const AVAILABLE_THEMES = [
     EventTheme.PERSON, EventTheme.FLIGHT, EventTheme.ORGANIZATION
 ];
-
-
 
 enum ViewState {
     FORM = 'form',
@@ -60,17 +58,19 @@ const mockPilots = [
     {name: 'Grimm', planeSortieNames: ['F', 'B']}
 ];
 
+const mockEvent: EventDatum = {
+}
 
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
-        allEvents: [],
+        allEvents: [mockEvent],
         entityCache: emptyCache(),
         subjectPanelData: {byDate: [], byPilot: []}
     });
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.FLIGHT);
     const [event, setEvent] = useState({});
-    const [viewState, setViewState] = useState(ViewState.FORM);
+    const [viewState, setViewState] = useState(ViewState.SEQUENCE);
     const [form] = Form.useForm();
     const [subject, setSubject] = useState({date: undefined, pilotName: undefined} as SubjectData);
 

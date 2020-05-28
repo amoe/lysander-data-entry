@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import {Form, Input, Button} from 'antd';
 import {LeftOutlined} from '@ant-design/icons';
+import {EventDatum} from './interfaces2';
 
 
-export function SequenceView(props: {allEvents: any[], onExpand: (index: number) => void}) {
+export function SequenceView(
+    props: {allEvents: EventDatum[],
+            onExpand: (index: number) => void}) {
     const [sequenceName, setSequenceName] = useState("Untitled sequence" as string | undefined);
 
     return (
@@ -15,11 +18,13 @@ export function SequenceView(props: {allEvents: any[], onExpand: (index: number)
           </Form.Item>
 
           <ul>
-            {props.allEvents.map((x, i) => 
+            {props.allEvents.map((event, i) => 
                 <li key={i}>
                   <Button icon={<LeftOutlined/>}
                           onClick={(e) => props.onExpand(i)}></Button>
-                  {JSON.stringify(x)}
+                  
+                  <span>2012-01-01</span>
+                  <span>{JSON.stringify(event)}</span>
                 </li>)}
           </ul>
         </div>

@@ -1,8 +1,8 @@
-import {EntityCache} from './interfaces2';
+import {EntityCache, EventDatum} from './interfaces2';
 import {SubjectPanelData} from './subject-panel/interfaces';
 
 interface AppState {
-    allEvents: any[];
+    allEvents: EventDatum[];
     entityCache: EntityCache;
     subjectPanelData: SubjectPanelData;
 }

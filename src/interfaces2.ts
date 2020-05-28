@@ -1,3 +1,6 @@
+export interface EventDatum {
+};
+
 export enum ViewMode {
     VIEW = 'view',
     MOVE = 'move'
