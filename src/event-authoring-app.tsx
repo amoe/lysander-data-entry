@@ -15,7 +15,7 @@ import {
 import {FilterConfiguration, SubjectPanelData} from './subject-panel/interfaces';
 import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
 import {SequenceView} from './sequence-view';
-import {Select, Layout, Row, Col, Form, notification} from 'antd';
+import {Divider, Select, Layout, Row, Col, Form, notification} from 'antd';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -155,7 +155,7 @@ export function EventAuthoringApp() {
 
         notification.success({
             message: 'Success',
-            description: 'Added event to sequence..'
+            description: 'Added event to sequence.'
         });
     }
 
@@ -173,22 +173,14 @@ export function EventAuthoringApp() {
     function handleSave() {
         console.log("saving");
 
-
-        const values = {} as EventBlob;
-        for (let x of fields) {
-            const {fieldName} = x;
-            const y = form.getFieldValue(fieldName);
-            console.log(y);
-            values[fieldName] = y;
-        }
-
-        singletons.gateway.saveEvent(values).then(r => {
-            notification.success({
-                message: 'Success',
-                description: 'Wrote event sequence to database.'
+        state.allEvents.forEach(e => {
+            singletons.gateway.saveEvent(e).then(r => {
+                notification.success({
+                    message: 'Success',
+                    description: 'Wrote event to database.'
+                });
             });
         });
-        ;
     }
 
     function handleSubjectChange(newValue: any) {
@@ -235,11 +227,14 @@ export function EventAuthoringApp() {
                             onNewEvent={handleNewEvent}
                             selectedThemeValue={selectedTheme}/>
 
-                <h2>Subject</h2>
+                <h2>Subject/Super-event</h2>
 
                 {<DumbSubjectPicker data={state.flattenedPlaneSortieData} 
                                     value={subject}
                                     onChange={handleSubjectChange} />}
+
+
+                <Divider></Divider>
 
                 {/*<SmartSubjectPicker enabled={viewState === ViewState.FORM} configuration={subjectPanelConfiguration}/>*/}
 

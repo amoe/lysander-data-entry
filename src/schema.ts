@@ -80,7 +80,6 @@ export const SCHEMA: EntitySchema = {
         ...commonFields
     ],
     [EventTheme.FLIGHT]: [
-        {label: 'SuperEvent: AirSortie', fieldName: 'superEvent', typeSpec: {fieldType: FieldType.INPUT}},
         {label: 'Pilot', fieldName: 'pilot', typeSpec: {fieldType: FieldType.INPUT}},
         {
             label: 'Event',
