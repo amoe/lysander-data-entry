@@ -29,8 +29,7 @@ import {CustomizedFormControls} from './customized-form-controls';
 
 ReactDOM.render(
     (<div>
-      {/* <EventAuthoringApp/> */}
-      <CustomizedFormControls/>
+      <EventAuthoringApp/>
     </div>),
     document.getElementById('root')
 );

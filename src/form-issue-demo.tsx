@@ -6,8 +6,14 @@ function Widget1() {
     return <Input/>;
 }
 
-function Widget2() {
-    return <Input/>;
+function Widget2(props: {value?: string, onChange?: (newValue: string) => void}) {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (props.onChange) {
+            props.onChange(e.target.value);
+        }
+    };
+
+    return <Input value={props.value} onChange={handleChange}/>;
 }
 
 export function FormIssueDemo() {
@@ -26,7 +32,7 @@ export function FormIssueDemo() {
             </Form.Item>
 
             <Form.Item label="Status2" name="status2">
-              <Widget1/>
+              <Widget2 />
             </Form.Item>
 
             <Button htmlType="submit">Submit</Button>

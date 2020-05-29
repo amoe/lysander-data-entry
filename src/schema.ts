@@ -2,7 +2,6 @@ const ALLOWED_EVENT_TYPE_FOR_FLIGHT = [
     'Operation commissioner',
     'Sortie arranged',
     'Sortie postponed',
-    'Sortie arranged',
     'Person travels',
     'Take Off',
     'Over Coast',
