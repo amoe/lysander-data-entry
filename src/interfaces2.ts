@@ -41,3 +41,35 @@ export interface SubjectData {
     date: string | undefined;
     pilotName: string | undefined;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export interface FlattenedPlaneSortieDatum {
+    planeSortieName: string;
+    nightOf: string;
+    lastNameTillet: string[];
+}

@@ -1,21 +1,26 @@
-import {EntityCache, EventDatum} from './interfaces2';
+import { EntityCache, EventDatum, FlattenedPlaneSortieDatum} from './interfaces2';
 import {SubjectPanelData} from './subject-panel/interfaces';
+
+
 
 interface AppState {
     allEvents: EventDatum[];
     entityCache: EntityCache;
     subjectPanelData: SubjectPanelData;
+    flattenedPlaneSortieData: FlattenedPlaneSortieDatum[];
 }
 
 export enum ActionType {
     ADD_EVENT = 'addEvent',
     SET_ENTITY_CACHE = 'setEntityCache',
-    SET_SUBJECT_PANEL_DATA = 'setSubjectPanelData'
+    SET_SUBJECT_PANEL_DATA = 'setSubjectPanelData',
+    SET_FLATTENED_PLANE_SORTIE_DATA = 'setFlattenedPlaneSortieData'
 };
 
 
 type Action = {type: ActionType.ADD_EVENT, event: any}
     | {type: ActionType.SET_ENTITY_CACHE, entityType: string, payload: any}
+    | {type: ActionType.SET_FLATTENED_PLANE_SORTIE_DATA, payload: FlattenedPlaneSortieDatum[]}
     | {type: ActionType.SET_SUBJECT_PANEL_DATA, key: string, payload: {[key: string]: any}[]}
 
 export function reducer(state: AppState, action: Action): AppState {
@@ -38,6 +43,8 @@ export function reducer(state: AppState, action: Action): AppState {
                     [action.key]: action.payload
                 }
             };
+        case ActionType.SET_FLATTENED_PLANE_SORTIE_DATA:
+            return {...state, flattenedPlaneSortieData: action.payload};
         default:
             throw new Error("no");
     }

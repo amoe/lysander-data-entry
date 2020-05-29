@@ -245,14 +245,14 @@ export class STPointsByCriteria implements CannedStatement {
 
 
 export class FlattenedPlaneSorties implements CannedStatement {
-    constructor() {
-    }
-
     getCypher() {
         const result = `
             MATCH (ps:PlaneSortie)<-[:HAS_PLANE_SORTIE]-(s:Sortie)
             OPTIONAL MATCH (pc1:PersonCluster)-[:HAS_ROLE {type: 'pilots'}]->(ps)
-            RETURN ps.name, s.nightOf, COLLECT(pc1.lastNameTillet)
+            RETURN 
+                ps.name AS planeSortieName,
+                s.nightOf AS nightOf,
+                COLLECT(pc1.lastNameTillet) AS lastNameTillet
             ORDER BY s.nightOf
         `;
         return result;

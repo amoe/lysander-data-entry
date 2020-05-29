@@ -1,22 +1,21 @@
 import React, {useState, useReducer, useEffect} from 'react';
-import {Layout, Row, Col} from 'antd';
 import {ThemePanel} from './theme-panel';
 import {SmartSubjectPicker} from './smart-subject-picker';
 import {FormView} from './form-view';
 import {EventTheme, SCHEMA, FieldSpecification} from './schema';
-import {Form, notification} from 'antd';
 import {Store} from 'antd/lib/form/interface';
-import {EventBlob, EntityCache, SubjectData, EventDatum} from './interfaces2';
+import {
+    EventBlob, EntityCache, SubjectData, EventDatum, FlattenedPlaneSortieDatum
+} from './interfaces2';
 import singletons from './singletons';
 import {reducer, ActionType} from './reducer';
-
 import {
-    GetDistinctPilots, GetDistinctLocations, GetDistinctOperations
+    GetDistinctPilots, GetDistinctLocations, GetDistinctOperations, FlattenedPlaneSorties
 } from './canned-statements';
 import {FilterConfiguration, SubjectPanelData} from './subject-panel/interfaces';
 import {FlightEventDates, FlightEventPilotNames} from './statements/subject-filter';
-
 import {SequenceView} from './sequence-view';
+import {Select, Layout, Row, Col, Form, notification} from 'antd';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -61,18 +60,45 @@ const mockPilots = [
 const mockEvent: EventDatum = {
 }
 
+function getLabel(datum: FlattenedPlaneSortieDatum) {
+    return `${datum.planeSortieName} — ${datum.nightOf} — ${datum.lastNameTillet}`;
+}
+
+function DumbSubjectPicker(props: {
+    data: FlattenedPlaneSortieDatum[],
+    value: string | undefined,
+    onChange: (newValue: string) => void
+}) {
+
+    const options = props.data.map(datum => ({
+        label: getLabel(datum),
+        value: datum.planeSortieName
+    }));
+
+    //    const options = [{value: 'fry', label: 'Fry'}];
+
+    return (
+        <div>
+          <Select options={options} 
+                  style={{width: '100%'}} 
+                  onChange={props.onChange}/>
+        </div>
+    );
+}
+
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
         allEvents: [mockEvent],
         entityCache: emptyCache(),
-        subjectPanelData: {byDate: [], byPilot: []}
+        subjectPanelData: {byDate: [], byPilot: []},
+        flattenedPlaneSortieData: []
     });
     const [selectedTheme, setSelectedTheme] = useState(EventTheme.FLIGHT);
     const [event, setEvent] = useState({});
-    const [viewState, setViewState] = useState(ViewState.SEQUENCE);
+    const [viewState, setViewState] = useState(ViewState.FORM);
     const [form] = Form.useForm();
-    const [subject, setSubject] = useState({date: undefined, pilotName: undefined} as SubjectData);
+    const [subject, setSubject] = useState(undefined as string | undefined);
 
     useEffect(() => {
         CACHE_FILLERS.forEach(({key, statement}) => {
@@ -102,6 +128,17 @@ export function EventAuthoringApp() {
             }
         );
 
+    }, []);
+
+
+    useEffect(() => {
+        singletons.gateway.search(new FlattenedPlaneSorties()).then(
+            ({records}) => {
+                console.log("inside flattened callback");
+                const payload = records.map(x => x.toObject() as FlattenedPlaneSortieDatum);
+                dispatch({type: ActionType.SET_FLATTENED_PLANE_SORTIE_DATA, payload});
+            }
+        );
     }, []);
 
     const fields: FieldSpecification[] = SCHEMA[selectedTheme];
@@ -151,7 +188,7 @@ export function EventAuthoringApp() {
         ;
     }
 
-    function handleSubjectChange(newValue: SubjectData) {
+    function handleSubjectChange(newValue: any) {
         console.log("subject change requested");
         setSubject(newValue);
     }
@@ -194,8 +231,14 @@ export function EventAuthoringApp() {
                             newEventEnabled={viewState === ViewState.SEQUENCE}
                             onNewEvent={handleNewEvent}
                             selectedThemeValue={selectedTheme}/>
-                <SmartSubjectPicker enabled={viewState === ViewState.FORM}
-                                    configuration={subjectPanelConfiguration}/>
+
+                {subject}
+
+                {<DumbSubjectPicker data={state.flattenedPlaneSortieData} 
+                                    value={subject}
+                                    onChange={handleSubjectChange}/>}
+
+                {/*<SmartSubjectPicker enabled={viewState === ViewState.FORM} configuration={subjectPanelConfiguration}/>*/}
 
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
