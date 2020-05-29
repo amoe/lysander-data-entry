@@ -6,7 +6,8 @@ import {FormInstance} from 'antd/lib/form';
 import {PlusOutlined} from '@ant-design/icons';
 
 function FieldWidget(props: FieldSpecification) {
-    console.log("field type is %o", props.typeSpec.fieldType);
+    return <Input/>;
+/*
     switch (props.typeSpec.fieldType) {
         case FieldType.INPUT:
             return (<Input/>);
@@ -16,12 +17,20 @@ function FieldWidget(props: FieldSpecification) {
         default:
             throw new Error("not implemented");
     }
+*/
 }
 
+function SomeFieldWidget() {
+    return (<Input/>);
+}
 
 function Field(props: FieldSpecification) {
-    return <Form.Item label={props.label}
-                      name={props.fieldName}><FieldWidget {...props}/></Form.Item>
+    return (
+        <Form.Item label={props.label}
+                   name={props.fieldName}>
+          <SomeFieldWidget/>
+        </Form.Item>
+    );
 }
 
 export function FormView(
@@ -31,9 +40,14 @@ export function FormView(
         form: FormInstance
     }
 ) {
+    const foo: FieldSpecification = {label: "Status", fieldName: "status", typeSpec: {fieldType: FieldType.INPUT}};
+
     return (
         <Form onFinish={props.onFinish} form={props.form}>
-          {props.fields.map(x => <Field key={x.fieldName} {...x}/>)}
+
+          <Field {...foo}/>
+
+          {/* {props.fields.map(x => <Field key={x.fieldName} {...x}/>)} */}
           
           <Button htmlType="submit" icon={<PlusOutlined/>}></Button>
         </Form>

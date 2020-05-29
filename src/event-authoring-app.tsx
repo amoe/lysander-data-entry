@@ -29,6 +29,7 @@ enum ViewState {
 };
 
 
+
 function emptyCache(): EntityCache {
     return {
         pilots: [],
@@ -147,13 +148,13 @@ export function EventAuthoringApp() {
     // Store is just string->any map anyway.
     function handleFinish(values: Store) {
         console.log("values are %o", values);
-        setEvent(values);
-        dispatch({type: ActionType.ADD_EVENT, event: values});
+        /* setEvent(values);
+         * dispatch({type: ActionType.ADD_EVENT, event: values});
 
-        notification.success({
-            message: 'Success',
-            description: 'Added event to sequence..'
-        });
+         * notification.success({
+         *     message: 'Success',
+         *     description: 'Added event to sequence..'
+         * });*/
     }
 
     function handleThemeChange(value: any) {
@@ -232,7 +233,7 @@ export function EventAuthoringApp() {
                             onNewEvent={handleNewEvent}
                             selectedThemeValue={selectedTheme}/>
 
-                {subject}
+                <h2>Subject</h2>
 
                 {<DumbSubjectPicker data={state.flattenedPlaneSortieData} 
                                     value={subject}
@@ -243,6 +244,8 @@ export function EventAuthoringApp() {
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
                  : <SequenceView allEvents={state.allEvents} onExpand={handleExpand}/>}
+
+        {JSON.stringify(state.allEvents)}
               </Col>
             </Row>
           </Content>

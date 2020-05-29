@@ -20,7 +20,7 @@ import {BasicAntdFormDemo} from './basic-antd-form-demo';
 import {ThemePanel} from './theme-panel';
 import {AutocompleteDemo} from './autocomplete-demo';
 import {EventAuthoringApp} from './event-authoring-app';
-
+import {FormIssueDemo} from './form-issue-demo';
 //<BasicAntdFormDemo />
 
 
@@ -28,7 +28,8 @@ import {EventAuthoringApp} from './event-authoring-app';
 
 ReactDOM.render(
     (<div>
-      <EventAuthoringApp/>
+      {/* <EventAuthoringApp/> */}
+      <FormIssueDemo/>
     </div>),
     document.getElementById('root')
 );
