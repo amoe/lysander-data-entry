@@ -25,11 +25,6 @@ function FieldWidget(props: {
     }
 }
             
-
-function SomeFieldWidget() {
-    return (<Input/>);
-}
-
 function Field(props: FieldSpecification) {
     return (
         <Form.Item label={props.label}
