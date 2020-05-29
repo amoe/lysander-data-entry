@@ -90,7 +90,9 @@ function DumbSubjectPicker(props: {
 
 export function EventAuthoringApp() {
     const [state, dispatch] = useReducer(reducer, {
-        allEvents: [mockEvent],
+        allEvents: [
+            //mockEvent
+        ],
         entityCache: emptyCache(),
         subjectPanelData: {byDate: [], byPilot: []},
         flattenedPlaneSortieData: []
@@ -148,13 +150,13 @@ export function EventAuthoringApp() {
     // Store is just string->any map anyway.
     function handleFinish(values: Store) {
         console.log("values are %o", values);
-        /* setEvent(values);
-         * dispatch({type: ActionType.ADD_EVENT, event: values});
+        setEvent(values);
+        dispatch({type: ActionType.ADD_EVENT, event: {...values, subject}})
 
-         * notification.success({
-         *     message: 'Success',
-         *     description: 'Added event to sequence..'
-         * });*/
+        notification.success({
+            message: 'Success',
+            description: 'Added event to sequence..'
+        });
     }
 
     function handleThemeChange(value: any) {
@@ -237,15 +239,13 @@ export function EventAuthoringApp() {
 
                 {<DumbSubjectPicker data={state.flattenedPlaneSortieData} 
                                     value={subject}
-                                    onChange={handleSubjectChange}/>}
+                                    onChange={handleSubjectChange} />}
 
                 {/*<SmartSubjectPicker enabled={viewState === ViewState.FORM} configuration={subjectPanelConfiguration}/>*/}
 
                 {viewState === ViewState.FORM
                  ? <FormView fields={fields} onFinish={handleFinish} form={form}/>
                  : <SequenceView allEvents={state.allEvents} onExpand={handleExpand}/>}
-
-        {JSON.stringify(state.allEvents)}
               </Col>
             </Row>
           </Content>
