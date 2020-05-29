@@ -21,6 +21,7 @@ import {ThemePanel} from './theme-panel';
 import {AutocompleteDemo} from './autocomplete-demo';
 import {EventAuthoringApp} from './event-authoring-app';
 import {FormIssueDemo} from './form-issue-demo';
+import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
 
 
@@ -29,7 +30,7 @@ import {FormIssueDemo} from './form-issue-demo';
 ReactDOM.render(
     (<div>
       {/* <EventAuthoringApp/> */}
-      <FormIssueDemo/>
+      <CustomizedFormControls/>
     </div>),
     document.getElementById('root')
 );
