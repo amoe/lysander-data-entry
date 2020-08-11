@@ -23,13 +23,14 @@ import {EventAuthoringApp} from './event-authoring-app';
 import {FormIssueDemo} from './form-issue-demo';
 import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
+import {GroupAndMoveDemo} from './group-and-move-demo';
 
 
 
 
 ReactDOM.render(
     (<div>
-      <EventAuthoringApp/>
+      <GroupAndMoveDemo/>
     </div>),
     document.getElementById('root')
 );
