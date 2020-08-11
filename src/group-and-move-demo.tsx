@@ -26,7 +26,7 @@ type Action =
   | {type: ActionType.MOVE_ITEM, sourcePosition: number, targetPosition: number}
   | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number};
 
-function contentAsArray(item: EventItem) {
+function contentAsArray(item: EventItem): EventContent[] {
     switch (item.type) {
         case ListItemType.SINGLE_EVENT:
             return [item.content];
@@ -83,7 +83,9 @@ function reduceEventList(state: EventList, action: Action): EventList {
 }
 
 function EventGroup(props: {members: EventContent[]}) {
-    return <li>Group of {props.members.length} items</li>;
+    return <li>
+      Group of {props.members.length} items: contents {props.members.map((x, i) => <cite>[{x}]</cite>)}
+    </li>;
 }
 
 function EventItem(props: EventItem) {
