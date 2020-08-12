@@ -261,7 +261,7 @@ export function GroupAndMoveDemo() {
 //
     return (
         <div>
-          <h1>My Component</h1>
+          <h1>Group and Move Demo</h1>
 
           <h2>Values</h2>
 
