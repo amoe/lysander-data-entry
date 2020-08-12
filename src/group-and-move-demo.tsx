@@ -196,6 +196,17 @@ function EventItemInList(props: {item: EventItem, index: number}) {
     }
 }
 
+function ConnectButton(
+    props: {onClick: (event: React.MouseEvent<HTMLButtonElement> ) => void}
+) {
+
+    return (
+        <div>
+          <button onClick={props.onClick}>Connect</button>
+        </div>
+    );
+}
+
 
 
 export function GroupAndMoveDemo() {
@@ -239,12 +250,12 @@ export function GroupAndMoveDemo() {
 
           <div>
             {
-                state.map((x, i) => (
-                    <div>
-                      <EventItemInList key={x.id} index={i} item={x}/>
-                      {i < lastIndex && <div>FOOBARBAZ</div>}
-                    </div>
-                ))
+            state.map((x, i) => (
+            <div>
+              <EventItemInList key={x.id} index={i} item={x}/>
+              {i < lastIndex && <ConnectButton onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: i})}/>}
+            </div>
+            ))
             }
           </div>
 
