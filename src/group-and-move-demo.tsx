@@ -164,10 +164,22 @@ function reduceEventList(state: EventList, action: Action): EventList {
     }
 }
 
+function GroupMember(props: {x: EventContent}) {
+    return (
+        <li>{props.x}</li>
+    )
+}
+
 function EventGroup(props: {members: EventContent[]}) {
-    return <li>
-      Group of {props.members.length} items: contents {props.members.map((x, i) => <cite>[{x}]</cite>)}
-    </li>;
+    return (
+        <li>
+          Group of {props.members.length} items: contents
+          <ol>
+            {props.members.map((x, i) => <GroupMember x={x}/>)}
+          </ol>
+        </li>
+    );
+
 }
 
 function EventItem(props: EventItem) {
