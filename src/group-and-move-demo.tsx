@@ -1,6 +1,7 @@
 import React, {useReducer, useState} from 'react';
 import {cloneDeep} from 'lodash';
 import uuidv4 from 'uuid/v4';
+import './group-and-move-demo.css';
 
 // You can only split a group.  That means that splitting requires two parameters:
 // index within the EventList and index within the group.  If it is not a group,
@@ -182,12 +183,14 @@ function EventGroup(props: {members: EventContent[]}) {
 
 }
 
-function EventItem(props: EventItem) {
-    switch (props.type) {
+function EventItemInList(props: {item: EventItem, index: number}) {
+    const listPosition = props.index + 1;
+
+    switch (props.item.type) {
         case ListItemType.SINGLE_EVENT:
-            return <li>Single item: {props.content}</li>;
+            return <div className="top-level-event-list-item">{listPosition}. Single item: {props.item.content}</div>;
         case ListItemType.GROUP:
-            return <EventGroup members={props.groupContent}/>
+            return <EventGroup members={props.item.groupContent}/>
         default:
             throw new Error("no");
     }
@@ -232,9 +235,9 @@ export function GroupAndMoveDemo() {
 
           <p>Count: {state.length}</p>
 
-          <ol>
-            {state.map(x => <EventItem key={x.id} {...x}/>)}
-          </ol>
+          <div>
+            {state.map((x, i) => <EventItemInList key={x.id} index={i} item={x}/>)}
+          </div>
 
           <h2>Actions</h2>
 
