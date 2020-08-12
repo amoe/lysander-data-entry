@@ -1,5 +1,28 @@
 /* group-and-move-demo.css */
 
+/*
+0: "#fbb4ae"
+1: "#b3cde3"
+2: "#ccebc5"
+3: "#decbe4"
+4: "#fed9a6"
+5: "#ffffcc"
+6: "#e5d8bd"
+7: "#fddaec"
+8: "#f2f2f2"
+*/
+
 .top-level-event-list-item {
     padding: 1em 0.5em;
+    background-color: #fbb4ae;
+}
+
+
+.event-group {
+    background-color: #b3cde3;
+}
+
+.event-group-member {
+    padding-left: 2em;
+    border-top: 1px solid black;
 }

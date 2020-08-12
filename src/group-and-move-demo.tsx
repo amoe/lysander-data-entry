@@ -167,18 +167,18 @@ function reduceEventList(state: EventList, action: Action): EventList {
 
 function GroupMember(props: {x: EventContent}) {
     return (
-        <li>{props.x}</li>
+        <div className="event-group-member">
+          {props.x}
+        </div>
     )
 }
 
-function EventGroup(props: {members: EventContent[]}) {
+function EventGroup(props: {toplevelIndex: number, members: EventContent[]}) {
     return (
-        <li>
-          Group of {props.members.length} items: contents
-          <ol>
-            {props.members.map((x, i) => <GroupMember x={x}/>)}
-          </ol>
-        </li>
+        <div className="event-group">
+          Group of {props.members.length} items, contents:
+          {props.members.map((x, i) => <GroupMember x={x}/>)}
+        </div>
     );
 
 }
@@ -190,7 +190,7 @@ function EventItemInList(props: {item: EventItem, index: number}) {
         case ListItemType.SINGLE_EVENT:
             return <div className="top-level-event-list-item">{listPosition}. Single item: {props.item.content}</div>;
         case ListItemType.GROUP:
-            return <EventGroup members={props.item.groupContent}/>
+            return <EventGroup toplevelIndex={props.index} members={props.item.groupContent}/>
         default:
             throw new Error("no");
     }
