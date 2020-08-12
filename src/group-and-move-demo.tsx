@@ -227,6 +227,8 @@ export function GroupAndMoveDemo() {
         setSplitGroupOffset(parseInt(e.target.value));
     };
 
+    const lastIndex = state.length - 1;
+
     return (
         <div>
           <h1>My Component</h1>
@@ -236,7 +238,14 @@ export function GroupAndMoveDemo() {
           <p>Count: {state.length}</p>
 
           <div>
-            {state.map((x, i) => <EventItemInList key={x.id} index={i} item={x}/>)}
+            {
+                state.map((x, i) => (
+                    <div>
+                      <EventItemInList key={x.id} index={i} item={x}/>
+                      {i < lastIndex && <div>FOOBARBAZ</div>}
+                    </div>
+                ))
+            }
           </div>
 
           <h2>Actions</h2>
@@ -266,7 +275,7 @@ export function GroupAndMoveDemo() {
             <label>First item
               <input type="number"
                      value={firstItemToConnect}
-        onChange={handleFirstItemToConnectChange}/>
+                     onChange={handleFirstItemToConnectChange}/>
             </label>
             <button onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: firstItemToConnect})}>Connect to adjacent item</button>
           </div>
