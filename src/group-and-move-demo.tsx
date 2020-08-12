@@ -173,7 +173,9 @@ function GroupMember(props: {x: EventContent}) {
     )
 }
 
-function EventGroup(props: {toplevelIndex: number, members: EventContent[]}) {
+type SplitHandler = (groupOffset: number) => void;
+
+function EventGroup(props: {members: EventContent[], onSplit: SplitHandler}) {
     const lastIndex = props.members.length - 1;
 
     return (
@@ -182,9 +184,9 @@ function EventGroup(props: {toplevelIndex: number, members: EventContent[]}) {
           {
               props.members.map((x, i) => {
                   return (
-                      <div>
+                      <div key={i}>  {/* not sure if key here is right! */}
                         <GroupMember x={x}/>
-                        {i < lastIndex && <div>SPLIT ME</div>}
+                        {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>SPLIT ME</button>}
                       </div>
                   );
               })
@@ -194,14 +196,20 @@ function EventGroup(props: {toplevelIndex: number, members: EventContent[]}) {
 
 }
 
-function EventItemInList(props: {item: EventItem, index: number}) {
+function EventItemInList(
+    props: {
+        item: EventItem,
+        index: number,
+        onSplit: SplitHandler
+    })
+{
     const listPosition = props.index + 1;
 
     switch (props.item.type) {
         case ListItemType.SINGLE_EVENT:
             return <div className="top-level-event-list-item">{listPosition}. Single item: {props.item.content}</div>;
         case ListItemType.GROUP:
-            return <EventGroup toplevelIndex={props.index} members={props.item.groupContent}/>
+            return <EventGroup onSplit={props.onSplit} members={props.item.groupContent}/>
         default:
             throw new Error("no");
     }
@@ -250,7 +258,7 @@ export function GroupAndMoveDemo() {
     };
 
     const lastIndex = state.length - 1;
-
+//
     return (
         <div>
           <h1>My Component</h1>
@@ -261,12 +269,28 @@ export function GroupAndMoveDemo() {
 
           <div>
             {
-            state.map((x, i) => (
-            <div>
-              <EventItemInList key={x.id} index={i} item={x}/>
-              {i < lastIndex && <ConnectButton onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: i})}/>}
-            </div>
-            ))
+                state.map((x, i) => {
+                    const handleSplit: SplitHandler = (groupOffset) => {
+                        console.log("requested at %o", groupOffset);
+                         dispatch(
+                              {
+                                  type: ActionType.SPLIT_GROUP_AT_INDEX,
+                                  itemIndex: i,
+                                  groupOffset
+                              })
+                    };
+
+
+                    return (
+                    <div key={x.id}>
+                      <EventItemInList key={x.id}
+                                       index={i} 
+                                       item={x}
+                                       onSplit={handleSplit}/>
+                      {i < lastIndex && <ConnectButton onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: i})}/>}
+                    </div>
+                    )
+                })
             }
           </div>
 
