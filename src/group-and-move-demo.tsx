@@ -186,7 +186,7 @@ function EventGroup(props: {members: EventContent[], onSplit: SplitHandler}) {
                   return (
                       <div key={i}>  {/* not sure if key here is right! */}
                         <GroupMember x={x}/>
-                        {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>SPLIT ME</button>}
+                        {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>Split</button>}
                       </div>
                   );
               })
