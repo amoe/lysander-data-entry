@@ -174,10 +174,21 @@ function GroupMember(props: {x: EventContent}) {
 }
 
 function EventGroup(props: {toplevelIndex: number, members: EventContent[]}) {
+    const lastIndex = props.members.length - 1;
+
     return (
         <div className="event-group">
           Group of {props.members.length} items, contents:
-          {props.members.map((x, i) => <GroupMember x={x}/>)}
+          {
+              props.members.map((x, i) => {
+                  return (
+                      <div>
+                        <GroupMember x={x}/>
+                        {i < lastIndex && <div>SPLIT ME</div>}
+                      </div>
+                  );
+              })
+          }
         </div>
     );
 
