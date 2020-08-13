@@ -31,7 +31,7 @@ import {ReactDndDemo} from './react-dnd-demo';
 
 ReactDOM.render(
     (<div>
-      <ReactDndDemo/>
+      <GroupAndMoveDemo/>
     </div>),
     document.getElementById('root')
 );
