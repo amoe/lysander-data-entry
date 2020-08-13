@@ -24,13 +24,14 @@ import {FormIssueDemo} from './form-issue-demo';
 import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
 import {GroupAndMoveDemo} from './group-and-move-demo';
+import {ReactDndDemo} from './react-dnd-demo';
 
 
 
 
 ReactDOM.render(
     (<div>
-      <GroupAndMoveDemo/>
+      <ReactDndDemo/>
     </div>),
     document.getElementById('root')
 );
