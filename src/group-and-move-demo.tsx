@@ -41,6 +41,7 @@ enum ActionType {
 type Action = 
   {type: ActionType.ADD_ITEM, content: EventContent}
   | {type: ActionType.MOVE_ITEM, sourcePosition: number, targetPosition: number}
+  | {type: ActionType.MOVE_BY_ID, sourceId: string, targetId: string}
   | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number}
   | {type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: number, groupOffset: number};
 
@@ -157,16 +158,26 @@ function connectToAdjacentItem(state: EventList, firstItem: number) {
 
     return state;
 }
-
+//
 function reduceEventList(state: EventList, action: Action): EventList {
+    const newState = cloneDeep(state);
+
     switch (action.type) {
         case ActionType.ADD_ITEM:
             return [...state, {type: ListItemType.SINGLE_EVENT, content: action.content, id: uuidv4()}];
         case ActionType.MOVE_ITEM:
             // XXX: error handling
-            const newState = cloneDeep(state);
             const removed = newState.splice(action.sourcePosition, 1)[0];
             newState.splice(action.targetPosition, 0, removed);
+            return newState;
+        case ActionType.MOVE_BY_ID:
+            const sourcePosition = state.findIndex(x => x.id === action.sourceId);
+            const targetPosition = state.findIndex(x => x.id === action.targetId);
+            if (sourcePosition === -1) throw new Error("bad source");
+            if (targetPosition === -1) throw new Error("bad source");
+
+            newState[targetPosition] = state[sourcePosition];
+            newState[sourcePosition] = state[targetPosition];
             return newState;
         case ActionType.CONNECT_TO_ADJACENT_ITEM:
             return connectToAdjacentItem(cloneDeep(state), action.firstItem);
@@ -261,7 +272,7 @@ function EventItemInList(
             props.onSwap(item.id, props.item.id);
         },
         hover: (item: DragObject, monitor: DropTargetMonitor) => {
-//            console.log("testing droppability: %o", monitor.canDrop());
+            //            console.log("testing droppability: %o", monitor.canDrop());
         },
         canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
             return true;
@@ -283,15 +294,15 @@ function EventItemInList(
                                  onSplit={props.onSplit}
                                  members={props.item.groupContent}/>
             break;
-        default:
+            default:
             throw new Error("no");
-    }
+            }
 
-    return (
-        <div ref={dropTargetRef} className="drop-wrapper">
-          {result}
-        </div>
-    );
+            return (
+            <div ref={dropTargetRef} className="drop-wrapper">
+              {result}
+            </div>
+            );
 }
 ////
 function ConnectButton(
@@ -338,6 +349,7 @@ export function GroupAndMoveDemo() {
 
     function handleSwap(sourceId: string, targetId: string) {
         console.log("a swap was requested");
+        dispatch({type: ActionType.MOVE_BY_ID, sourceId, targetId});
     }
 
     const lastIndex = state.length - 1;
