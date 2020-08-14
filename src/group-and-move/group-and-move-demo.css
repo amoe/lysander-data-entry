@@ -27,3 +27,7 @@
     padding-left: 2em;
     border-top: 1px solid black;
 }
+
+.event-content-display {
+    color: green;
+}

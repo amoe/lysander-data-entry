@@ -23,7 +23,7 @@ import {EventAuthoringApp} from './event-authoring-app';
 import {FormIssueDemo} from './form-issue-demo';
 import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
-import {GroupAndMoveDemo} from './group-and-move-demo';
+import {GroupAndMoveDemo} from './group-and-move';
 import {ReactDndDemo} from './react-dnd-demo';
 
 
