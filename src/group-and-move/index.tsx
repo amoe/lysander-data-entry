@@ -18,9 +18,35 @@ function ContentDisplay(props: {value: EventContent}) {
 
 // How to ID the group members and how to move within a group?
 function GroupMember(props: {x: EventContent}) {
+    const dragSpec = {
+        item: {type: DraggableType.GROUP_ITEM, id: props.x.id},
+        collect: (monitor: DragSourceMonitor) => ({
+            // not currently used but can be used, no idea why the double bang
+            isDragging: !!monitor.isDragging()
+        })
+    };
+    const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
+
+
+    const dropSpec = {
+        accept: DraggableType.GROUP_ITEM,
+        drop: (item: any, monitor: any) => {
+            console.log("group drop detected");
+        },
+        hover: (item: DragObject, monitor: DropTargetMonitor) => {
+            //            console.log("testing droppability: %o", monitor.canDrop());
+        },
+        canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
+            return true;
+        }
+    };
+    const [dropProps, dropTargetRef] = useDrop(dropSpec);
+
     return (
-        <div className="event-group-member">
-          <ContentDisplay value={props.x}/>
+        <div ref={dropTargetRef}>
+          <div ref={dragSourceRef} className="event-group-member">
+            <ContentDisplay value={props.x}/>
+          </div>
         </div>
     )
 }
