@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer, useState, useContext} from 'react';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
@@ -7,8 +7,10 @@ import './group-and-move-demo.css';
 import {reduceEventList} from './reducer';
 import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
-    ListItemType, EventList, SplitHandler
+    ListItemType, EventList, SplitHandler, Action
 } from './interfaces';
+
+const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
@@ -18,6 +20,8 @@ function ContentDisplay(props: {value: EventContent}) {
 
 // How to ID the group members and how to move within a group?
 function GroupMember(props: {x: EventContent}) {
+    const dispatch = useContext(DispatchContext);
+
     const dragSpec = {
         item: {type: DraggableType.GROUP_ITEM, id: props.x.id},
         collect: (monitor: DragSourceMonitor) => ({
@@ -31,10 +35,17 @@ function GroupMember(props: {x: EventContent}) {
     const dropSpec = {
         accept: DraggableType.GROUP_ITEM,
         drop: (item: any, monitor: any) => {
-            console.log("group drop detected");
+            const itemIndex = 0;
+            const sourceGroupOffset = 0;
+            const targetGroupOffset = 0;
+            dispatch({
+                type: ActionType.MOVE_EVENT_WITHIN_GROUP,
+                itemIndex, sourceGroupOffset, targetGroupOffset
+            });
         },
         hover: (item: DragObject, monitor: DropTargetMonitor) => {
             //            console.log("testing droppability: %o", monitor.canDrop());
+
         },
         canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
             return true;
@@ -234,6 +245,7 @@ export function GroupAndMoveDemo() {
     const lastIndex = state.length - 1;
     //
     return (
+        <DispatchContext.Provider value={dispatch}>
         <DndProvider backend={HTML5Backend}>
           <div>
             <h1>Group and Move Demo</h1>
@@ -334,6 +346,7 @@ export function GroupAndMoveDemo() {
             </div>
           </div>
         </DndProvider>
+        </DispatchContext.Provider>
     );
 }
 

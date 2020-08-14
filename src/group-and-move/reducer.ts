@@ -146,6 +146,7 @@ export function reduceEventList(state: EventList, action: Action): EventList {
         case ActionType.SPLIT_GROUP_AT_INDEX:
             return splitGroupAtIndex(cloneDeep(state), action.itemIndex, action.groupOffset);
         case ActionType.MOVE_EVENT_WITHIN_GROUP:
+            console.log("inside reducer mwg handler");
             const {itemIndex, sourceGroupOffset, targetGroupOffset} = action;
 
             const newGroup = newState[itemIndex];
