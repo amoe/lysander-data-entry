@@ -121,6 +121,41 @@ function connectToAdjacentItem(state: EventList, firstItem: number) {
     return state;
 }
 
+function moveEventWithinGroupById(
+    oldState: EventList, groupId: string, sourceId: string, targetId: string
+) {
+    console.log("inside mwgbi handler");
+
+    const newState = cloneDeep(oldState);
+
+    const groupIndex = oldState.findIndex(x => x.id === groupId);
+    if (groupIndex === -1) throw new Error("bad group");
+
+
+    const newGroup = newState[groupIndex];
+    if (newGroup.type !== ListItemType.GROUP) {
+        throw new Error("will not work");
+    }
+
+    const oldGroup = oldState[groupIndex];
+    if (oldGroup.type !== ListItemType.GROUP) {
+        throw new Error("will not work");
+    }
+
+
+    const sourceGroupOffset = oldGroup.groupContent.findIndex(x => x.id === sourceId);
+    const targetGroupOffset = oldGroup.groupContent.findIndex(x => x.id === targetId);
+    if (sourceGroupOffset === -1) throw new Error("bad source");
+    if (targetGroupOffset === -1) throw new Error("bad source");
+    
+
+    const content = newGroup.groupContent;
+    content[targetGroupOffset] = oldGroup.groupContent[sourceGroupOffset];
+    content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
+    
+    return newState;
+}
+
 export function reduceEventList(state: EventList, action: Action): EventList {
     const newState = cloneDeep(state);
 
@@ -146,7 +181,6 @@ export function reduceEventList(state: EventList, action: Action): EventList {
         case ActionType.SPLIT_GROUP_AT_INDEX:
             return splitGroupAtIndex(cloneDeep(state), action.itemIndex, action.groupOffset);
         case ActionType.MOVE_EVENT_WITHIN_GROUP:
-            console.log("inside reducer mwg handler");
             const {itemIndex, sourceGroupOffset, targetGroupOffset} = action;
 
             const newGroup = newState[itemIndex];
@@ -164,6 +198,10 @@ export function reduceEventList(state: EventList, action: Action): EventList {
             content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
 
             return newState;
+        case ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID:
+            return moveEventWithinGroupById(
+                state, action.groupId, action.sourceId, action.targetId
+            );
         default:
             throw new Error("no");
     }

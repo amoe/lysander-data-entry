@@ -19,7 +19,7 @@ function ContentDisplay(props: {value: EventContent}) {
 }
 
 // How to ID the group members and how to move within a group?
-function GroupMember(props: {x: EventContent}) {
+function GroupMember(props: {x: EventContent, groupId: string}) {
     const dispatch = useContext(DispatchContext);
 
     const dragSpec = {
@@ -31,16 +31,15 @@ function GroupMember(props: {x: EventContent}) {
     };
     const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
 
-
     const dropSpec = {
         accept: DraggableType.GROUP_ITEM,
-        drop: (item: any, monitor: any) => {
-            const itemIndex = 0;
-            const sourceGroupOffset = 0;
-            const targetGroupOffset = 0;
+        drop: (item: DragObject, monitor: any) => {
+            const groupId = props.groupId;
+            const sourceId = item.id;
+            const targetId = props.x.id;
             dispatch({
-                type: ActionType.MOVE_EVENT_WITHIN_GROUP,
-                itemIndex, sourceGroupOffset, targetGroupOffset
+                type: ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID,
+                groupId, sourceId, targetId
             });
         },
         hover: (item: DragObject, monitor: DropTargetMonitor) => {
@@ -89,7 +88,7 @@ function EventGroup(
               props.members.map((x, i) => {
                   return (
                       <div key={x.id}>  {/* not sure if key here is right! */}
-                        <GroupMember x={x}/>
+                        <GroupMember groupId={props.id} x={x}/>
                         {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>Split</button>}
                       </div>
                   );

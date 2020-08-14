@@ -33,7 +33,9 @@ export enum ActionType {
     MOVE_BY_ID = 'moveById',
     CONNECT_TO_ADJACENT_ITEM = 'connectToAdjacentItem',
     SPLIT_GROUP_AT_INDEX = 'splitGroupAtIndex',
-    MOVE_EVENT_WITHIN_GROUP = 'moveEventWithinGroup'
+    MOVE_EVENT_WITHIN_GROUP = 'moveEventWithinGroup',
+    MOVE_EVENT_WITHIN_GROUP_BY_ID = 'moveEventWithinGroupById'
+
 };
 
 
@@ -43,6 +45,10 @@ export type Action =
     | {type: ActionType.MOVE_BY_ID, sourceId: string, targetId: string}
     | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number}
     | {type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: number, groupOffset: number}
-    | {type: ActionType.MOVE_EVENT_WITHIN_GROUP, itemIndex: number, sourceGroupOffset: number, targetGroupOffset: number};
+    | {type: ActionType.MOVE_EVENT_WITHIN_GROUP, itemIndex: number, sourceGroupOffset: number, targetGroupOffset: number}
+    | {type: ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID, groupId: string, sourceId: string, targetId: string};
 
 export type SplitHandler = (groupOffset: number) => void;
+
+// Stupid hack to make webpack reload the interfaces properly
+export const INTERFACES_FILE_VERSION = 1;
