@@ -9,21 +9,23 @@ import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
     ListItemType, EventList, SplitHandler, Action
 } from './interfaces';
-import {randomPartial} from '../date-collection';
+import {randomPartial, DateCollection} from '../date-collection';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
+
+type DroppablePredicate = (sourceId: string, targetId: string) => boolean;
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
         <span className="event-content-display">
-          {props.value.description} - {props.value.pd.toString()}
+          {props.value.description} - {props.value.date.toString()}
           {/*(id is {props.value.id})*/}
         </span>
     );
 }
 
 // How to ID the group members and how to move within a group?
-function GroupMember(props: {x: EventContent, groupId: string}) {
+function GroupMember(props: {x: EventContent, groupId: string, canDrop: DroppablePredicate}) {
     const dispatch = useContext(DispatchContext);
 
     const dragSpec = {
@@ -84,6 +86,11 @@ function EventGroup(
     const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
 
     const lastIndex = props.members.length - 1;
+
+    // This is the easier one as it doesn't have to deal with groups itself
+    function canDrop(sourceId: string, targetId: string): boolean {
+        return true;
+    }
     //
     return (
         <div ref={dragSourceRef} className="event-group">
@@ -92,7 +99,7 @@ function EventGroup(
               props.members.map((x, i) => {
                   return (
                       <div key={x.id}>  {/* not sure if key here is right! */}
-                        <GroupMember groupId={props.id} x={x}/>
+                        <GroupMember groupId={props.id} x={x} canDrop={canDrop}/>
                         {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>Split</button>}
                       </div>
                   );
@@ -129,7 +136,8 @@ function EventItemInList(
         item: EventItem,
         index: number,
         onSplit: SplitHandler,
-        onSwap: Function
+        onSwap: Function,
+        canDrop: DroppablePredicate
     })
 {
     var result;
@@ -143,13 +151,17 @@ function EventItemInList(
             //            console.log("testing droppability: %o", monitor.canDrop());
         },
         canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
-            return true;
+            console.log("inside candrop");
+            console.log("source is %o", item.id);
+            console.log("target is %o", props.item.id);
+
+            const sourceId = item.id;
+            const targetId = props.item.id;
+            return props.canDrop(sourceId, targetId);
         }
     };
 
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
-
-
 
     switch (props.item.type) {
         case ListItemType.SINGLE_EVENT:
@@ -162,9 +174,9 @@ function EventItemInList(
                                  onSplit={props.onSplit}
                                  members={props.item.groupContent}/>
             break;
-            default:
+         default:
             throw new Error("no");
-            }
+    }
 
             return (
             <div ref={dropTargetRef} className="drop-wrapper">
@@ -187,9 +199,8 @@ function ConnectButton(
 function makeDummyEvent(): EventContent {
     return {
         description: "foo",
-        date: Date.now(),
         id: uuidv4(),
-        pd: randomPartial()
+        date: randomPartial()
     };
 }
 //
@@ -246,6 +257,10 @@ export function GroupAndMoveDemo() {
         dispatch({type: ActionType.MOVE_BY_ID, sourceId, targetId});
     }
 
+    function canDrop(sourceId: string, targetId: string): boolean {
+        return true;
+    }
+
     const lastIndex = state.length - 1;
     //
     return (
@@ -278,7 +293,8 @@ export function GroupAndMoveDemo() {
                                                index={i} 
                                                item={x}
                                                onSplit={handleSplit}
-                                               onSwap={handleSwap}/>
+                                               onSwap={handleSwap}
+                                               canDrop={canDrop}/>
                               {i < lastIndex && <ConnectButton onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: i})}/>}
                             </div>
                         )

@@ -17,9 +17,7 @@ export interface DragObject {
 
 export interface EventContent {
     description: string;
-    date: number;
-
-    pd: PartialDate;
+    date: PartialDate;
 
     // These ALSO need a key, as well as the event container itself, as they must
     // be rendered as group children.
