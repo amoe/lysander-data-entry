@@ -39,11 +39,11 @@ enum ActionType {
 
 
 type Action = 
-  {type: ActionType.ADD_ITEM, content: EventContent}
-  | {type: ActionType.MOVE_ITEM, sourcePosition: number, targetPosition: number}
-  | {type: ActionType.MOVE_BY_ID, sourceId: string, targetId: string}
-  | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number}
-  | {type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: number, groupOffset: number};
+    {type: ActionType.ADD_ITEM, content: EventContent}
+    | {type: ActionType.MOVE_ITEM, sourcePosition: number, targetPosition: number}
+    | {type: ActionType.MOVE_BY_ID, sourceId: string, targetId: string}
+    | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number}
+    | {type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: number, groupOffset: number};
 
 function contentAsArray(item: EventItem): EventContent[] {
     switch (item.type) {
