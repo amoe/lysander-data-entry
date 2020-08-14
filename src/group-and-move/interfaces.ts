@@ -1,3 +1,5 @@
+import {PartialDate} from '../partial-date';
+
 export enum ListItemType {
     SINGLE_EVENT = 'singleEvent',
     GROUP = 'group'
@@ -16,6 +18,8 @@ export interface DragObject {
 export interface EventContent {
     description: string;
     date: number;
+
+    pd: PartialDate;
 
     // These ALSO need a key, as well as the event container itself, as they must
     // be rendered as group children.
