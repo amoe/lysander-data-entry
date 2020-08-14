@@ -17,7 +17,9 @@ const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!)
 
 type DroppablePredicate = (sourceId: string, targetId: string) => boolean;
 
-// not done yet!
+// not done yet!  Need to create a function in partialdate that trims a date to
+// the correct range.  If one component is at the limits of that component
+// (startofmonth, endofmonth, etc) just null it out.   will need tests
 function fullRange(dates: PartialDate[]): PartialDate {
     var minSoFar: Date | undefined = undefined;
 
