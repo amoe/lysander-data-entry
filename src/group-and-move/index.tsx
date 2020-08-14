@@ -12,7 +12,7 @@ import {
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
-        <span className="event-content-display">{props.value.description} - {props.value.date}</span>
+        <span className="event-content-display">{props.value.description} - {props.value.date} (id is {props.value.id})</span>
     );
 }
 
@@ -44,14 +44,14 @@ function EventGroup(
     const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
 
     const lastIndex = props.members.length - 1;
-
+//
     return (
         <div ref={dragSourceRef} className="event-group">
           Group of {props.members.length} items, contents:
           {
               props.members.map((x, i) => {
                   return (
-                      <div key={i}>  {/* not sure if key here is right! */}
+                      <div key={x.id}>  {/* not sure if key here is right! */}
                         <GroupMember x={x}/>
                         {i < lastIndex && <button onClick={() => props.onSplit(i + 1)}>Split</button>}
                       </div>
@@ -147,7 +147,8 @@ function ConnectButton(
 function makeDummyEvent(): EventContent {
     return {
         description: "foo",
-        date: Date.now()
+        date: Date.now(),
+        id: uuidv4()
     };
 }
 

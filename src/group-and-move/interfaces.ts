@@ -4,7 +4,8 @@ export enum ListItemType {
 }
 
 export enum DraggableType {
-    LIST_ITEM = 'listItem'
+    LIST_ITEM = 'listItem',
+    GROUP_ITEM = 'groupItem'
 }
 
 export interface DragObject {
@@ -15,6 +16,10 @@ export interface DragObject {
 export interface EventContent {
     description: string;
     date: number;
+
+    // These ALSO need a key, as well as the event container itself, as they must
+    // be rendered as group children.
+    id: string;
 }
 
 export type EventItem = 
