@@ -10,11 +10,17 @@ import {
     ListItemType, EventList, SplitHandler
 } from './interfaces';
 
+function ContentDisplay(props: {value: EventContent}) {
+    return (
+        <span className="event-content-display">{props.value}</span>
+    );
+}
+
 
 function GroupMember(props: {x: EventContent}) {
     return (
         <div className="event-group-member">
-          {props.x}
+          <ContentDisplay value={props.x}/>
         </div>
     )
 }
@@ -73,7 +79,7 @@ function SingleEvent(props: {
 
     return (
         <div ref={dragSourceRef}
-             className="top-level-event-list-item" >{listPosition}. Single item: {props.content}</div>
+             className="top-level-event-list-item">{listPosition}. Single item: <ContentDisplay value={props.content}/></div>
     );
 }
 
