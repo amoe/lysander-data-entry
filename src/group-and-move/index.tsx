@@ -10,6 +10,7 @@ import {
     ListItemType, EventList, SplitHandler, Action
 } from './interfaces';
 import {randomPartial, DateCollection} from '../date-collection';
+import {strictFindIndex} from '../utility';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
@@ -53,7 +54,7 @@ function GroupMember(props: {x: EventContent, groupId: string, canDrop: Droppabl
 
         },
         canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
-            return true;
+            return props.canDrop(item.id, props.x.id);
         }
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
@@ -89,6 +90,10 @@ function EventGroup(
 
     // This is the easier one as it doesn't have to deal with groups itself
     function canDrop(sourceId: string, targetId: string): boolean {
+        console.log("inside candrop");
+        const dates = props.members.map(x => x.date);
+        const collection = DateCollection.fromArray(dates);
+        const val = strictFindIndex(props.members, x => x.id === sourceId);
         return true;
     }
     //
