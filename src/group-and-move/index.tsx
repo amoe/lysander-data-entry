@@ -16,6 +16,7 @@ function ContentDisplay(props: {value: EventContent}) {
     );
 }
 
+// How to ID the group members and how to move within a group?
 function GroupMember(props: {x: EventContent}) {
     return (
         <div className="event-group-member">
@@ -24,7 +25,7 @@ function GroupMember(props: {x: EventContent}) {
     )
 }
 
-// Usedrag needs to be called twice because it can't be passed as props.
+// useDrag needs to be called twice because it can't be passed as props.
 
 function EventGroup(
     props: {
@@ -36,6 +37,7 @@ function EventGroup(
     const dragSpec = {
         item: {type: DraggableType.LIST_ITEM, id: props.id},
         collect: (monitor: DragSourceMonitor) => ({
+            // not currently used but can be used, no idea why the double bang
             isDragging: !!monitor.isDragging()
         })
     };
@@ -130,7 +132,7 @@ function EventItemInList(
             </div>
             );
 }
-////
+
 function ConnectButton(
     props: {onClick: (event: React.MouseEvent<HTMLButtonElement> ) => void}
 ) {
