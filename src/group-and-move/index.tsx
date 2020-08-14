@@ -12,7 +12,7 @@ import {
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
-        <span className="event-content-display">{props.value.description}</span>
+        <span className="event-content-display">{props.value.description} - {props.value.date}</span>
     );
 }
 
@@ -161,6 +161,11 @@ export function GroupAndMoveDemo() {
     const [splitItemIndex, setSplitItemIndex] = useState<number>(0);
     const [splitGroupOffset, setSplitGroupOffset] = useState<number>(0);
 
+    const [mwgItemIndex, setMwgItemIndex] = useState<number>(0);
+    const [mwgSourceGroupOffset, setMwgSourceGroupOffset] = useState<number>(0);
+    const [mwgTargetGroupOffset, setMwgTargetGroupOffset] = useState<number>(0);
+
+
     const handleTargetPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTargetPosition(parseInt(e.target.value));
     };
@@ -180,6 +185,19 @@ export function GroupAndMoveDemo() {
     const handleSplitGroupOffsetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSplitGroupOffset(parseInt(e.target.value));
     };
+
+    const handleMwgItemIndexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMwgItemIndex(parseInt(e.target.value));
+    };
+
+    const handleMwgSourceGroupOffset = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMwgSourceGroupOffset(parseInt(e.target.value));
+    };
+
+    const handleMwgTargetGroupOffset = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMwgTargetGroupOffset(parseInt(e.target.value));
+    };
+
 
     function handleSwap(sourceId: string, targetId: string) {
         console.log("a swap was requested");
@@ -229,49 +247,66 @@ export function GroupAndMoveDemo() {
 
             <div>
               <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
-                </div>
-                
-                <div>
-                <label>Source position
+            </div>
+            
+            <div>
+              <label>Source position
                 <input type="number"
-                value={sourcePosition}
-                onChange={handleSourcePositionChange}/>
-                </label>
+                       value={sourcePosition}
+                       onChange={handleSourcePositionChange}/>
+              </label>
 
-                <label>Target position
+              <label>Target position
                 <input type="number"
-                value={targetPosition}
-                onChange={handleTargetPositionChange}/>
-                </label>
+                       value={targetPosition}
+                       onChange={handleTargetPositionChange}/>
+              </label>
 
 
-                <button onClick={() => dispatch({type: ActionType.MOVE_ITEM, sourcePosition, targetPosition})}>Move item</button>
-                </div>
+              <button onClick={() => dispatch({type: ActionType.MOVE_ITEM, sourcePosition, targetPosition})}>Move item</button>
+            </div>
 
-                <div>
-                <label>First item
+            <div>
+              <label>First item
                 <input type="number"
-                value={firstItemToConnect}
-                onChange={handleFirstItemToConnectChange}/>
-                </label>
-                <button onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: firstItemToConnect})}>Connect to adjacent item</button>
-                </div>
+                       value={firstItemToConnect}
+                       onChange={handleFirstItemToConnectChange}/>
+              </label>
+              <button onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: firstItemToConnect})}>Connect to adjacent item</button>
+            </div>
 
-                <div>
-                <label>Item index
+            <div>
+              <label>Item index
                 <input type="number"
-                value={splitItemIndex} onChange={handleSplitItemIndexChange}/>
-                </label>
+                       value={splitItemIndex} onChange={handleSplitItemIndexChange}/>
+              </label>
 
-                <label>Group offset
+              <label>Group offset
                 <input type="number"
-                value={splitGroupOffset} onChange={handleSplitGroupOffsetChange}/>
-                </label>
+                       value={splitGroupOffset} onChange={handleSplitGroupOffsetChange}/>
+              </label>
 
-                <button onClick={() => dispatch({type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: splitItemIndex, groupOffset: splitGroupOffset})}>Split group</button>
-                </div>
-                </div>
-                </DndProvider>
-              );
+              <button onClick={() => dispatch({type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: splitItemIndex, groupOffset: splitGroupOffset})}>Split group</button>
+            </div>
+
+            <div>
+              <label>Item index
+                <input type="number" value={mwgItemIndex} onChange={handleMwgItemIndexChange}/>
+              </label>
+
+              <label>Source group offset
+                <input type="number" value={mwgSourceGroupOffset} onChange={handleMwgSourceGroupOffset}/>
+              </label>
+
+              <label>Target group offset
+                <input type="number" value={mwgTargetGroupOffset} onChange={handleMwgTargetGroupOffset}/>
+              </label>
+
+              <button onClick={() => dispatch({type: ActionType.MOVE_EVENT_WITHIN_GROUP, itemIndex: mwgItemIndex, sourceGroupOffset: mwgSourceGroupOffset, targetGroupOffset: mwgTargetGroupOffset})}>Foo</button>
+
+            </div>
+          </div>
+        </DndProvider>
+    );
 }
 

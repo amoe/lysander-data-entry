@@ -145,6 +145,24 @@ export function reduceEventList(state: EventList, action: Action): EventList {
             return connectToAdjacentItem(cloneDeep(state), action.firstItem);
         case ActionType.SPLIT_GROUP_AT_INDEX:
             return splitGroupAtIndex(cloneDeep(state), action.itemIndex, action.groupOffset);
+        case ActionType.MOVE_EVENT_WITHIN_GROUP:
+            const {itemIndex, sourceGroupOffset, targetGroupOffset} = action;
+
+            const newGroup = newState[itemIndex];
+            if (newGroup.type !== ListItemType.GROUP) {
+                throw new Error("will not work");
+            }
+
+            const oldGroup = state[itemIndex];
+            if (oldGroup.type !== ListItemType.GROUP) {
+                throw new Error("will not work");
+            }
+
+            const content = newGroup.groupContent;
+            content[targetGroupOffset] = oldGroup.groupContent[sourceGroupOffset];
+            content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
+
+            return newState;
         default:
             throw new Error("no");
     }
