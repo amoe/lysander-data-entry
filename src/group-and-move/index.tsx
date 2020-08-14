@@ -12,10 +12,9 @@ import {
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
-        <span className="event-content-display">{props.value}</span>
+        <span className="event-content-display">{props.value.description}</span>
     );
 }
-
 
 function GroupMember(props: {x: EventContent}) {
     return (
@@ -143,6 +142,12 @@ function ConnectButton(
     );
 }
 
+function makeDummyEvent(): EventContent {
+    return {
+        description: "foo",
+        date: Date.now()
+    };
+}
 
 
 export function GroupAndMoveDemo() {
@@ -221,50 +226,50 @@ export function GroupAndMoveDemo() {
             <h2>Actions</h2>
 
             <div>
-              <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: "foo " + Date.now()})}>Add item</button>
-            </div>
-            
-            <div>
-              <label>Source position
+              <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
+                </div>
+                
+                <div>
+                <label>Source position
                 <input type="number"
-                       value={sourcePosition}
-                       onChange={handleSourcePositionChange}/>
-              </label>
+                value={sourcePosition}
+                onChange={handleSourcePositionChange}/>
+                </label>
 
-              <label>Target position
+                <label>Target position
                 <input type="number"
-                       value={targetPosition}
-                       onChange={handleTargetPositionChange}/>
-              </label>
+                value={targetPosition}
+                onChange={handleTargetPositionChange}/>
+                </label>
 
 
-              <button onClick={() => dispatch({type: ActionType.MOVE_ITEM, sourcePosition, targetPosition})}>Move item</button>
-            </div>
+                <button onClick={() => dispatch({type: ActionType.MOVE_ITEM, sourcePosition, targetPosition})}>Move item</button>
+                </div>
 
-            <div>
-              <label>First item
+                <div>
+                <label>First item
                 <input type="number"
-                       value={firstItemToConnect}
-                       onChange={handleFirstItemToConnectChange}/>
-              </label>
-              <button onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: firstItemToConnect})}>Connect to adjacent item</button>
-            </div>
+                value={firstItemToConnect}
+                onChange={handleFirstItemToConnectChange}/>
+                </label>
+                <button onClick={() => dispatch({type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: firstItemToConnect})}>Connect to adjacent item</button>
+                </div>
 
-            <div>
-              <label>Item index
+                <div>
+                <label>Item index
                 <input type="number"
-                       value={splitItemIndex} onChange={handleSplitItemIndexChange}/>
-              </label>
+                value={splitItemIndex} onChange={handleSplitItemIndexChange}/>
+                </label>
 
-              <label>Group offset
+                <label>Group offset
                 <input type="number"
-                       value={splitGroupOffset} onChange={handleSplitGroupOffsetChange}/>
-              </label>
+                value={splitGroupOffset} onChange={handleSplitGroupOffsetChange}/>
+                </label>
 
-              <button onClick={() => dispatch({type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: splitItemIndex, groupOffset: splitGroupOffset})}>Split group</button>
-            </div>
-          </div>
-        </DndProvider>
-    );
+                <button onClick={() => dispatch({type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: splitItemIndex, groupOffset: splitGroupOffset})}>Split group</button>
+                </div>
+                </div>
+                </DndProvider>
+              );
 }
 

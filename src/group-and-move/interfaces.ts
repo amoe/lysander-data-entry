@@ -12,7 +12,11 @@ export interface DragObject {
     id: string   // or whatever is used as id property of EventItem
 }
 
-export type EventContent = string;
+export interface EventContent {
+    description: string;
+    date: number;
+}
+
 export type EventItem = 
     {type: ListItemType.SINGLE_EVENT, content: EventContent, id: string}
     | {type: ListItemType.GROUP, groupContent: EventContent[], id: string};
