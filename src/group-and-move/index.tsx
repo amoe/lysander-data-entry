@@ -11,10 +11,40 @@ import {
 } from './interfaces';
 import {randomPartial, DateCollection} from '../date-collection';
 import {strictFindIndex} from '../utility';
+import {PartialDate} from '../partial-date';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
 type DroppablePredicate = (sourceId: string, targetId: string) => boolean;
+
+// not done yet!
+function fullRange(dates: PartialDate[]): PartialDate {
+    var minSoFar: Date | undefined = undefined;
+
+    dates.forEach(pd => {
+        const d = pd.toEarliestDate();
+        if (minSoFar === undefined || d < minSoFar) minSoFar = d;
+    });
+
+    var maxSoFar: Date | undefined = undefined;
+    dates.forEach(pd => {
+        const d = pd.toLatestDate();
+        if (maxSoFar === undefined || d < maxSoFar) maxSoFar = d;
+    });
+
+    throw new Error("but very unclear what we return here");
+}
+
+function eventItemToPartialDate(item: EventItem) {
+    switch (item.type) {
+        case ListItemType.SINGLE_EVENT:
+            return item.content.date;
+        case ListItemType.GROUP:
+            return fullRange(item.groupContent.map(x => x.date));
+        default:
+            throw new Error('no');
+    }
+}
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
@@ -88,13 +118,14 @@ function EventGroup(
 
     const lastIndex = props.members.length - 1;
 
-    // This is the easier one as it doesn't have to deal with groups itself
+    // This is the easier one as it doesn't have to deal with groups itself.
     function canDrop(sourceId: string, targetId: string): boolean {
         console.log("inside candrop");
         const dates = props.members.map(x => x.date);
         const collection = DateCollection.fromArray(dates);
-        const val = strictFindIndex(props.members, x => x.id === sourceId);
-        return true;
+        const sourceIndex = strictFindIndex(props.members, x => x.id === sourceId);
+        const targetIndex = strictFindIndex(props.members, x => x.id === targetId);
+        return collection.canMove(sourceIndex, targetIndex);
     }
     //
     return (
