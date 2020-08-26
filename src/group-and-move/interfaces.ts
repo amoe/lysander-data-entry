@@ -41,8 +41,8 @@ export enum ActionType {
     CONNECT_TO_ADJACENT_ITEM = 'connectToAdjacentItem',
     SPLIT_GROUP_AT_INDEX = 'splitGroupAtIndex',
     MOVE_EVENT_WITHIN_GROUP = 'moveEventWithinGroup',
-    MOVE_EVENT_WITHIN_GROUP_BY_ID = 'moveEventWithinGroupById'
-
+    MOVE_EVENT_WITHIN_GROUP_BY_ID = 'moveEventWithinGroupById',
+    SET_CAN_MOVE_VALUE = 'setCanMoveValue'
 };
 
 export type Action = 
@@ -52,7 +52,8 @@ export type Action =
     | {type: ActionType.CONNECT_TO_ADJACENT_ITEM, firstItem: number}
     | {type: ActionType.SPLIT_GROUP_AT_INDEX, itemIndex: number, groupOffset: number}
     | {type: ActionType.MOVE_EVENT_WITHIN_GROUP, itemIndex: number, sourceGroupOffset: number, targetGroupOffset: number}
-    | {type: ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID, groupId: string, sourceId: string, targetId: string};
+    | {type: ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID, groupId: string, sourceId: string, targetId: string}
+    | {type: ActionType.SET_CAN_MOVE_VALUE, newValue: boolean};
 
 export type SplitHandler = (groupOffset: number) => void;
 

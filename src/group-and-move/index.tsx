@@ -86,7 +86,9 @@ function GroupMember(props: {x: EventContent, groupId: string, canDrop: Droppabl
 
         },
         canDrop: (item: DragObject, monitor: DropTargetMonitor) => {
-            return props.canDrop(item.id, props.x.id);
+            const canDrop = props.canDrop(item.id, props.x.id);
+            dispatch({type: ActionType.SET_CAN_MOVE_VALUE, newValue: canDrop});
+            return canDrop;
         }
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
@@ -127,8 +129,6 @@ function EventGroup(
         const sourceIndex = strictFindIndex(props.members, x => x.id === sourceId);
         const targetIndex = strictFindIndex(props.members, x => x.id === targetId);
         const answer =  collection.canMove(sourceIndex, targetIndex);
-
-        console.log("canDrop?  %o", answer);
         return answer;
     }
     //
@@ -251,6 +251,9 @@ function makeEmptyState(): PageState {
 
 export function GroupAndMoveDemo() {
     const [state, dispatch] = useReducer(reduceEventList, makeEmptyState());
+
+    console.log("x is %o", state.canMoveValue);
+    
     const [sourcePosition, setSourcePosition] = useState<number>(0);
     const [targetPosition, setTargetPosition] = useState<number>(0);
     const [firstItemToConnect, setFirstItemToConnect] = useState<number>(0);
@@ -315,6 +318,8 @@ export function GroupAndMoveDemo() {
 
               <h2>Values</h2>
 
+              <p>Can move: {state.canMoveValue.toString()}</p>
+              
               <p>Count: {state.eventList.length}</p>
 
               <div>

@@ -223,6 +223,8 @@ export function reduceEventList(state: PageState, action: Action): PageState {
             return val(moveEventWithinGroupById(
                 state.eventList, action.groupId, action.sourceId, action.targetId
             ));
+        case ActionType.SET_CAN_MOVE_VALUE:
+            return {canMoveValue: action.newValue, eventList: state.eventList}
         default:
             throw new Error("no");
     }
