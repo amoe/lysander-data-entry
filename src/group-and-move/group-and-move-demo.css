@@ -31,3 +31,8 @@
 .event-content-display {
     color: green;
 }
+
+.event-content-id {
+    margin-left: 2em;
+    font-size: x-small;
+}

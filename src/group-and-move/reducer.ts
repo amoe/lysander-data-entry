@@ -1,6 +1,7 @@
 import {cloneDeep} from 'lodash';
 import uuidv4 from 'uuid/v4';
 import {EventItem, EventContent, EventList, Action, ActionType, ListItemType} from './interfaces';
+import {arrayMove} from '../utility';
 
 // You can only split a group.  That means that splitting requires two parameters:
 // index within the EventList and index within the group.  If it is not a group,
@@ -150,8 +151,11 @@ function moveEventWithinGroupById(
     
 
     const content = newGroup.groupContent;
-    content[targetGroupOffset] = oldGroup.groupContent[sourceGroupOffset];
-    content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
+
+    arrayMove(content, sourceGroupOffset, targetGroupOffset);
+
+    // content[targetGroupOffset] = oldGroup.groupContent[sourceGroupOffset];
+    // content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
     
     return newState;
 }
