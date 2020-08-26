@@ -52,7 +52,7 @@ function ContentDisplay(props: {value: EventContent}) {
     return (
         <span className="event-content-display">
           {props.value.description} - {props.value.date.toString()}
-          {/*(id is {props.value.id})*/}
+          <span className="event-content-id">(id is {props.value.id})</span>}
         </span>
     );
 }
@@ -122,12 +122,14 @@ function EventGroup(
 
     // This is the easier one as it doesn't have to deal with groups itself.
     function canDrop(sourceId: string, targetId: string): boolean {
-        console.log("inside candrop");
         const dates = props.members.map(x => x.date);
         const collection = DateCollection.fromArray(dates);
         const sourceIndex = strictFindIndex(props.members, x => x.id === sourceId);
         const targetIndex = strictFindIndex(props.members, x => x.id === targetId);
-        return collection.canMove(sourceIndex, targetIndex);
+        const answer =  collection.canMove(sourceIndex, targetIndex);
+
+        console.log("canDrop?  %o", answer);
+        return answer;
     }
     //
     return (
