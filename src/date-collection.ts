@@ -9,6 +9,26 @@ export function daysFromMonthNumber(year: number, month: number): number {
     return getDaysInMonth(new Date(year, month - 1));
 }
 
+export function randomPartial(): PartialDate {
+    const extraElements = random(0, 2);
+
+    var x;
+
+    const randomYear = random(1939, 1945);
+    const randomMonth = random(1, 12);
+    const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
+
+    if (extraElements === 0) {
+        x = new PartialDate(randomYear)
+    } else if (extraElements === 1) {
+        x = new PartialDate(randomYear, randomMonth);
+    } else {
+        x = new PartialDate(randomYear, randomMonth, randomDay);
+    }
+
+    return x;
+ }
+
 export class DateCollection {
     contents: PartialDate[];
 
@@ -24,23 +44,7 @@ export class DateCollection {
 
     populate(size: number) {
         for (var i = 0; i < size; i++) {
-            const extraElements = random(0, 2);
-
-            var x;
-
-            const randomYear = random(1939, 1945);
-            const randomMonth = random(1, 12);
-            const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
-
-            if (extraElements === 0) {
-                x = new PartialDate(randomYear)
-            } else if (extraElements === 1) {
-                x = new PartialDate(randomYear, randomMonth);
-            } else {
-                x = new PartialDate(randomYear, randomMonth, randomDay);
-            }
-
-            this.contents.push(x);
+            this.contents.push(randomPartial());
         }
 
         this.contents.sort(comparePartialDates);
