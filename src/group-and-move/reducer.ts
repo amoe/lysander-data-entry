@@ -1,6 +1,9 @@
 import {cloneDeep} from 'lodash';
 import uuidv4 from 'uuid/v4';
-import {EventItem, EventContent, EventList, Action, ActionType, ListItemType} from './interfaces';
+import {
+    EventItem, EventContent, EventList, Action, ActionType, ListItemType,
+    PageState
+} from './interfaces';
 import {arrayMove} from '../utility';
 
 // You can only split a group.  That means that splitting requires two parameters:
@@ -160,30 +163,44 @@ function moveEventWithinGroupById(
     return newState;
 }
 
-export function reduceEventList(state: EventList, action: Action): EventList {
+function moveById(state: EventList, sourceId: string, targetId: string) {
     const newState = cloneDeep(state);
+    const sourcePosition = state.findIndex(x => x.id === sourceId);
+    const targetPosition = state.findIndex(x => x.id === targetId);
+    if (sourcePosition === -1) throw new Error("bad source");
+    if (targetPosition === -1) throw new Error("bad source");
+
+    newState[targetPosition] = state[sourcePosition];
+    newState[sourcePosition] = state[targetPosition];
+
+    return newState;
+}
+
+export function reduceEventList(state: PageState, action: Action): PageState {
+    const newState = cloneDeep(state.eventList);
+
+    // Nearly all functions preserve the canmovevalue, so use this helper
+    // probably similar to state slices in redux
+    const val = (l: EventList): PageState  => {
+        return {canMoveValue: state.canMoveValue, eventList: l};
+    }
 
     switch (action.type) {
         case ActionType.ADD_ITEM:
-            return [...state, {type: ListItemType.SINGLE_EVENT, content: action.content, id: uuidv4()}];
+            return val([...newState,
+                    {type: ListItemType.SINGLE_EVENT, content: action.content, id: uuidv4()}
+                       ]);
         case ActionType.MOVE_ITEM:
             // XXX: error handling
             const removed = newState.splice(action.sourcePosition, 1)[0];
             newState.splice(action.targetPosition, 0, removed);
-            return newState;
+            return val(newState);
         case ActionType.MOVE_BY_ID:
-            const sourcePosition = state.findIndex(x => x.id === action.sourceId);
-            const targetPosition = state.findIndex(x => x.id === action.targetId);
-            if (sourcePosition === -1) throw new Error("bad source");
-            if (targetPosition === -1) throw new Error("bad source");
-
-            newState[targetPosition] = state[sourcePosition];
-            newState[sourcePosition] = state[targetPosition];
-            return newState;
+            return val(moveById(state.eventList, action.sourceId, action.targetId));
         case ActionType.CONNECT_TO_ADJACENT_ITEM:
-            return connectToAdjacentItem(cloneDeep(state), action.firstItem);
+            return val(connectToAdjacentItem(cloneDeep(state.eventList), action.firstItem));
         case ActionType.SPLIT_GROUP_AT_INDEX:
-            return splitGroupAtIndex(cloneDeep(state), action.itemIndex, action.groupOffset);
+            return val(splitGroupAtIndex(cloneDeep(state.eventList), action.itemIndex, action.groupOffset));
         case ActionType.MOVE_EVENT_WITHIN_GROUP:
             const {itemIndex, sourceGroupOffset, targetGroupOffset} = action;
 
@@ -192,7 +209,7 @@ export function reduceEventList(state: EventList, action: Action): EventList {
                 throw new Error("will not work");
             }
 
-            const oldGroup = state[itemIndex];
+            const oldGroup = state.eventList[itemIndex];
             if (oldGroup.type !== ListItemType.GROUP) {
                 throw new Error("will not work");
             }
@@ -201,11 +218,13 @@ export function reduceEventList(state: EventList, action: Action): EventList {
             content[targetGroupOffset] = oldGroup.groupContent[sourceGroupOffset];
             content[sourceGroupOffset] = oldGroup.groupContent[targetGroupOffset];
 
-            return newState;
+            return val(newState);
         case ActionType.MOVE_EVENT_WITHIN_GROUP_BY_ID:
-            return moveEventWithinGroupById(
-                state, action.groupId, action.sourceId, action.targetId
-            );
+            return val(moveEventWithinGroupById(
+                state.eventList, action.groupId, action.sourceId, action.targetId
+            ));
+        case ActionType.SET_CAN_MOVE_VALUE:
+            return {canMoveValue: action.newValue, eventList: state.eventList}
         default:
             throw new Error("no");
     }
