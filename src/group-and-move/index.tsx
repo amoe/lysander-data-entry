@@ -7,7 +7,7 @@ import './group-and-move-demo.css';
 import {reduceEventList} from './reducer';
 import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
-    ListItemType, EventList, SplitHandler, Action
+    ListItemType, EventList, SplitHandler, Action, PageState
 } from './interfaces';
 import {randomPartial, DateCollection} from '../date-collection';
 import {strictFindIndex} from '../utility';
@@ -245,8 +245,12 @@ function makeDummyEvent(): EventContent {
 }
 //
 
+function makeEmptyState(): PageState {
+    return {canMoveValue: false, eventList: []};
+}
+
 export function GroupAndMoveDemo() {
-    const [state, dispatch] = useReducer(reduceEventList, []);
+    const [state, dispatch] = useReducer(reduceEventList, makeEmptyState());
     const [sourcePosition, setSourcePosition] = useState<number>(0);
     const [targetPosition, setTargetPosition] = useState<number>(0);
     const [firstItemToConnect, setFirstItemToConnect] = useState<number>(0);
@@ -301,8 +305,8 @@ export function GroupAndMoveDemo() {
         return true;
     }
 
-    const lastIndex = state.length - 1;
-    //
+    const lastIndex = state.eventList.length - 1;
+
     return (
         <DispatchContext.Provider value={dispatch}>
           <DndProvider backend={HTML5Backend}>
@@ -311,11 +315,11 @@ export function GroupAndMoveDemo() {
 
               <h2>Values</h2>
 
-              <p>Count: {state.length}</p>
+              <p>Count: {state.eventList.length}</p>
 
               <div>
                 {
-                    state.map((x, i) => {
+                    state.eventList.map((x, i) => {
                         const handleSplit: SplitHandler = (groupOffset) => {
                             console.log("requested at %o", groupOffset);
                             dispatch(

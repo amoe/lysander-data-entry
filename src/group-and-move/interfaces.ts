@@ -29,6 +29,11 @@ export type EventItem =
     | {type: ListItemType.GROUP, groupContent: EventContent[], id: string};
 export type EventList = Array<EventItem>;
 
+export interface PageState {
+    eventList: EventList;
+    canMoveValue: boolean;
+}
+
 export enum ActionType {
     ADD_ITEM = 'addItem',
     MOVE_ITEM = 'moveItem',
@@ -39,7 +44,6 @@ export enum ActionType {
     MOVE_EVENT_WITHIN_GROUP_BY_ID = 'moveEventWithinGroupById'
 
 };
-
 
 export type Action = 
     {type: ActionType.ADD_ITEM, content: EventContent}
