@@ -1,6 +1,6 @@
 import {
     PartialDate,
-    comparePartialDates
+//    comparePartialDates
 } from './partial-date';
 
 it('constructs a year', () => {
@@ -30,29 +30,89 @@ it('constructs a year-and-month-and-day-and-minute', () => {
     // expect(d.minute).toEqual(23);
 });
 
-it('allows ordering partial dates', () => {
-    const d1 = new PartialDate({year: 1940});
-    const d2 = new PartialDate({year: 1940, monthIndex: 5});
-    const d3 = new PartialDate({year: 1940, monthIndex: 5, day: 9});
+// it('allows ordering partial dates', () => {
+//     const d1 = new PartialDate({year: 1940});
+//     const d2 = new PartialDate({year: 1940, monthIndex: 5});
+//     const d3 = new PartialDate({year: 1940, monthIndex: 5, day: 9});
+//     
+//     const allDates = [d3, d2, d1];
+//     
+//     allDates.sort(comparePartialDates);
+//     
+//     // Unknown points should be filled with zeros, and compared
+//     // based on the start-point of their respective date-ranges.
+//     expect(allDates).toEqual([d1, d2, d3]);
+// });
+// 
+
+
+// it('derives a latest date properly', () => {
+//     const d1 = new PartialDate({year: 1939, monthIndex: 11, day: 20});
+//     const ld = d1.toLatestDate();
+//     
+//     expect(ld.getFullYear()).toBe(1939);
+//     expect(ld.getMonth()).toBe(10);//   zero offset
+//     expect(ld.getDate()).toBe(20);
+// });
+// 
+
+
+
+// Special case where we only provide a year
+it('derives a most accurate date properly', () => {
+    const d1 = new PartialDate({year: 1939});
+    const ld = d1.toMostAccurateDate();
     
-    const allDates = [d3, d2, d1];
+    expect(ld.getFullYear()).toBe(1939);
+    expect(ld.getMonth()).toBe(0);
+});
+
+it('derives a most accurate date properly for a year', () => {
+    const d1 = new PartialDate({year: 1939, monthIndex: 1});
+    const ld = d1.toMostAccurateDate();
     
-    allDates.sort(comparePartialDates);
+    expect(ld.getFullYear()).toBe(1939);
+    expect(ld.getMonth()).toBe(1);
+    expect(ld.getDate()).toBe(1);
+    expect(ld.getMinutes()).toBe(0);
+    expect(ld.getSeconds()).toBe(0);
+});
+
+it('derives a most accurate date properly for a year & month combination', () => {
+    const d1 = new PartialDate({year: 1939, monthIndex: 1});
+    const ld = d1.toMostAccurateDate();
     
-    // Unknown points should be filled with zeros, and compared
-    // based on the start-point of their respective date-ranges.
-    expect(allDates).toEqual([d1, d2, d3]);
+    expect(ld.getFullYear()).toBe(1939);
+    expect(ld.getMonth()).toBe(1);
+    expect(ld.getDate()).toBe(1);
+    expect(ld.getMinutes()).toBe(0);
+    expect(ld.getSeconds()).toBe(0);
 });
 
 
-
-it('derives a latest date properly', () => {
-    const d1 = new PartialDate({year: 1939, monthIndex: 11, day: 20});
+it('derives a latest date properly for a year', () => {
+    const d1 = new PartialDate({year: 1939});
     const ld = d1.toLatestDate();
     
     expect(ld.getFullYear()).toBe(1939);
-    expect(ld.getMonth()).toBe(10);//   zero offset
-    expect(ld.getDate()).toBe(20);
+    expect(ld.getMonth()).toBe(11);
+    expect(ld.getDate()).toBe(31);
+    expect(ld.getHours()).toBe(23);
+    expect(ld.getMinutes()).toBe(59);
+    expect(ld.getSeconds()).toBe(59);
+});
+
+
+it('derives an earliest date properly for a year', () => {
+    const d1 = new PartialDate({year: 1939});
+    const ld = d1.toEarliestDate();
+    
+    expect(ld.getFullYear()).toBe(1939);
+    expect(ld.getMonth()).toBe(0);
+    expect(ld.getDate()).toBe(1);
+    expect(ld.getHours()).toBe(0);
+    expect(ld.getMinutes()).toBe(0);
+    expect(ld.getSeconds()).toBe(0);
 });
 
 
