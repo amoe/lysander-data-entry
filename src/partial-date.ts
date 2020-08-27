@@ -80,7 +80,7 @@ class PartialDate {
     }
 
     toString(): string {
-        return "";
+        return this.getDateConstructorArguments().join();
     }
 
     toLatestDate(): Date {
@@ -93,21 +93,24 @@ class PartialDate {
         return startFn(this.toMostAccurateDate());
     }
 
-    toMostAccurateDate(): Date {
+    getDateConstructorArguments(): number[] {
         const dateConstructorArguments: number[] = [];
-
-        
         for (let x of DATE_CONSTRUCTOR_COMPONENT_ORDERING) {
             // We previously verified that nothing here is actually undefined.
             // In reality we know that this will be at 
             const value = this.components[x] as number;
             dateConstructorArguments.push(value);
-                
+            
             if (x === this.highestResolutionComponent) {
                 break;
             }
         }
 
+        return dateConstructorArguments;
+    }
+
+    toMostAccurateDate(): Date {
+        const dateConstructorArguments = this.getDateConstructorArguments();
 
         // XXX: THE FIRST TWO ARGUMENTS TO THE DATE CONSTRUCTOR ARE NON
         // NULLABLE!  Including monthIndex, which is used to distinguish this

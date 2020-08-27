@@ -39,7 +39,7 @@ import {ReactDndDemo} from './react-dnd-demo';
 
 ReactDOM.render(
     (<div>
-      <DateAuthoringDemo/>
+      <GroupAndMoveDemo/>
     </div>),
     document.getElementById('root')
 );
