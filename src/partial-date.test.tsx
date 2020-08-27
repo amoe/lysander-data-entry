@@ -47,7 +47,7 @@ it('allows ordering partial dates', () => {
 
 
 it('derives a latest date properly', () => {
-    const d1 = new PartialDate(1939, 11, 20);
+    const d1 = new PartialDate({year: 1939, monthIndex: 11, day: 20});
     const ld = d1.toLatestDate();
     
     expect(ld.getFullYear()).toBe(1939);

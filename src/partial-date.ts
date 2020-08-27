@@ -23,10 +23,21 @@ class PartialDate {
         return "";
     }
     
-    toLatestDate(): string {
-        return Date(0);
-    }
+    toLatestDate(): Date {
+        return new Date(0);
 
+        const dateConstructorArguments: DateConstructorArguments = [
+            this.getEarliestYear(),
+            this.getEarliestMonth(),
+            this.getEarliestDay(),
+            0,  // HH
+            0,  // MM
+            0,  // SS
+            0   // MS
+        ];
+
+        return new Date(...dateConstructorArguments);
+    }
 }
 
 export {PartialDate};
