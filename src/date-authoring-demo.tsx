@@ -83,7 +83,11 @@ export function DateAuthoringDemo() {
     const [currentDate, setCurrentDate] = useState<PartialDate | undefined>(undefined)
 
     const onChangeDate: DateChangeHandler = (y, m, d) => {
-        setCurrentDate(new PartialDate(y, m, d));
+        setCurrentDate(
+            new PartialDate(
+                {year: y, monthIndex: m! - 1, day: d}
+            )
+        );
     }
 
     const addDate = (e: MouseEvent) => {

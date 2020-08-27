@@ -28,10 +28,18 @@ import {ReactDndDemo} from './react-dnd-demo';
 
 
 
+// 
+// ReactDOM.render(
+//     (<div>
+//       <GroupAndMoveDemo/>
+//     </div>),
+//     document.getElementById('root')
+// );
+
 
 ReactDOM.render(
     (<div>
-      <GroupAndMoveDemo/>
+      <DateAuthoringDemo/>
     </div>),
     document.getElementById('root')
 );

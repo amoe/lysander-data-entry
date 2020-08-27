@@ -19,11 +19,13 @@ export function randomPartial(): PartialDate {
     const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
 
     if (extraElements === 0) {
-        x = new PartialDate(randomYear)
+        x = new PartialDate({year: randomYear})
     } else if (extraElements === 1) {
-        x = new PartialDate(randomYear, randomMonth);
+        x = new PartialDate({year: randomYear, monthIndex: randomMonth - 1});
     } else {
-        x = new PartialDate(randomYear, randomMonth, randomDay);
+        x = new PartialDate(
+            {year: randomYear, monthIndex: randomMonth - 1, day: randomDay}
+        );
     }
 
     return x;
