@@ -121,5 +121,3 @@ it('derives a latest date properly for a fully-specified partialdate', () => {
     expect(ld.getSeconds()).toBe(47);
     expect(ld.getMilliseconds()).toBe(0);
 });
-
-

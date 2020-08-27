@@ -6,6 +6,7 @@ import {
     startOfHour, endOfHour,
     startOfMinute, endOfMinute,
     startOfSecond, endOfSecond,
+    format
 } from 'date-fns';
 
 const MINIMUM_MONTH_INDEX = 0;
@@ -80,7 +81,13 @@ class PartialDate {
     }
 
     toString(): string {
-        return this.getDateConstructorArguments().join();
+        const correspondingFormats = ['Y', 'MM', 'dd', 'HH', 'mm', 'ss'];
+        const constructorArgs = this.getDateConstructorArguments();
+
+        const patterns = constructorArgs.map((x, i) => correspondingFormats[i]);
+        const fullFormat = patterns.join(' ');
+
+        return format(new Date(...constructorArgs as DateConstructorTuple), fullFormat);
     }
 
     toLatestDate(): Date {
@@ -106,6 +113,15 @@ class PartialDate {
             }
         }
 
+        const definedLength = dateConstructorArguments.length;
+        if (definedLength === 0) {
+            throw new Error("can't happen");
+        }
+
+        if (definedLength === 1) {
+            dateConstructorArguments.push(MINIMUM_MONTH_INDEX);
+        }
+        
         return dateConstructorArguments;
     }
 
@@ -120,15 +136,6 @@ class PartialDate {
         // uncertainty that we handle here is a simple year.  A month may also
         // be undefined from PartialDate's perspective, so we need a special
         // case to initialize it to the lowest possible month.
-
-        const definedLength = dateConstructorArguments.length;
-        if (definedLength === 0) {
-            throw new Error("can't happen");
-        }
-
-        if (definedLength === 1) {
-            dateConstructorArguments.push(MINIMUM_MONTH_INDEX);
-        }
 
         // Override type safety for this case
         return new Date(...(dateConstructorArguments as DateConstructorTuple));

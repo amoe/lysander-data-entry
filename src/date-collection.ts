@@ -18,6 +18,8 @@ export function randomPartial(): PartialDate {
     const randomMonth = random(1, 12);
     const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
 
+    console.log(randomYear);
+    
     if (extraElements === 0) {
         x = new PartialDate({year: randomYear})
     } else if (extraElements === 1) {
