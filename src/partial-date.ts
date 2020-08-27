@@ -132,4 +132,10 @@ class PartialDate {
     }
 }
 
-export {PartialDate};
+
+function comparePartialDates(a: PartialDate, b: PartialDate): number {
+    return compareAsc(a.toEarliestDate(), b.toEarliestDate());
+}
+
+
+export {PartialDate, comparePartialDates};
