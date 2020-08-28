@@ -84,10 +84,13 @@ class PartialDate {
         const correspondingFormats = ['Y', 'MM', 'dd', 'HH', 'mm', 'ss'];
         const constructorArgs = this.getDateConstructorArguments();
 
-        const patterns = constructorArgs.map((x, i) => correspondingFormats[i]);
-        const fullFormat = patterns.join(' ');
-
-        return format(new Date(...constructorArgs as DateConstructorTuple), fullFormat);
+        if (constructorArgs.length === 1) {
+            return constructorArgs[0].toString();    // Year only, special case
+        } else {
+            const patterns = constructorArgs.map((x, i) => correspondingFormats[i]);
+            const fullFormat = patterns.join(' ');
+            return format(new Date(...constructorArgs as DateConstructorTuple), fullFormat);
+        }
     }
 
     toLatestDate(): Date {
@@ -101,28 +104,23 @@ class PartialDate {
     }
 
     getDateConstructorArguments(): number[] {
-        const dateConstructorArguments: number[] = [];
+        const result: number[] = [];
         for (let x of DATE_CONSTRUCTOR_COMPONENT_ORDERING) {
             // We previously verified that nothing here is actually undefined.
             // In reality we know that this will be at 
             const value = this.components[x] as number;
-            dateConstructorArguments.push(value);
+            result.push(value);
             
             if (x === this.highestResolutionComponent) {
                 break;
             }
         }
 
-        const definedLength = dateConstructorArguments.length;
-        if (definedLength === 0) {
+        if (result.length === 0) {
             throw new Error("can't happen");
         }
 
-        if (definedLength === 1) {
-            dateConstructorArguments.push(MINIMUM_MONTH_INDEX);
-        }
-        
-        return dateConstructorArguments;
+        return result;
     }
 
     toMostAccurateDate(): Date {
@@ -137,6 +135,11 @@ class PartialDate {
         // be undefined from PartialDate's perspective, so we need a special
         // case to initialize it to the lowest possible month.
 
+        if (dateConstructorArguments.length === 1) {
+            dateConstructorArguments.push(MINIMUM_MONTH_INDEX);
+        }
+
+        
         // Override type safety for this case
         return new Date(...(dateConstructorArguments as DateConstructorTuple));
     }

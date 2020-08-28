@@ -9,9 +9,11 @@ import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
     ListItemType, EventList, SplitHandler, Action, PageState
 } from './interfaces';
-import {randomPartial, DateCollection} from '../date-collection';
+import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
 import {PartialDate} from '../partial-date';
+import {DateAuthoringComponent, DateInputs} from '../date-authoring-component';
+import {Input, notification} from 'antd';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
@@ -20,38 +22,49 @@ type DroppablePredicate = (sourceId: string, targetId: string) => boolean;
 // not done yet!  Need to create a function in partialdate that trims a date to
 // the correct range.  If one component is at the limits of that component
 // (startofmonth, endofmonth, etc) just null it out.   will need tests
-function fullRange(dates: PartialDate[]): PartialDate {
-    var minSoFar: Date | undefined = undefined;
 
-    dates.forEach(pd => {
-        const d = pd.toEarliestDate();
-        if (minSoFar === undefined || d < minSoFar) minSoFar = d;
-    });
+// function fullRange(dates: PartialDate[]): PartialDate {
+//     var minSoFar: Date | undefined = undefined;
+// 
+//     dates.forEach(pd => {
+//         const d = pd.toEarliestDate();
+//         if (minSoFar === undefined || d < minSoFar) minSoFar = d;
+//     });
+// 
+//     var maxSoFar: Date | undefined = undefined;
+//     dates.forEach(pd => {
+//         const d = pd.toLatestDate();
+//         if (maxSoFar === undefined || d < maxSoFar) maxSoFar = d;
+//     });
+// 
+//     throw new Error("but very unclear what we return here");
+// }
+// 
+// function eventItemToPartialDate(item: EventItem): PartialDate {
+//     switch (item.type) {
+//         case ListItemType.SINGLE_EVENT:
+//             return item.content.date;
+//         case ListItemType.GROUP:
+//             const foo = item.groupContent.map(x => x.date);
+//             return fullRange(foo);
+//         default:
+//             throw new Error('no');
+//     }
+// }
 
-    var maxSoFar: Date | undefined = undefined;
-    dates.forEach(pd => {
-        const d = pd.toLatestDate();
-        if (maxSoFar === undefined || d < maxSoFar) maxSoFar = d;
-    });
-
-    throw new Error("but very unclear what we return here");
-}
-
-function eventItemToPartialDate(item: EventItem) {
-    switch (item.type) {
-        case ListItemType.SINGLE_EVENT:
-            return item.content.date;
-        case ListItemType.GROUP:
-            return fullRange(item.groupContent.map(x => x.date));
-        default:
-            throw new Error('no');
+function formatEventContentDate(value: EventContent) {
+    if (value.date === undefined) {
+        return "[UNCONSTRAINED DATE]";
+    } else {
+        return value.date.toString();
     }
 }
+
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
         <span className="event-content-display">
-          {props.value.description} - {props.value.date.toString()}
+          {props.value.description} - {formatEventContentDate(props.value)}
           <span className="event-content-id">(id is {props.value.id})</span>}
         </span>
     );
@@ -125,7 +138,7 @@ function EventGroup(
     // This is the easier one as it doesn't have to deal with groups itself.
     function canDrop(sourceId: string, targetId: string): boolean {
         const dates = props.members.map(x => x.date);
-        const collection = DateCollection.fromArray(dates);
+        const collection = MaybeDateCollection.fromArray(dates);
         const sourceIndex = strictFindIndex(props.members, x => x.id === sourceId);
         const targetIndex = strictFindIndex(props.members, x => x.id === targetId);
         const answer =  collection.canMove(sourceIndex, targetIndex);
@@ -243,7 +256,18 @@ function makeDummyEvent(): EventContent {
         date: randomPartial()
     };
 }
-//
+
+
+function makeDummyEventWithDate(description: string, date: DateInputs): EventContent {
+    const partialDate = new PartialDate(date);
+    console.log(partialDate.toString());
+    
+    return {
+        description,
+        id: uuidv4(),
+        date: partialDate
+    };
+}
 
 function makeEmptyState(): PageState {
     return {canMoveValue: false, eventList: []};
@@ -282,6 +306,7 @@ export function GroupAndMoveDemo() {
         setSplitItemIndex(parseInt(e.target.value));
     };
 
+    
     const handleSplitGroupOffsetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSplitGroupOffset(parseInt(e.target.value));
     };
@@ -309,6 +334,24 @@ export function GroupAndMoveDemo() {
     }
 
     const lastIndex = state.eventList.length - 1;
+
+
+    const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
+    const [eventDescription, setEventDescription] = useState("");
+
+    function addDate() {
+        if (eventDescription === "") {
+            notification.error({
+                message: 'Error',
+                description: 'Event description cannot be blank'
+            });
+        } else {
+            dispatch(
+                {type: ActionType.ADD_ITEM,
+                 content: makeDummyEventWithDate(eventDescription, dateInputs)}
+            )
+        };
+    }
 
     return (
         <DispatchContext.Provider value={dispatch}>
@@ -351,11 +394,29 @@ export function GroupAndMoveDemo() {
                 }
               </div>
 
+              <h2>Author Dates</h2>
+
+              <div>
+                <label>Description
+                  <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/></label>
+                
+                {JSON.stringify(dateInputs)}
+                
+                <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
+                <button onClick={addDate}>Add item</button>
+              </div>
+
               <h2>Actions</h2>
 
               <div>
                 <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
               </div>
+
+              <div>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM_WITH_UNDEFINED_DATE})}>Add time-unconstrained item</button>
+              </div>
+
+              
               
               <div>
                 <label>Source position
