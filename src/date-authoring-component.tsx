@@ -38,11 +38,11 @@ function OptionalNumber(props: {
             props.onChange(undefined);
         }
     };
-
+//
 
     return (
         <div>
-          
+          {props.label}
           <Checkbox checked={isEnabled} onChange={onCheckboxChange} />
           <InputNumber value={props.value} onChange={props.onChange} 
                        disabled={!isEnabled}
@@ -86,6 +86,17 @@ export function DateAuthoringComponent(props: {value: DateInputs, onChange: (x: 
                           label="Day"
                           min={1}
                           max={props.value.monthIndex === undefined ? undefined : daysFromMonthNumber(props.value.year, props.value.monthIndex)}/>
+          <OptionalNumber value={props.value.hours}
+                          onChange={makeUpdater('hours')}
+                          label="Hours"
+                          min={0}
+                          max={23}/>
+
+          <OptionalNumber value={props.value.minutes}
+                          onChange={makeUpdater('minutes')}
+                          label="Minutes"
+                          min={0}
+                          max={59}/>
         </span>
     );
 }
