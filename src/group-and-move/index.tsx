@@ -20,38 +20,49 @@ type DroppablePredicate = (sourceId: string, targetId: string) => boolean;
 // not done yet!  Need to create a function in partialdate that trims a date to
 // the correct range.  If one component is at the limits of that component
 // (startofmonth, endofmonth, etc) just null it out.   will need tests
-function fullRange(dates: PartialDate[]): PartialDate {
-    var minSoFar: Date | undefined = undefined;
 
-    dates.forEach(pd => {
-        const d = pd.toEarliestDate();
-        if (minSoFar === undefined || d < minSoFar) minSoFar = d;
-    });
+// function fullRange(dates: PartialDate[]): PartialDate {
+//     var minSoFar: Date | undefined = undefined;
+// 
+//     dates.forEach(pd => {
+//         const d = pd.toEarliestDate();
+//         if (minSoFar === undefined || d < minSoFar) minSoFar = d;
+//     });
+// 
+//     var maxSoFar: Date | undefined = undefined;
+//     dates.forEach(pd => {
+//         const d = pd.toLatestDate();
+//         if (maxSoFar === undefined || d < maxSoFar) maxSoFar = d;
+//     });
+// 
+//     throw new Error("but very unclear what we return here");
+// }
+// 
+// function eventItemToPartialDate(item: EventItem): PartialDate {
+//     switch (item.type) {
+//         case ListItemType.SINGLE_EVENT:
+//             return item.content.date;
+//         case ListItemType.GROUP:
+//             const foo = item.groupContent.map(x => x.date);
+//             return fullRange(foo);
+//         default:
+//             throw new Error('no');
+//     }
+// }
 
-    var maxSoFar: Date | undefined = undefined;
-    dates.forEach(pd => {
-        const d = pd.toLatestDate();
-        if (maxSoFar === undefined || d < maxSoFar) maxSoFar = d;
-    });
-
-    throw new Error("but very unclear what we return here");
-}
-
-function eventItemToPartialDate(item: EventItem) {
-    switch (item.type) {
-        case ListItemType.SINGLE_EVENT:
-            return item.content.date;
-        case ListItemType.GROUP:
-            return fullRange(item.groupContent.map(x => x.date));
-        default:
-            throw new Error('no');
+function formatEventContentDate(value: EventContent) {
+    if (value.date === undefined) {
+        return "[UNCONSTRAINED DATE]";
+    } else {
+        return value.date.toString();
     }
 }
+
 
 function ContentDisplay(props: {value: EventContent}) {
     return (
         <span className="event-content-display">
-          {props.value.description} - {props.value.date.toString()}
+          {props.value.description} - {formatEventContentDate(props.value)}
           <span className="event-content-id">(id is {props.value.id})</span>}
         </span>
     );
