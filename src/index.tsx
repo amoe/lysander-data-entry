@@ -10,7 +10,6 @@ import * as serviceWorker from './serviceWorker';
 // import {GroupedDndDemo} from './grouped-dnd-demo';
 // import {PartialDate} from './partial-date';
 // import {GeneratedDates} from './generated-dates'
-import {DateAuthoringDemo} from './date-authoring-demo';
 // import {SwitchDemo} from './switch-demo';
 // import {LocationAuthoringDemo} from './location-authoring-demo';
 // import {EventGrouping} from './event-grouping';
@@ -23,9 +22,9 @@ import {DateAuthoringDemo} from './date-authoring-demo';
 // import {FormIssueDemo} from './form-issue-demo';
 // import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
-//import {GroupAndMoveDemo} from './group-and-move';
 // import {ReactDndDemo} from './react-dnd-demo';
-
+import {DateAuthoringDemo} from './date-authoring-demo';
+import {GroupAndMoveDemo} from './group-and-move';
 
 
 // 
@@ -39,7 +38,7 @@ import {DateAuthoringDemo} from './date-authoring-demo';
 
 ReactDOM.render(
     (<div>
-      <DateAuthoringDemo/>
+      <GroupAndMoveDemo/>
     </div>),
     document.getElementById('root')
 );

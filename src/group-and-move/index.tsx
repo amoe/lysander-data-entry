@@ -12,6 +12,7 @@ import {
 import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
 import {PartialDate} from '../partial-date';
+import {DateAuthoringComponent, DateInputs} from '../date-authoring-component';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
@@ -254,7 +255,18 @@ function makeDummyEvent(): EventContent {
         date: randomPartial()
     };
 }
-//
+
+
+function makeDummyEventWithDate(description: string, date: DateInputs): EventContent {
+    const partialDate = new PartialDate(date);
+    console.log(partialDate.toString());
+    
+    return {
+        description,
+        id: uuidv4(),
+        date: partialDate
+    };
+}
 
 function makeEmptyState(): PageState {
     return {canMoveValue: false, eventList: []};
@@ -322,6 +334,17 @@ export function GroupAndMoveDemo() {
 
     const lastIndex = state.eventList.length - 1;
 
+
+    const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
+
+    
+    function addDate() {
+        console.log("adding a date");
+    }
+    
+
+    
+
     return (
         <DispatchContext.Provider value={dispatch}>
           <DndProvider backend={HTML5Backend}>
@@ -361,6 +384,15 @@ export function GroupAndMoveDemo() {
                         )
                     })
                 }
+              </div>
+
+              <h2>Author Dates</h2>
+
+              <div>
+                {JSON.stringify(dateInputs)}
+                
+                <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEventWithDate("foo", dateInputs)})}>Add item</button>
               </div>
 
               <h2>Actions</h2>
