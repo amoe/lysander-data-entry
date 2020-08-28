@@ -51,9 +51,6 @@ function OptionalNumber(props: {
 
 type DateChangeHandler = (year: number, month: number | undefined, day: number | undefined) => void;
 
-
-
-
 export function DateAuthoringComponent(props: {value: DateInputs, onChange: (x: DateInputs) => void}) {
     function makeUpdater(fieldName: string) {
         return (x: string | number | undefined) => {

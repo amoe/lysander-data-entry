@@ -121,3 +121,11 @@ it('derives a latest date properly for a fully-specified partialdate', () => {
     expect(ld.getSeconds()).toBe(47);
     expect(ld.getMilliseconds()).toBe(0);
 });
+
+
+it('formats a single year date properly', () => {
+    const d1 = new PartialDate({year: 1940});
+    const formatted = d1.toString();
+
+    expect(formatted).toBe("1940");
+});
