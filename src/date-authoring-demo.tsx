@@ -6,6 +6,16 @@ import {clone} from 'lodash';
 import {getDaysInMonth} from 'date-fns';
 import {daysFromMonthNumber} from './maybe-date-collection';
 
+interface DateInputs {
+    year: number;
+    monthIndex?: number;    // 0-BASED
+    day?: number;
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+    milliseconds?: number;
+}
+
 // not sure how to type the onchange handler
 function OptionalNumber(props: {
     value: number | undefined, 
@@ -42,36 +52,32 @@ function OptionalNumber(props: {
 type DateChangeHandler = (year: number, month: number | undefined, day: number | undefined) => void;
 
 
-function DateAuthoringComponent(props: {onChange: DateChangeHandler}) {
-    const [year, setYear] = useState(1939);
-    const [month, setMonth] = useState<number | undefined>(1);
-    const [day, setDay] = useState(2);
 
-    function makeUpdater(setValue: Function) {
+
+function DateAuthoringComponent(props: {value: DateInputs, onChange: (x: DateInputs) => void}) {
+    function makeUpdater(fieldName: string) {
         return (x: string | number | undefined) => {
-            setValue(x);
-            console.log("about to fire onchange");
-            props.onChange(year, month, day);
+            props.onChange({...props.value, [fieldName]: x});
         }
     }
 
     return (
         <span>
-        <OptionalNumber value={year}
-                        onChange={makeUpdater(setYear)}
+        <OptionalNumber value={props.value.year}
+                        onChange={makeUpdater('year')}
                         label="Year"
                         min={1930}
                         max={1950}/>
-        <OptionalNumber value={month}
-                        onChange={makeUpdater(setMonth)}
+        <OptionalNumber value={props.value.monthIndex}
+                        onChange={makeUpdater('monthIndex')}
                         label="Month"
                         min={1}
                         max={12}/>
-        <OptionalNumber value={day}
-                        onChange={makeUpdater(setDay)}
+        <OptionalNumber value={props.value.day}
+                        onChange={makeUpdater('day')}
                         label="Day"
                         min={1}
-                        max={month === undefined ? undefined : daysFromMonthNumber(year, month)}/>
+                        max={props.value.monthIndex === undefined ? undefined : daysFromMonthNumber(props.value.year, props.value.monthIndex)}/>
         </span>
     );
 }
@@ -79,39 +85,29 @@ function DateAuthoringComponent(props: {onChange: DateChangeHandler}) {
 
 
 export function DateAuthoringDemo() {
-    const [dates, setDates] = useState<PartialDate[]>([]);
-    const [currentDate, setCurrentDate] = useState<PartialDate | undefined>(
-        undefined
-    )
+    const [dates, setDates] = useState([] as DateInputs[]);
+    const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
 
-    const onChangeDate: DateChangeHandler = (y, m, d) => {
-        setCurrentDate(
-            new PartialDate(
-                {year: y, monthIndex: m! - 1, day: d}
-            )
-        );
+
+    function onChange(x: DateInputs) {
+        setDateInputs(x);
     }
-
-    const addDate = (e: MouseEvent) => {
-        if (currentDate !== undefined) {
-            setDates([...dates, currentDate]);
-        } else {
-            console.log("skipping add as date is undefined");
-        }
-    };
-
+    
+    function addDate() {
+        setDates([...dates, dateInputs]);
+    }
+    
     return (
         <div>
           <h1>Date authoring demo</h1>
           
- 
-          <DateAuthoringComponent onChange={onChangeDate}/>
+          <DateAuthoringComponent value={dateInputs} onChange={onChange}/>
 
-            <ul>
-            {dates.map((x, i) => <li>{x.toString()}</li>)}
-            </ul>
+          <ul>
+            {dates.map((x, i) => <li>{JSON.stringify(x)}</li>)}
+          </ul>
 
-            <button onClick={addDate}>Add</button>
-            </div>
+          <button onClick={addDate}>Add</button>
+        </div>
     );
 }
