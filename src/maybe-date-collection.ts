@@ -43,20 +43,28 @@ function compareMaybePartialDates(a: MaybePartialDate, b: MaybePartialDate): num
 }
 
 function checkValidityForward(source: MaybePartialDate, target: MaybePartialDate): boolean {
-    const x = source.toLatestDate();
-    const y = target.toEarliestDate();
+    if (source === undefined || target === undefined) {
+        return true;
+    } else {
+        const x = source.toLatestDate();
+        const y = target.toEarliestDate();
 
-    const isValid = isAfter(x, y) || isEqual(x, y);
-    return isValid;
+        const isValid = isAfter(x, y) || isEqual(x, y);
+        return isValid;
+    }
 }
 
 
 function checkValidityBackward(source: MaybePartialDate, target: MaybePartialDate): boolean {
-    const x = source.toEarliestDate();
-    const y = target.toLatestDate();
+    if (source === undefined || target === undefined) {
+        return true;
+    } else {
+        const x = source.toEarliestDate();
+        const y = target.toLatestDate();
 
-    const isValid = isBefore(x, y) || isEqual(x, y);
-    return isValid;
+        const isValid = isBefore(x, y) || isEqual(x, y);
+        return isValid;
+    }
 }
 
 
@@ -79,26 +87,6 @@ export class MaybeDateCollection {
         }
 
         this.contents.sort(compareMaybePartialDates);
-    }
-
-    canMoveDisregardingInterveningItems(sourceIndex: number, targetIndex: number) {
-        const source = this.contents[sourceIndex];
-        const target = this.contents[targetIndex];
-
-        if (sourceIndex < targetIndex) {    // We are moving the event forward
-            const x = source.toLatestDate();
-            const y = target.toEarliestDate();
-            
-            return isAfter(x, y) || isEqual(x, y);
-        } else if (sourceIndex > targetIndex)  { // We are moving the event backward
-            const x = source.toEarliestDate();
-            const y = target.toLatestDate();
-
-            return isBefore(x, y) || isEqual(x, y);
-        } else {
-            console.warn("attempt to swap date with itself: %o", sourceIndex);
-            return true;
-        }
     }
 
     canMove(sourceIndex: number, targetIndex: number): boolean {
