@@ -13,6 +13,7 @@ import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
 import {PartialDate} from '../partial-date';
 import {DateAuthoringComponent, DateInputs} from '../date-authoring-component';
+import {Input, notification} from 'antd';
 
 const DispatchContext = React.createContext<React.Dispatch<Action>>(undefined!!);
 
@@ -336,14 +337,21 @@ export function GroupAndMoveDemo() {
 
 
     const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
+    const [eventDescription, setEventDescription] = useState("");
 
-    
     function addDate() {
-        console.log("adding a date");
+        if (eventDescription === "") {
+            notification.error({
+                message: 'Error',
+                description: 'Event description cannot be blank'
+            });
+        } else {
+            dispatch(
+                {type: ActionType.ADD_ITEM,
+                 content: makeDummyEventWithDate(eventDescription, dateInputs)}
+            )
+        };
     }
-    
-
-    
 
     return (
         <DispatchContext.Provider value={dispatch}>
@@ -389,10 +397,13 @@ export function GroupAndMoveDemo() {
               <h2>Author Dates</h2>
 
               <div>
+                <label>Description
+                  <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/></label>
+                
                 {JSON.stringify(dateInputs)}
                 
                 <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
-                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEventWithDate("foo", dateInputs)})}>Add item</button>
+                <button onClick={addDate}>Add item</button>
               </div>
 
               <h2>Actions</h2>
