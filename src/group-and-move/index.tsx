@@ -282,6 +282,7 @@ export function GroupAndMoveDemo() {
         setSplitItemIndex(parseInt(e.target.value));
     };
 
+    
     const handleSplitGroupOffsetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSplitGroupOffset(parseInt(e.target.value));
     };
@@ -356,6 +357,12 @@ export function GroupAndMoveDemo() {
               <div>
                 <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
               </div>
+
+              <div>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM_WITH_UNDEFINED_DATE})}>Add item</button>
+              </div>
+
+              
               
               <div>
                 <label>Source position

@@ -225,6 +225,20 @@ export function reduceEventList(state: PageState, action: Action): PageState {
             ));
         case ActionType.SET_CAN_MOVE_VALUE:
             return {canMoveValue: action.newValue, eventList: state.eventList}
+        case ActionType.ADD_ITEM_WITH_UNDEFINED_DATE:
+            const newContent = {
+                description: "An unconstrained event",
+                date: undefined,
+                id: uuidv4()
+            };
+            const item: EventItem = {
+                type: ListItemType.SINGLE_EVENT,
+                content: newContent,
+                id: uuidv4()
+            };
+            
+            const newEvents = [...newState, item];
+            return val(newEvents);
         default:
             throw new Error("no");
     }
