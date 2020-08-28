@@ -1,12 +1,12 @@
 import {DateCollection} from './date-collection';
 import {PartialDate} from './partial-date';
 
-it('works', () => {
+it('restricts reordering as expected', () => {
     const ordering: PartialDate[] = [
-        new PartialDate(1939),            // 0
-        new PartialDate(1939, 1),         // 1
-        new PartialDate(1939, 11, 20),    // 2
-        new PartialDate(1940)             // 3
+        new PartialDate({year: 1939}),             // 0
+        new PartialDate({year: 1939, monthIndex: 2}),          // 1
+        new PartialDate({year: 1939, monthIndex: 11, day: 20}),     // 2
+        new PartialDate({year: 1940})              // 3
     ];
 
     const coll = DateCollection.fromArray(ordering);

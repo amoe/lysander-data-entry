@@ -24,13 +24,13 @@ export function EventGrouping() {
 
     const events = new EventSequence();
 
-    const e1 = new FlightEvent('Bartholomew I of Constantinople issues a formal decree granting independence to the Orthodox Church of Ukraine from the Russian Orthodox Church.', new PartialDate(2019, 1, 5));
+    const e1 = new FlightEvent('Bartholomew I of Constantinople issues a formal decree granting independence to the Orthodox Church of Ukraine from the Russian Orthodox Church.', new PartialDate({year: 2019, monthIndex: 0, day: 5}));
 
-    const e2 = new FlightEvent('Venezuelan presidential crisis: President Maduro severs diplomatic ties with Colombia as humanitarian aid attempts to enter the country across the border.', new PartialDate(2019, 2, 23));
+    const e2 = new FlightEvent('Venezuelan presidential crisis: President Maduro severs diplomatic ties with Colombia as humanitarian aid attempts to enter the country across the border.', new PartialDate({year: 2019, monthIndex: 1, day: 23}));
 
-    const e3 = new FlightEvent("Europe's antitrust regulators fine Google 1.49 billion euros ($1.7 billion) for freezing out rivals in the online advertising business. The ruling brings to nearly $10 billion the fines imposed against Google by the European Union.", new PartialDate(2019, 3, 20));
+    const e3 = new FlightEvent("Europe's antitrust regulators fine Google 1.49 billion euros ($1.7 billion) for freezing out rivals in the online advertising business. The ruling brings to nearly $10 billion the fines imposed against Google by the European Union.", new PartialDate({year: 2019, monthIndex: 3, day: 20}));
 
-    const e4 = new FlightEvent('A series of bomb attacks occur at eight locations in Sri Lanka, including three churches, four hotels and one housing complex in Colombo, on Easter Sunday, leaving 259 people dead and over 500 injured. It is the first major terrorist attack in the country since the Sri Lankan Civil War ended in 2009.', new PartialDate(2019, 4, 21));
+    const e4 = new FlightEvent('A series of bomb attacks occur at eight locations in Sri Lanka, including three churches, four hotels and one housing complex in Colombo, on Easter Sunday, leaving 259 people dead and over 500 injured. It is the first major terrorist attack in the country since the Sri Lankan Civil War ended in 2009.', new PartialDate({year: 2019, monthIndex: 4, day: 21}));
 
     events.addEvent(e1);
     events.addEvent(e2);

@@ -93,7 +93,7 @@ export function DndDemo(props: AppProps) {
     const handleAdd = () => {
         const yearNum = parseInt(year);
         const newItemsValue = clone(items);
-        newItemsValue.push(new PartialDate(yearNum))
+        newItemsValue.push(new PartialDate({year: yearNum}))
         setItems(newItemsValue);
     };
 
