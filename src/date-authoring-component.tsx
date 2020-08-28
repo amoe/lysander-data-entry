@@ -2,7 +2,7 @@ import React, {useState, ChangeEvent, MouseEvent} from 'react';
 import {InputNumber, Checkbox} from 'antd';
 import {Button, Form, Input} from 'antd';
 import {PartialDate} from './partial-date';
-import {clone} from 'lodash';
+import {clone, cloneDeep} from 'lodash';
 import {getDaysInMonth} from 'date-fns';
 import {daysFromMonthNumber} from './maybe-date-collection';
 
@@ -34,7 +34,9 @@ function OptionalNumber(props: {
         const newEnabledValue = e.target.checked;
 
         setEnabled(newEnabledValue);
-        if (!newEnabledValue) props.onChange(undefined);
+        if (newEnabledValue === false) {
+            props.onChange(undefined);
+        }
     };
 
 
@@ -54,7 +56,16 @@ type DateChangeHandler = (year: number, month: number | undefined, day: number |
 export function DateAuthoringComponent(props: {value: DateInputs, onChange: (x: DateInputs) => void}) {
     function makeUpdater(fieldName: string) {
         return (x: string | number | undefined) => {
-            props.onChange({...props.value, [fieldName]: x});
+            // Completely remove undefined values from the object.  That means we can
+            // manage a date with a completely undefined year, which just produces an
+            // empty object of type DateInputs.
+            if (x === undefined) {
+                const newProps: any = cloneDeep(props.value);   // YUCK NOT TYPE SAFE
+                delete newProps[fieldName];
+                props.onChange(newProps);
+            } else {
+                props.onChange({...props.value, [fieldName]: x});
+            }
         }
     }
 

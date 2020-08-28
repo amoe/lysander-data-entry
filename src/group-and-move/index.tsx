@@ -1,7 +1,7 @@
 import React, {useReducer, useState, useContext} from 'react';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, isEmpty} from 'lodash';
 import uuidv4 from 'uuid/v4';
 import './group-and-move-demo.css';
 import {reduceEventList} from './reducer';
@@ -259,13 +259,22 @@ function makeDummyEvent(): EventContent {
 
 
 function makeDummyEventWithDate(description: string, date: DateInputs): EventContent {
-    const partialDate = new PartialDate(date);
-    console.log(partialDate.toString());
+    var dateField;
+
+    console.log(date);
+    
+    if (isEmpty(date)) {
+        dateField = undefined;
+    } else {
+        dateField = new PartialDate(date);
+        console.log(dateField.toString());
+    }
+        
     
     return {
         description,
         id: uuidv4(),
-        date: partialDate
+        date: dateField
     };
 }
 
@@ -353,6 +362,27 @@ export function GroupAndMoveDemo() {
         };
     }
 
+    const [sequenceName, setSequenceName] = useState("Sequence 1");
+    
+    function download() {
+        if (sequenceName === "") {
+            notification.error({
+                message: 'Error',
+                description: 'Please set a name for the sequence'
+            });
+            return;
+        }
+        
+        const content = JSON.stringify(state.eventList, null, 4);
+        var data = new Blob([content], {type: 'application/json'});
+        var csvURL = window.URL.createObjectURL(data);
+        const tempLink = document.createElement('a');
+        tempLink.href = csvURL;
+        tempLink.setAttribute('download', sequenceName + '.json');
+        setSequenceName("");
+        tempLink.click();
+    }
+
     return (
         <DispatchContext.Provider value={dispatch}>
           <DndProvider backend={HTML5Backend}>
@@ -361,9 +391,19 @@ export function GroupAndMoveDemo() {
 
               <h2>Values</h2>
 
+              <div>
+                <label>Sequence name: <input type="text"
+                                            value={sequenceName}
+                                            onChange={(e) => setSequenceName(e.target.value)}/>
+                </label>
+              </div>
+                  
+
               <p>Can move: {state.canMoveValue.toString()}</p>
               
               <p>Count: {state.eventList.length}</p>
+
+              <button onClick={download}>Download</button>
 
               <div>
                 {
