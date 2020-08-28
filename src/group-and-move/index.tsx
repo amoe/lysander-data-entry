@@ -9,7 +9,7 @@ import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
     ListItemType, EventList, SplitHandler, Action, PageState
 } from './interfaces';
-import {randomPartial, DateCollection} from '../date-collection';
+import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
 import {PartialDate} from '../partial-date';
 
@@ -136,7 +136,7 @@ function EventGroup(
     // This is the easier one as it doesn't have to deal with groups itself.
     function canDrop(sourceId: string, targetId: string): boolean {
         const dates = props.members.map(x => x.date);
-        const collection = DateCollection.fromArray(dates);
+        const collection = MaybeDateCollection.fromArray(dates);
         const sourceIndex = strictFindIndex(props.members, x => x.id === sourceId);
         const targetIndex = strictFindIndex(props.members, x => x.id === targetId);
         const answer =  collection.canMove(sourceIndex, targetIndex);
@@ -370,7 +370,7 @@ export function GroupAndMoveDemo() {
               </div>
 
               <div>
-                <button onClick={() => dispatch({type: ActionType.ADD_ITEM_WITH_UNDEFINED_DATE})}>Add item</button>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM_WITH_UNDEFINED_DATE})}>Add time-unconstrained item</button>
               </div>
 
               

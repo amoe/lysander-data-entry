@@ -35,7 +35,7 @@ export function randomPartial(): PartialDate {
  }
 
 function compareMaybePartialDates(a: MaybePartialDate, b: MaybePartialDate): number {
-    if (a === undefined || b == undefined) {
+    if (a === undefined || b === undefined) {
         return -1;    // I think this is ok????
     } else {
         return comparePartialDates(a, b);
