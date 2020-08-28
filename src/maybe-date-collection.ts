@@ -11,13 +11,15 @@ export function daysFromMonthNumber(year: number, month: number): number {
 }
 
 export function randomPartial(): PartialDate {
-    const extraElements = random(0, 2);
+    const extraElements = random(0, 4);
 
     var x;
 
     const randomYear = random(1939, 1945);
     const randomMonth = random(1, 12);
     const randomDay = random(1, daysFromMonthNumber(randomYear, randomMonth));
+    const randomHour = random(0, 23);
+    const randomMinute = random(0, 59);
 
     console.log(randomYear);
     
@@ -25,9 +27,17 @@ export function randomPartial(): PartialDate {
         x = new PartialDate({year: randomYear})
     } else if (extraElements === 1) {
         x = new PartialDate({year: randomYear, monthIndex: randomMonth - 1});
-    } else {
+    } else if (extraElements === 2) {
         x = new PartialDate(
             {year: randomYear, monthIndex: randomMonth - 1, day: randomDay}
+        );
+    } else if (extraElements === 3) {
+        x = new PartialDate(
+            {year: randomYear, monthIndex: randomMonth - 1, day: randomDay, hours: randomHour}
+        );
+    } else {
+        x = new PartialDate(
+            {year: randomYear, monthIndex: randomMonth - 1, day: randomDay, hours: randomHour, minutes: randomMinute}
         );
     }
 
