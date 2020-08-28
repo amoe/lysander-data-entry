@@ -24,7 +24,14 @@ it('restricts reordering as expected', () => {
     // Should not be possible because (2, 1) is impossible.
     expect(coll.canMove(4, 1)).toBe(false);
 
-    
+
+    // Undefined moves should be unrestricted
+    expect(coll.canMove(0, 0)).toBe(true);
+    expect(coll.canMove(3, 2)).toBe(true);
+    expect(coll.canMove(3, 4)).toBe(true);
+    expect(coll.canMove(3, 4)).toBe(true);
+    expect(coll.canMove(3, 6)).toBe(true);
+    expect(coll.canMove(3, 0)).toBe(true);
 });
 
 
