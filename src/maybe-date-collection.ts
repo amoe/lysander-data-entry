@@ -3,6 +3,7 @@ import {PartialDate, comparePartialDates} from './partial-date';
 import {random} from 'lodash';
 import {getDaysInMonth, isBefore, isAfter, isEqual} from 'date-fns';
 
+export type MaybePartialDate = PartialDate | undefined;
 
 // month is 1-based
 export function daysFromMonthNumber(year: number, month: number): number {
@@ -33,15 +34,41 @@ export function randomPartial(): PartialDate {
     return x;
  }
 
-export class DateCollection {
-    contents: PartialDate[];
+function compareMaybePartialDates(a: MaybePartialDate, b: MaybePartialDate): number {
+    if (a === undefined || b == undefined) {
+        return -1;    // I think this is ok????
+    } else {
+        return comparePartialDates(a, b);
+    }
+}
+
+function checkValidityForward(source: MaybePartialDate, target: MaybePartialDate): boolean {
+    const x = source.toLatestDate();
+    const y = target.toEarliestDate();
+
+    const isValid = isAfter(x, y) || isEqual(x, y);
+    return isValid;
+}
+
+
+function checkValidityBackward(source: MaybePartialDate, target: MaybePartialDate): boolean {
+    const x = source.toEarliestDate();
+    const y = target.toLatestDate();
+
+    const isValid = isBefore(x, y) || isEqual(x, y);
+    return isValid;
+}
+
+
+export class MaybeDateCollection {
+    contents: MaybePartialDate[];
 
     constructor() {
         this.contents = [];
     }
 
-    static fromArray(contents: PartialDate[]) {
-        const result = new DateCollection();
+    static fromArray(contents: MaybePartialDate[]) {
+        const result = new MaybeDateCollection();
         result.contents = contents;
         return result;
     }
@@ -51,7 +78,7 @@ export class DateCollection {
             this.contents.push(randomPartial());
         }
 
-        this.contents.sort(comparePartialDates);
+        this.contents.sort(compareMaybePartialDates);
     }
 
     canMoveDisregardingInterveningItems(sourceIndex: number, targetIndex: number) {
@@ -61,9 +88,9 @@ export class DateCollection {
         if (sourceIndex < targetIndex) {    // We are moving the event forward
             const x = source.toLatestDate();
             const y = target.toEarliestDate();
-
+            
             return isAfter(x, y) || isEqual(x, y);
-        } else if (sourceIndex > targetIndex)  {// We are moving the event backward
+        } else if (sourceIndex > targetIndex)  { // We are moving the event backward
             const x = source.toEarliestDate();
             const y = target.toLatestDate();
 
@@ -78,19 +105,11 @@ export class DateCollection {
         const source = this.contents[sourceIndex];
         const target = this.contents[targetIndex];
 
-         if (sourceIndex < targetIndex) {    // Moving event forward
-            const x = source.toLatestDate();
-            const y = target.toEarliestDate();
-
-            const isValid = isAfter(x, y) || isEqual(x, y);
-
+        if (sourceIndex < targetIndex) {    // Moving event forward
+            const isValid = checkValidityForward(source, target);
             return isValid && this.canMove(sourceIndex, targetIndex - 1);
         } else if (sourceIndex > targetIndex) {    // Moving backward
-            const x = source.toEarliestDate();
-            const y = target.toLatestDate();
-
-            const isValid = isBefore(x, y) || isEqual(x, y);
-
+            const isValid = checkValidityBackward(source, target);
             return isValid && this.canMove(sourceIndex, targetIndex + 1);
         } else {
             return true;    // base case, same event can always be swapped
