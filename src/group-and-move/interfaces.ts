@@ -22,6 +22,7 @@ export interface DragObject {
 
 export interface EventInfo {
     description: string;
+    notes: string;
 }
 
 export interface EventTrackingData {
@@ -33,8 +34,6 @@ export interface EventTrackingData {
 }
 
 export type EventContent = EventInfo & EventTrackingData;
-
-
 
 
 

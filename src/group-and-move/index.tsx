@@ -253,6 +253,7 @@ function ConnectButton(
 function makeDummyEvent(): EventContent {
     return {
         description: "foo",
+        notes: "bar",
         id: uuidv4(),
         date: randomPartial()
     };
@@ -346,16 +347,18 @@ export function GroupAndMoveDemo() {
     const [eventDescription, setEventDescription] = useState("");
     const [eventNotes, setEventNotes] = useState("");
 
-    function addDate() {
+    function addEvent() {
         if (eventDescription === "") {
             notification.error({
                 message: 'Error',
                 description: 'Event description cannot be blank'
             });
         } else {
+            
             dispatch(
                 {type: ActionType.ADD_ITEM,
                  content: makeEventWithDate(dateInputs, {
+                     notes: eventNotes,
                      description: eventDescription
                  })}
             )
@@ -449,13 +452,13 @@ export function GroupAndMoveDemo() {
                               onChange={(e) => setEventNotes(e.target.value)}/>
                   </label>
 
-                  <button onClick={addDate}>Add item</button>
+                  <button onClick={addEvent}>Add event</button>
               </div>
 
               <h2>Actions</h2>
 
               <div>
-                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add dummy event</button>
               </div>
 
               <div>
