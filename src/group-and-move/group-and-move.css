@@ -1,4 +1,4 @@
-/* group-and-move-demo.css */
+/* group-and-move.css */
 
 /*
 0: "#fbb4ae"
@@ -35,4 +35,9 @@
 .event-content-id {
     margin-left: 2em;
     font-size: x-small;
+}
+
+body {
+    margin-left: 10vw;
+    margin-right: 10vw;
 }

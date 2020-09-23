@@ -3,7 +3,7 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep, isEmpty} from 'lodash';
 import uuidv4 from 'uuid/v4';
-import './group-and-move-demo.css';
+import './group-and-move.css';
 import {reduceEventList} from './reducer';
 import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
