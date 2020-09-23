@@ -15,14 +15,28 @@ export interface DragObject {
     id: string   // or whatever is used as id property of EventItem
 }
 
-export interface EventContent {
+
+
+// Separated into two because the tracking data is generated, rest is
+// user-entered.
+
+export interface EventInfo {
     description: string;
+    notes: string;
+}
+
+export interface EventTrackingData {
     date: PartialDate | undefined;
 
     // These ALSO need a key, as well as the event container itself, as they must
     // be rendered as group children.
     id: string;
 }
+
+export type EventContent = EventInfo & EventTrackingData;
+
+
+
 
 export type EventItem = 
     {type: ListItemType.SINGLE_EVENT, content: EventContent, id: string}

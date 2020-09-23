@@ -228,6 +228,7 @@ export function reduceEventList(state: PageState, action: Action): PageState {
         case ActionType.ADD_ITEM_WITH_UNDEFINED_DATE:
             const newContent = {
                 description: "An unconstrained event",
+                notes: "Some notes",
                 date: undefined,
                 id: uuidv4()
             };

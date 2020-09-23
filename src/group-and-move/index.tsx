@@ -7,7 +7,8 @@ import './group-and-move.css';
 import {reduceEventList} from './reducer';
 import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
-    ListItemType, EventList, SplitHandler, Action, PageState
+    ListItemType, EventList, SplitHandler, Action, PageState,
+    EventInfo
 } from './interfaces';
 import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
@@ -252,30 +253,26 @@ function ConnectButton(
 function makeDummyEvent(): EventContent {
     return {
         description: "foo",
+        notes: "bar",
         id: uuidv4(),
         date: randomPartial()
     };
 }
 
 
-function makeDummyEventWithDate(description: string, date: DateInputs): EventContent {
+function makeEventWithDate(
+    date: DateInputs, info: EventInfo
+): EventContent {
     var dateField;
 
-    console.log(date);
-    
     if (isEmpty(date)) {
         dateField = undefined;
     } else {
         dateField = new PartialDate(date);
         console.log(dateField.toString());
     }
-        
-    
-    return {
-        description,
-        id: uuidv4(),
-        date: dateField
-    };
+
+    return Object.assign({}, info, {id: uuidv4(), date: dateField});
 }
 
 function makeEmptyState(): PageState {
@@ -346,18 +343,24 @@ export function GroupAndMoveDemo() {
 
 
     const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
+    
     const [eventDescription, setEventDescription] = useState("");
+    const [eventNotes, setEventNotes] = useState("");
 
-    function addDate() {
+    function addEvent() {
         if (eventDescription === "") {
             notification.error({
                 message: 'Error',
                 description: 'Event description cannot be blank'
             });
         } else {
+            
             dispatch(
                 {type: ActionType.ADD_ITEM,
-                 content: makeDummyEventWithDate(eventDescription, dateInputs)}
+                 content: makeEventWithDate(dateInputs, {
+                     notes: eventNotes,
+                     description: eventDescription
+                 })}
             )
         };
     }
@@ -393,11 +396,11 @@ export function GroupAndMoveDemo() {
 
               <div>
                 <label>Sequence name: <input type="text"
-                                            value={sequenceName}
-                                            onChange={(e) => setSequenceName(e.target.value)}/>
+                                             value={sequenceName}
+                                             onChange={(e) => setSequenceName(e.target.value)}/>
                 </label>
               </div>
-                  
+              
 
               <p>Can move: {state.canMoveValue.toString()}</p>
               
@@ -439,17 +442,23 @@ export function GroupAndMoveDemo() {
               <div>
                 <label>Description
                   <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/></label>
-                
-                {JSON.stringify(dateInputs)}
-                
-                <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
-                <button onClick={addDate}>Add item</button>
+                  
+                  {JSON.stringify(dateInputs)}
+                  
+                  <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
+
+                  <label>Notes
+                    <textarea value={eventNotes}
+                              onChange={(e) => setEventNotes(e.target.value)}/>
+                  </label>
+
+                  <button onClick={addEvent}>Add event</button>
               </div>
 
               <h2>Actions</h2>
 
               <div>
-                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add item</button>
+                <button onClick={() => dispatch({type: ActionType.ADD_ITEM, content: makeDummyEvent()})}>Add dummy event</button>
               </div>
 
               <div>
