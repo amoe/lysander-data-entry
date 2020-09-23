@@ -7,7 +7,8 @@ import './group-and-move.css';
 import {reduceEventList} from './reducer';
 import {
     ActionType, DragObject, DraggableType, EventItem, EventContent, 
-    ListItemType, EventList, SplitHandler, Action, PageState
+    ListItemType, EventList, SplitHandler, Action, PageState,
+    EventInfo
 } from './interfaces';
 import {randomPartial, MaybeDateCollection} from '../maybe-date-collection';
 import {strictFindIndex} from '../utility';
@@ -258,24 +259,19 @@ function makeDummyEvent(): EventContent {
 }
 
 
-function makeDummyEventWithDate(description: string, date: DateInputs): EventContent {
+function makeEventWithDate(
+    date: DateInputs, info: EventInfo
+): EventContent {
     var dateField;
 
-    console.log(date);
-    
     if (isEmpty(date)) {
         dateField = undefined;
     } else {
         dateField = new PartialDate(date);
         console.log(dateField.toString());
     }
-        
-    
-    return {
-        description,
-        id: uuidv4(),
-        date: dateField
-    };
+
+    return Object.assign({}, info, {id: uuidv4(), date: dateField});
 }
 
 function makeEmptyState(): PageState {
@@ -346,7 +342,9 @@ export function GroupAndMoveDemo() {
 
 
     const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
+    
     const [eventDescription, setEventDescription] = useState("");
+    const [eventNotes, setEventNotes] = useState("");
 
     function addDate() {
         if (eventDescription === "") {
@@ -357,7 +355,9 @@ export function GroupAndMoveDemo() {
         } else {
             dispatch(
                 {type: ActionType.ADD_ITEM,
-                 content: makeDummyEventWithDate(eventDescription, dateInputs)}
+                 content: makeEventWithDate(dateInputs, {
+                     description: eventDescription
+                 })}
             )
         };
     }
@@ -393,11 +393,11 @@ export function GroupAndMoveDemo() {
 
               <div>
                 <label>Sequence name: <input type="text"
-                                            value={sequenceName}
-                                            onChange={(e) => setSequenceName(e.target.value)}/>
+                                             value={sequenceName}
+                                             onChange={(e) => setSequenceName(e.target.value)}/>
                 </label>
               </div>
-                  
+              
 
               <p>Can move: {state.canMoveValue.toString()}</p>
               
@@ -439,11 +439,17 @@ export function GroupAndMoveDemo() {
               <div>
                 <label>Description
                   <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/></label>
-                
-                {JSON.stringify(dateInputs)}
-                
-                <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
-                <button onClick={addDate}>Add item</button>
+                  
+                  {JSON.stringify(dateInputs)}
+                  
+                  <DateAuthoringComponent value={dateInputs} onChange={setDateInputs}/>
+
+                  <label>Notes
+                    <textarea value={eventNotes}
+                              onChange={(e) => setEventNotes(e.target.value)}/>
+                  </label>
+
+                  <button onClick={addDate}>Add item</button>
               </div>
 
               <h2>Actions</h2>
