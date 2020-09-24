@@ -8,8 +8,16 @@ const client = new ApolloClient({
     uri: 'http://localhost:4000', cache: new InMemoryCache()
 });
 
+const ALL_PLANESORTIES_QUERY = gql`
+    query {
+        PlaneSortie {
+            name
+        }
+    }
+`;
+
 const EVENT_SEQUENCE_QUERY = gql`
-    query Foo {
+    query {
 	EventSequence {
             name
             uuid
@@ -22,7 +30,7 @@ const EVENT_SEQUENCE_QUERY = gql`
 `;
 
 const EVENT_QUERY = gql`
-    query Bar {
+    query {
         Event {
             description
         }
@@ -84,6 +92,7 @@ function EventSequenceView(props: EventSequence) {
         <div>
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
+          <p>Name: {props.name}</p>
 
           <div>
             {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
@@ -107,9 +116,25 @@ function CreateEventWidget() {
 }
 //
 
+function PlaneSortieSelector() {
+    const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error!</p>;
+
+    return (
+        <div>
+          <select>
+            {data['PlaneSortie'].map((ps: any) => <option value={ps.name}>{ps.name}</option>)}
+          </select>
+        </div>
+    )
+}
+
 function SequenceData() {
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
+    // Gonna return the same thing
     const foo = useQuery(EVENT_QUERY);
 
     
@@ -121,10 +146,13 @@ function SequenceData() {
 
     return (
         <div>
+          <PlaneSortieSelector/>
+          
           {data['EventSequence'].map((es: EventSequence) => <EventSequenceView key={es.uuid} {...es}/>)}
 
-          <CreateEventWidget/>
 
+          <hr/>
+          <CreateEventWidget/>
           {foo.data['Event'].length}
         </div>
     );
