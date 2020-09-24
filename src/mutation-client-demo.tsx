@@ -25,6 +25,9 @@ const EVENT_SEQUENCE_QUERY = gql`
                 uuid
                 description
             }
+            planeSortie {
+                name
+            }
         }
     }    
 `;
@@ -61,10 +64,15 @@ interface Event {
     description: string;
 }
 
+interface PlaneSortie {
+    name: string;
+}
+
 interface EventSequence {
     name: string;
     uuid: string;
     content: Event[];
+    planeSortie: PlaneSortie
 }
 
 
@@ -93,6 +101,8 @@ function EventSequenceView(props: EventSequence) {
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
+          <p>Referred-to PlaneSortie: <PlaneSortieSelector value={props.planeSortie.name}/></p>
+
 
           <div>
             {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
@@ -116,7 +126,7 @@ function CreateEventWidget() {
 }
 //
 
-function PlaneSortieSelector() {
+function PlaneSortieSelector(props: {value: string}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
 
     if (loading) return <p>Loading...</p>;
@@ -124,7 +134,7 @@ function PlaneSortieSelector() {
 
     return (
         <div>
-          <select>
+          <select value={props.value}>
             {data['PlaneSortie'].map((ps: any) => <option value={ps.name}>{ps.name}</option>)}
           </select>
         </div>
@@ -146,7 +156,6 @@ function SequenceData() {
 
     return (
         <div>
-          <PlaneSortieSelector/>
           
           {data['EventSequence'].map((es: EventSequence) => <EventSequenceView key={es.uuid} {...es}/>)}
 
