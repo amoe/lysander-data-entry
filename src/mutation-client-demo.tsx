@@ -23,6 +23,37 @@ const EVENT_SEQUENCE_QUERY = gql`
 
 //client.query({query}).then(result => console.log(result));
 
+interface Event {
+    uuid: string;
+    description: string;
+}
+
+interface EventSequence {
+    name: string;
+    uuid: string;
+    content: Event[];
+}
+
+
+function EventView(props: Event) {
+    return (
+        <div>{props.description}</div>
+    )
+}
+
+function EventSequenceView(props: EventSequence) {
+    return (
+        <div>
+          <h1>Event Sequence</h1>
+          <p>UUID: {props.uuid}</p>
+
+          <div>
+            {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
+          </div>
+        </div>
+    );
+}
+
 
 function SequenceData() {
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
@@ -31,11 +62,7 @@ function SequenceData() {
     if (error) return <p>Error!</p>;
 
     return (
-        <div>{data['EventSequence'].map((es: any) => {
-            return (
-                <p key={es.uuid}>{es.uuid}</p>
-            );
-        })}
+        <div>{data['EventSequence'].map((es: EventSequence) => <EventSequenceView key={es.uuid} {...es}/>)}
         </div>
     );
 }
