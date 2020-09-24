@@ -23,8 +23,9 @@ import * as serviceWorker from './serviceWorker';
 // import {CustomizedFormControls} from './customized-form-controls';
 //<BasicAntdFormDemo />
 // import {ReactDndDemo} from './react-dnd-demo';
-import {DateAuthoringDemo} from './date-authoring-demo';
-import {GroupAndMoveDemo} from './group-and-move';
+// import {DateAuthoringDemo} from './date-authoring-demo';
+// import {GroupAndMoveDemo} from './group-and-move';
+import {MutationClientDemo} from './mutation-client-demo';
 
 
 // 
@@ -38,7 +39,7 @@ import {GroupAndMoveDemo} from './group-and-move';
 
 ReactDOM.render(
     (<div>
-      <GroupAndMoveDemo/>
+      <MutationClientDemo/>
     </div>),
     document.getElementById('root')
 );
