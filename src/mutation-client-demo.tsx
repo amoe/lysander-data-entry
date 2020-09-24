@@ -35,7 +35,16 @@ const CREATE_EVENT = gql`
             description
         }
     }
-`
+`;
+
+const SET_EVENT_DESCRIPTION = gql`
+    mutation SetEventDescription($uuid: ID!, $description: String!) {
+        UpdateEvent(uuid: $uuid, description: $description) {
+            uuid
+            description
+        }
+    }
+`;
 
 //client.query({query}).then(result => console.log(result));
 
@@ -52,8 +61,21 @@ interface EventSequence {
 
 
 function EventView(props: Event) {
+    const [setEventDescription, {data}] = useMutation(
+        SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
+    const onChange = (foo: any) => {
+        console.log("inside on change handler foo is %o", foo);
+        setEventDescription({variables: {uuid: props.uuid, description: foo}});
+    };
+    
     return (
-        <div>{props.description}</div>
+        <div>
+          <input type="text"
+                 value={props.description}
+                 onChange={(e) => onChange(e.target.value)}/>
+        </div>
     )
 }
 
@@ -78,7 +100,7 @@ function CreateEventWidget() {
     return (
         <div>
           <button onClick={() => {
-            createEvent();
+                  createEvent();
           }}>Create event</button>
         </div>
     )
