@@ -1,10 +1,54 @@
 import React from 'react';
+import {
+    ApolloClient, InMemoryCache, ApolloProvider
+} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+
+const client = new ApolloClient({
+    uri: 'http://localhost:4000', cache: new InMemoryCache()
+});
+
+const EVENT_SEQUENCE_QUERY = gql`
+    query Foo {
+	EventSequence {
+            name
+            uuid
+            content {
+                uuid
+                description
+            }
+        }
+    }    
+`;
+
+//client.query({query}).then(result => console.log(result));
+
+
+function SequenceData() {
+    const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error!</p>;
+
+    return (
+        <div>{data['EventSequence'].map((es: any) => {
+            return (
+                <p key={es.uuid}>{es.uuid}</p>
+            );
+        })}
+        </div>
+    );
+}
 
 export function MutationClientDemo() {
     return (
-        <div>
-          <h1>My Component</h1>
-        </div>
+        <ApolloProvider client={client}>
+          <div>
+            <h1>My Component</h1>
+
+            <SequenceData/>
+          </div>
+        </ApolloProvider>
     );
 }
 
