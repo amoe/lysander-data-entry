@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     ApolloClient, InMemoryCache, ApolloProvider
 } from '@apollo/client';
@@ -129,14 +129,24 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
 }
 
 function SequenceData() {
+    const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000001");
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error!</p>;
 
+    const sequences = data['EventSequence'];
+    const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
+
     return (
         <div>
-          {data['EventSequence'].map((es: EventSequence) => <EventSequenceView key={es.uuid} {...es}/>)}
+        <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
+        
+        {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
+        </select>
+
+        <EventSequenceView {...thisSequence}/>
+        
         </div>
     );
 }
