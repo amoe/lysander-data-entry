@@ -58,7 +58,7 @@ const SET_EVENT_DESCRIPTION = gql`
 `;
 
 const REDIRECT_EVENT_SEQUENCE = gql`
-    mutation {
+    mutation RedirectEventSequence($esId: ID!, $psName: String!) {
 	redirectEventSequence(esId: $esId, psName: $psName) {
             name
         }
@@ -108,9 +108,10 @@ function EventSequenceView(props: EventSequence) {
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
-
     const handlePlaneSortieChange = (value: string) => {
         console.log("I would change the planesortie to %o", value);
+
+        redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
     
     return (
