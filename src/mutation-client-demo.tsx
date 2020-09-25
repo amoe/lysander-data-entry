@@ -72,7 +72,7 @@ function EventView(props: Event) {
         SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
-    const onChange = (value: any) => {
+    const onChange = (value: string) => {
         setEventDescription({variables: {uuid: props.uuid, description: value}});
     };
     
@@ -122,7 +122,7 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
         <div>
           <select value={props.value}
                   onChange={e => props.onChange(e.target.value)}>
-            {data['PlaneSortie'].map((ps: any) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
+            {data['PlaneSortie'].map((ps: PlaneSortie) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
           </select>
         </div>
     )
