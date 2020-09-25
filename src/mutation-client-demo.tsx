@@ -57,6 +57,14 @@ const SET_EVENT_DESCRIPTION = gql`
     }
 `;
 
+const REDIRECT_EVENT_SEQUENCE = gql`
+    mutation {
+	redirectEventSequence(esId: $esId, psName: $psName) {
+            name
+        }
+    }
+`
+
 //client.query({query}).then(result => console.log(result));
 
 interface Event {
@@ -96,13 +104,24 @@ function EventView(props: Event) {
 }
 
 function EventSequenceView(props: EventSequence) {
+    const [redirectEventSequence, _] = useMutation(
+        REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
+
+    const handlePlaneSortieChange = (value: string) => {
+        console.log("I would change the planesortie to %o", value);
+    };
+    
     return (
         <div>
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
-          <p>Referred-to PlaneSortie: <PlaneSortieSelector value={props.planeSortie.name}/></p>
-
+          
+          <p>Referred-to PlaneSortie:</p>
+          <PlaneSortieSelector value={props.planeSortie.name}
+                               onChange={handlePlaneSortieChange}/>
 
           <div>
             {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
@@ -126,16 +145,18 @@ function CreateEventWidget() {
 }
 //
 
-function PlaneSortieSelector(props: {value: string}) {
+function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
+
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error!</p>;
 
     return (
         <div>
-          <select value={props.value}>
-            {data['PlaneSortie'].map((ps: any) => <option value={ps.name}>{ps.name}</option>)}
+          <select value={props.value}
+                  onChange={e => props.onChange(e.target.value)}>
+            {data['PlaneSortie'].map((ps: any) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
           </select>
         </div>
     )
