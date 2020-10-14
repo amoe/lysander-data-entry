@@ -2,53 +2,18 @@ import React, {useState} from 'react';
 import {
     ApolloClient, InMemoryCache, ApolloProvider
 } from '@apollo/client';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import {
+    useQuery, useMutation
+} from '@apollo/client';
+import {
+    EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
+    REDIRECT_EVENT_SEQUENCE
+} from './graphql-operations';
 import './event-form.css'
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000', cache: new InMemoryCache()
 });
-
-const ALL_PLANESORTIES_QUERY = gql`
-    query {
-        PlaneSortie {
-            name
-        }
-    }
-`;
-
-const EVENT_SEQUENCE_QUERY = gql`
-    query {
-	EventSequence {
-            name
-            uuid
-            content {
-                uuid
-                description
-            }
-            planeSortie {
-                name
-            }
-        }
-    }    
-`;
-
-const SET_EVENT_DESCRIPTION = gql`
-    mutation SetEventDescription($uuid: ID!, $description: String!) {
-        UpdateEvent(uuid: $uuid, description: $description) {
-            uuid
-            description
-        }
-    }
-`;
-
-const REDIRECT_EVENT_SEQUENCE = gql`
-    mutation RedirectEventSequence($esId: ID!, $psName: String!) {
-	redirectEventSequence(esId: $esId, psName: $psName) {
-            name
-        }
-    }
-`
 
 
 interface Event {
