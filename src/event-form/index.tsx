@@ -31,9 +31,6 @@ interface EventSequence {
     planeSortie: PlaneSortie
 }
 
-
-
-
 function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
 
@@ -60,10 +57,13 @@ function EventView(props: Event) {
     };
     
     return (
-        <div className="event">
-          <input type="text"
-                 value={props.description}
-                 onChange={(e) => onChange(e.target.value)}/>
+        <div className="event-drop-target">
+
+          <div className="event-drag-source">
+            <input type="text"
+                   value={props.description}
+                   onChange={(e) => onChange(e.target.value)}/>
+          </div>
         </div>
     )
 }

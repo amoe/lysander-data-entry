@@ -16,6 +16,14 @@
     margin: 1em;
 }
 
-.event {
+.event-drop-target {
     background-color: #b3cde3;
+    border: 1px solid black;
+    padding: 1em 0.5em;
+}
+
+.event-drag-source {
+    background-color: #ccebc5;
+    border: 1px solid black;
+    padding: 1em 0.5em;
 }
