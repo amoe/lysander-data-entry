@@ -84,10 +84,11 @@ function EventView(props: Event) {
         drop: (item: DragObject, monitor: any) => {
             // target is this id, item.id is source
             console.log("accepting a drop");
+            console.log("target uuid is %o", props.uuid);
+            console.log("source uuid is %o", item.id);
         },
         hover: (item: DragObject, monitor: DropTargetMonitor) => {
             //            console.log("testing droppability: %o", monitor.canDrop());
-
         },
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
