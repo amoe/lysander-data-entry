@@ -15,7 +15,6 @@ const client = new ApolloClient({
     uri: 'http://localhost:4000', cache: new InMemoryCache()
 });
 
-
 interface Event {
     uuid: string;
     description: string;
@@ -33,23 +32,6 @@ interface EventSequence {
 }
 
 
-function EventView(props: Event) {
-    const [setEventDescription, {data}] = useMutation(
-        SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
-    );
-
-    const onChange = (value: string) => {
-        setEventDescription({variables: {uuid: props.uuid, description: value}});
-    };
-    
-    return (
-        <div>
-          <input type="text"
-                 value={props.description}
-                 onChange={(e) => onChange(e.target.value)}/>
-        </div>
-    )
-}
 
 
 function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
@@ -67,6 +49,25 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
         </span>
     )
 }
+
+function EventView(props: Event) {
+    const [setEventDescription, {data}] = useMutation(
+        SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
+    const onChange = (value: string) => {
+        setEventDescription({variables: {uuid: props.uuid, description: value}});
+    };
+    
+    return (
+        <div className="event">
+          <input type="text"
+                 value={props.description}
+                 onChange={(e) => onChange(e.target.value)}/>
+        </div>
+    )
+}
+
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
@@ -100,7 +101,7 @@ function EventSequenceView(props: EventSequence) {
 
 
 function AllSequencesView() {
-    const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000001");
+    const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000000");
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
     if (loading) return <p>Loading...</p>;
