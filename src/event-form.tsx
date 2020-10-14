@@ -151,7 +151,7 @@ function SequenceData() {
     );
 }
 
-export function MutationClientDemo() {
+export function EventForm() {
     return (
         <ApolloProvider client={client}>
           <div>
