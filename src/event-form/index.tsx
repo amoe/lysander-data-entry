@@ -3,6 +3,7 @@ import {
     ApolloClient, InMemoryCache, ApolloProvider
 } from '@apollo/client';
 import { gql, useQuery, useMutation } from '@apollo/client';
+import './event-form.css'
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000', cache: new InMemoryCache()
@@ -85,6 +86,24 @@ function EventView(props: Event) {
     )
 }
 
+
+function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
+    const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error!</p>;
+
+    return (
+        <span>
+          <select value={props.value}
+                  onChange={e => props.onChange(e.target.value)}>
+            {data['PlaneSortie'].map((ps: PlaneSortie) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
+          </select>
+        </span>
+    )
+}
+
+// View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
@@ -100,32 +119,20 @@ function EventSequenceView(props: EventSequence) {
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
           
-          <p>Referred-to PlaneSortie:</p>
-          <PlaneSortieSelector value={props.planeSortie.name}
-                               onChange={handlePlaneSortieChange}/>
+          <p>Referred-to PlaneSortie:
+            <PlaneSortieSelector value={props.planeSortie.name}
+                                 onChange={handlePlaneSortieChange}/>
+          </p>
 
-          <div>
+          <p>Total items in event sequence: {props.content.length}</p>
+          
+          <div className="event-list">
             {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
           </div>
         </div>
     );
 }
 
-function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
-    const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error!</p>;
-
-    return (
-        <div>
-          <select value={props.value}
-                  onChange={e => props.onChange(e.target.value)}>
-            {data['PlaneSortie'].map((ps: PlaneSortie) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
-          </select>
-        </div>
-    )
-}
 
 function AllSequencesView() {
     const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000001");
@@ -140,12 +147,10 @@ function AllSequencesView() {
     return (
         <div>
           <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
-            
             {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
           </select>
 
           <EventSequenceView {...thisSequence}/>
-          
         </div>
     );
 }

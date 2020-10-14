@@ -1,0 +1,18 @@
+/*
+0: "#fbb4ae"
+1: "#b3cde3"
+2: "#ccebc5"
+3: "#decbe4"
+4: "#fed9a6"
+5: "#ffffcc"
+6: "#e5d8bd"
+7: "#fddaec"
+8: "#f2f2f2"
+*/
+
+.event-list {
+    border: 1px solid #fbb4ae;
+    padding: 1em;
+    margin: 1em;
+}
+
