@@ -37,9 +37,12 @@ interface EventSequence {
 
 enum DraggableType {
     LIST_ITEM = 'listItem',
-    GROUP_ITEM = 'groupItem'
 }
 
+export interface DragObject {
+    type: DraggableType,
+    id: string
+}
 
 function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
@@ -75,9 +78,22 @@ function EventView(props: Event) {
     };
 
     const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
-    
+
+    const dropSpec = {
+        accept: DraggableType.LIST_ITEM,
+        drop: (item: DragObject, monitor: any) => {
+            // target is this id, item.id is source
+            console.log("accepting a drop");
+        },
+        hover: (item: DragObject, monitor: DropTargetMonitor) => {
+            //            console.log("testing droppability: %o", monitor.canDrop());
+
+        },
+    };
+    const [dropProps, dropTargetRef] = useDrop(dropSpec);
+
     return (
-        <div className="event-drop-target">
+        <div ref={dropTargetRef} className="event-drop-target">
           <div ref={dragSourceRef} className="event-drag-source">
             <input type="text"
                    value={props.description}
@@ -104,10 +120,10 @@ function EventSequenceView(props: EventSequence) {
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
           
-          <p>Referred-to PlaneSortie:
+          <div>Referred-to PlaneSortie:
             <PlaneSortieSelector value={props.planeSortie.name}
                                  onChange={handlePlaneSortieChange}/>
-          </p>
+          </div>
 
           <p>Total items in event sequence: {props.content.length}</p>
           
