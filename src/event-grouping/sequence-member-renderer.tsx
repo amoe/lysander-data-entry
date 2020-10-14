@@ -1,6 +1,6 @@
 import React from 'react';
-import { EventSequence, FlightEvent, SequenceMember, EventGroup } from './event-sequence';
-import { ViewMode, MoveHandler } from './interfaces2';
+import { EventSequence, FlightEvent, SequenceMember, EventGroup } from '../event-sequence';
+import { ViewMode, MoveHandler } from '../interfaces2';
 
 function FlightEventView(props: {value: FlightEvent, onMove: MoveHandler}) {
     return <div>

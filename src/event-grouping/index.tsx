@@ -1,10 +1,12 @@
 import React, {MouseEvent, useState} from 'react';
 import plusIcon from './plus.svg';
-import { PartialDate } from './partial-date';
-import { EventSequence, FlightEvent, SequenceMember, EventGroup } from './event-sequence';
+import { PartialDate } from '../partial-date';
+import { EventSequence, FlightEvent, SequenceMember, EventGroup } from '../event-sequence';
 import { SequenceMemberView } from './sequence-member-renderer';
-import { ViewMode, MoveHandler } from './interfaces2';
+import { ViewMode, MoveHandler } from '../interfaces2';
+import 'event-grouping.css';
 
+// foo
 
 // This could just be a fixed width div with a border
 function MovePlace() {
@@ -63,8 +65,8 @@ export function EventGrouping() {
             <div>Current state: Linked</div>
             <button>Unlink</button>
 
-                     </div>
           </div>
+        </div>
 
         
     );

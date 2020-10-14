@@ -114,7 +114,6 @@ function EventSequenceView(props: EventSequence) {
 function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
 
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error!</p>;
 
@@ -140,13 +139,13 @@ function SequenceData() {
 
     return (
         <div>
-        <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
-        
-        {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
-        </select>
+          <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
+            
+            {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
+          </select>
 
-        <EventSequenceView {...thisSequence}/>
-        
+          <EventSequenceView {...thisSequence}/>
+          
         </div>
     );
 }

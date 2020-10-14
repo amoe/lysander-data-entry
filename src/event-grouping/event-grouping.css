@@ -1,0 +1,50 @@
+body {
+    
+}
+
+code {
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+li:hover { color:green; font-weight: bold;}
+
+/*li { border: 1px solid black; margin: 16px; }*/
+
+
+.event-summary {
+    border: 1px solid red;
+    padding: 1em;
+    margin-bottom: 0.2em;
+    display: flex;
+}
+
+.event-description {
+    flex-basis: 80%;
+}
+
+.event-date {
+}
+
+.grouping-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grouping-icon.active {
+    border: 0.2em solid #ffd700;
+}
+
+div.drop-location {
+    border: 1px dashed black;
+    width: 90vw;
+    height: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
