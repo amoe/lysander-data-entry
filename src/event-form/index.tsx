@@ -9,6 +9,10 @@ import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE
 } from './graphql-operations';
+
+import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+
 import './event-form.css'
 
 const client = new ApolloClient({
@@ -31,6 +35,12 @@ interface EventSequence {
     planeSortie: PlaneSortie
 }
 
+enum DraggableType {
+    LIST_ITEM = 'listItem',
+    GROUP_ITEM = 'groupItem'
+}
+
+
 function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
 
@@ -51,15 +61,24 @@ function EventView(props: Event) {
     const [setEventDescription, {data}] = useMutation(
         SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
+    
 
     const onChange = (value: string) => {
         setEventDescription({variables: {uuid: props.uuid, description: value}});
     };
+
+    const dragSpec = {
+        item: {type: DraggableType.LIST_ITEM, id: props.uuid},
+        collect: (monitor: DragSourceMonitor) => ({
+            isDragging: !!monitor.isDragging()
+        })
+    };
+
+    const [dragProps, dragSourceRef, dragPreviewRef] = useDrag(dragSpec);
     
     return (
         <div className="event-drop-target">
-
-          <div className="event-drag-source">
+          <div ref={dragSourceRef} className="event-drag-source">
             <input type="text"
                    value={props.description}
                    onChange={(e) => onChange(e.target.value)}/>
@@ -123,11 +142,13 @@ function AllSequencesView() {
 
 export function EventForm() {
     return (
-        <ApolloProvider client={client}>
-          <div>
-            <AllSequencesView/>
-          </div>
-        </ApolloProvider>
+        <DndProvider backend={HTML5Backend}>
+          <ApolloProvider client={client}>
+            <div>
+              <AllSequencesView/>
+            </div>
+          </ApolloProvider>
+        </DndProvider>
     );
 }
 
