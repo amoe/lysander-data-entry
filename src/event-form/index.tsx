@@ -127,7 +127,7 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
     )
 }
 
-function SequenceData() {
+function AllSequencesView() {
     const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000001");
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
@@ -154,7 +154,7 @@ export function EventForm() {
     return (
         <ApolloProvider client={client}>
           <div>
-            <SequenceData/>
+            <AllSequencesView/>
           </div>
         </ApolloProvider>
     );
