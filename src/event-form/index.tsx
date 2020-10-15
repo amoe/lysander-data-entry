@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
-    REDIRECT_EVENT_SEQUENCE, MOVE_EVENT
+    REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 
@@ -66,12 +66,17 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
     )
 }
 
-function EventView(props: {value: Event, onRearrange: (sourceId: string, targetId: string) => void}) {
+function EventView(
+    props: {
+        value: Event,
+        onRearrange: (sourceId: string, targetId: string) => void,
+        onDelete: (eventId: string) => void
+    }
+) {
     const [setEventDescription, {data}] = useMutation(
         SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
     
-
     const onChange = (value: string) => {
         setEventDescription({variables: {uuid: props.value.uuid, description: value}});
     };
@@ -106,6 +111,8 @@ function EventView(props: {value: Event, onRearrange: (sourceId: string, targetI
             <input type="text"
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
+
+            <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
         </div>
     )
@@ -122,6 +129,10 @@ function EventSequenceView(props: EventSequence) {
         MOVE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
+    const [deleteEvent, deleteEventResult] = useMutation(
+        DELETE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
@@ -129,6 +140,11 @@ function EventSequenceView(props: EventSequence) {
     const handleRearrange = (sourceId: string, targetId: string) => {
         console.log("handling rearrange");
         moveEvent({variables: {esId: props.uuid, sourceEvent: sourceId, targetEvent: targetId}});
+    };
+
+    const handleDelete = (eventId: string) => {
+        console.log("deleting event");
+        deleteEvent({variables: {esId: props.uuid, eventId}});
     };
     
     return (
@@ -145,7 +161,7 @@ function EventSequenceView(props: EventSequence) {
           <p>Total items in event sequence: {props.events.length}</p>
           
           <div className="event-list">
-            {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange}/>)}
+            {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange} onDelete={handleDelete}/>)}
           </div>
         </div>
     );

@@ -56,3 +56,9 @@ export const MOVE_EVENT = gql`
         }
     } 
 `;
+
+export const DELETE_EVENT = gql`
+    mutation DeleteEvent($esId: ID!, $eventId: ID!) {
+        deleteEvent(esId: $esId, eventId: $eventId)
+    }
+`;
