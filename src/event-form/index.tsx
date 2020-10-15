@@ -199,12 +199,17 @@ function EventSequenceView(props: EventSequence) {
 function AllSequencesView() {
     const [currentId, setCurrentId] = useState(undefined as string | undefined);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
-    
+
+
     useEffect(
         () => {
             if (!loading) {
-                const val = data['EventSequence'][0].uuid;
-                setCurrentId(val);
+                const sequences = data['EventSequence']
+                if (sequences.length > 0) {
+                    setCurrentId(sequences[0].uuid);
+                } else {
+                    // There's actually zero sequences defined, perhaps a blank DB
+                }
             } else {
                 console.log("effect called before loading completed");
             }
