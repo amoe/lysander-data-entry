@@ -7,3 +7,4 @@ function checkAndReturn(value: string | undefined): string {
 export const NEO4J_HOSTNAME = checkAndReturn(process.env.REACT_APP_NEO4J_HOSTNAME);
 export const NEO4J_USERNAME = checkAndReturn(process.env.REACT_APP_NEO4J_USERNAME);
 export const NEO4J_PASSWORD = checkAndReturn(process.env.REACT_APP_NEO4J_PASSWORD);
+export const GRAPHQL_URL = checkAndReturn(process.env.REACT_APP_GRAPHQL_URL);

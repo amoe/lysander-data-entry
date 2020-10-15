@@ -7,7 +7,8 @@ import {
 } from '@apollo/client';
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
-    REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT
+    REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
+    ADD_EVENT
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 
@@ -15,9 +16,11 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import './event-form.css'
+import {GRAPHQL_URL} from '../configuration';
 
+// Need to get this deploy data specifically
 const client = new ApolloClient({
-    uri: 'http://localhost:4000', cache: new InMemoryCache()
+    uri: GRAPHQL_URL, cache: new InMemoryCache()
 });
 
 interface Event {
@@ -133,6 +136,10 @@ function EventSequenceView(props: EventSequence) {
         DELETE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
+    const [addEvent, addEventResult] = useMutation(
+        ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
@@ -145,6 +152,12 @@ function EventSequenceView(props: EventSequence) {
     const handleDelete = (eventId: string) => {
         console.log("deleting event");
         deleteEvent({variables: {esId: props.uuid, eventId}});
+    };
+
+    const handleAdd = () => {
+        console.log("handling add");
+        const result = window.prompt('Event description');
+        addEvent({variables: {esId: props.uuid, description: result}});
     };
     
     return (
@@ -163,6 +176,8 @@ function EventSequenceView(props: EventSequence) {
           <div className="event-list">
             {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange} onDelete={handleDelete}/>)}
           </div>
+
+          <button onClick={(e) => handleAdd()}>Add</button>
         </div>
     );
 }

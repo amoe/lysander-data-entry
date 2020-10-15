@@ -62,3 +62,12 @@ export const DELETE_EVENT = gql`
         deleteEvent(esId: $esId, eventId: $eventId)
     }
 `;
+
+export const ADD_EVENT = gql`
+    mutation AddEvent($esId: ID!, $description: String!) {
+        addEvent(esId: $esId, description: $description) {
+            uuid
+        }
+    }
+`;
+
