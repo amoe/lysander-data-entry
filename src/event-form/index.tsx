@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
-    REDIRECT_EVENT_SEQUENCE
+    REDIRECT_EVENT_SEQUENCE, MOVE_EVENT
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 
@@ -29,10 +29,15 @@ interface PlaneSortie {
     name: string;
 }
 
+interface InSequenceRelationship {
+    position: number;
+    Event: Event;
+}
+
 interface EventSequence {
     name: string;
     uuid: string;
-    content: Event[];
+    events: InSequenceRelationship[];
     planeSortie: PlaneSortie
 }
 
@@ -113,18 +118,17 @@ function EventSequenceView(props: EventSequence) {
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
+    const [moveEvent, moveEventResult] = useMutation(
+        MOVE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
 
     const handleRearrange = (sourceId: string, targetId: string) => {
         console.log("handling rearrange");
-        // The problem should actually reduce to issue the modification in the backend.
-        const sourceIndex = strictFindIndex(props.content, e => e.uuid === sourceId);
-        const targetIndex = strictFindIndex(props.content, e => e.uuid === targetId);
-
-        const foo = cloneDeep(props.content);
-        arrayMove(foo, sourceIndex, targetIndex);
+        moveEvent({variables: {esId: props.uuid, sourceEvent: sourceId, targetEvent: targetId}});
     };
     
     return (
@@ -138,10 +142,10 @@ function EventSequenceView(props: EventSequence) {
                                  onChange={handlePlaneSortieChange}/>
           </div>
 
-          <p>Total items in event sequence: {props.content.length}</p>
+          <p>Total items in event sequence: {props.events.length}</p>
           
           <div className="event-list">
-            {props.content.map(e => <EventView key={e.uuid} value={e} onRearrange={handleRearrange}/>)}
+            {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange}/>)}
           </div>
         </div>
     );
