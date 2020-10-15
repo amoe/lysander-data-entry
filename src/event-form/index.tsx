@@ -8,7 +8,7 @@ import {
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
-    ADD_EVENT
+    ADD_EVENT, ADD_SEQUENCE
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 
@@ -159,6 +159,8 @@ function EventSequenceView(props: EventSequence) {
         const result = window.prompt('Event description');
         addEvent({variables: {esId: props.uuid, description: result}});
     };
+
+    console.log(props);
     
     return (
         <div>
@@ -186,7 +188,10 @@ function EventSequenceView(props: EventSequence) {
 function AllSequencesView() {
     const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000000");
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
-
+    const [addSequence, addSequenceResult] = useMutation(
+        ADD_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+    
 
     
     if (loading) return <p>Loading...</p>;
@@ -195,19 +200,33 @@ function AllSequencesView() {
         return <p>Error! {error.message} {JSON.stringify(error.graphQLErrors)} {JSON.stringify(error.networkError)}</p>;
     }
 
+    const handleAdd = () => {
+        const sequenceName = window.prompt("What name should the sequence have?");
+        addSequence({variables: {name: sequenceName}});
+    };
+    
 
     const sequences = data['EventSequence'];
-    const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
 
-    return (
-        <div>
-          <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
-            {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
-          </select>
+    if (sequences.length === 0) {
+        return <div>
+          Zero sequences :(
+          <button onClick={(e) => handleAdd()}>Add sequence</button>
+        </div>;
+    } else {
+        const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
+        console.log(sequences);
+        
+        return (
+            <div>
+              <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
+                {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
+              </select>
 
-          <EventSequenceView {...thisSequence}/>
-        </div>
-    );
+              <EventSequenceView {...thisSequence}/>
+            </div>
+        );
+    }
 }
 
 export function EventForm() {

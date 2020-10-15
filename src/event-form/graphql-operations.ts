@@ -71,3 +71,10 @@ export const ADD_EVENT = gql`
     }
 `;
 
+export const ADD_SEQUENCE = gql`
+    mutation AddSequence($name: String!) {
+        addSequence(name: $name) {
+            uuid
+        }
+    }
+`;
