@@ -187,8 +187,14 @@ function AllSequencesView() {
     const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000000");
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
+
+    
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error!</p>;
+    if (error) {
+        console.log(error.message);
+        return <p>Error! {error.message} {JSON.stringify(error.graphQLErrors)} {JSON.stringify(error.networkError)}</p>;
+    }
+
 
     const sequences = data['EventSequence'];
     const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
