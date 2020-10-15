@@ -63,9 +63,9 @@ function PlaneSortieSelector(
 
     return (
         <span>
-          <select value={props.value}
+          <select value={props.value === undefined ? "" : props.value}
                   onChange={e => props.onChange(e.target.value)}>
-            <option disabled selected>No value selected</option>            
+            <option value="" disabled>No association</option>            
             {data['PlaneSortie'].map((ps: PlaneSortie) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
           </select>
         </span>
@@ -174,7 +174,7 @@ function EventSequenceView(props: EventSequence) {
     }
     
     return (
-        <div>
+        <div className="event-sequence">
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
@@ -198,6 +198,7 @@ function EventSequenceView(props: EventSequence) {
 
 function AllSequencesView() {
     const [currentId, setCurrentId] = useState(undefined as string | undefined);
+    const [isManuallySelected, setManuallySelected] = useState(false);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
 
@@ -205,7 +206,7 @@ function AllSequencesView() {
         () => {
             if (!loading) {
                 const sequences = data['EventSequence']
-                if (sequences.length > 0) {
+                if (sequences.length > 0 && !isManuallySelected) {
                     setCurrentId(sequences[0].uuid);
                 } else {
                     // There's actually zero sequences defined, perhaps a blank DB
@@ -213,7 +214,7 @@ function AllSequencesView() {
             } else {
                 console.log("effect called before loading completed");
             }
-        }, [loading, data]
+        }, [loading, data, isManuallySelected]
     );
 
     
@@ -234,6 +235,11 @@ function AllSequencesView() {
         const sequenceName = window.prompt("What name should the sequence have?");
         addSequence({variables: {name: sequenceName}});
     };
+
+    const handleSwitch = (sequenceId: string) => {
+        setCurrentId(sequenceId);
+        setManuallySelected(true);
+    };
     
 
     const sequences = data['EventSequence'];
@@ -250,11 +256,13 @@ function AllSequencesView() {
             
             return (
                 <div>
-                  <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
+                  <select onChange={e => handleSwitch(e.target.value)} value={currentId}>
                     {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
                   </select>
 
                   <EventSequenceView {...thisSequence}/>
+
+                  <button onClick={(e) => handleAdd()}>Add event sequence</button>
                 </div>
             );
         } else {

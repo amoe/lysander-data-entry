@@ -27,3 +27,8 @@
     border: 1px solid black;
     padding: 1em 0.5em;
 }
+
+.event-sequence {
+    border: 1px solid #decbe4;
+    padding: 1em 0.5em;
+}
