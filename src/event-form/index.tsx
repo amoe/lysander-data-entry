@@ -201,7 +201,6 @@ function AllSequencesView() {
     const [isManuallySelected, setManuallySelected] = useState(false);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
 
-
     useEffect(
         () => {
             if (!loading) {
