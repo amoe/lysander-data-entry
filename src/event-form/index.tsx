@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     ApolloClient, InMemoryCache, ApolloProvider
 } from '@apollo/client';
@@ -53,7 +53,9 @@ export interface DragObject {
     id: string
 }
 
-function PlaneSortieSelector(props: {value: string, onChange: (x: string) => void}) {
+function PlaneSortieSelector(
+    props: {value: string | undefined, onChange: (x: string) => void}
+) {
     const {loading, error, data} = useQuery(ALL_PLANESORTIES_QUERY);
 
     if (loading) return <p>Loading...</p>;
@@ -63,6 +65,7 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
         <span>
           <select value={props.value}
                   onChange={e => props.onChange(e.target.value)}>
+            <option disabled selected>No value selected</option>            
             {data['PlaneSortie'].map((ps: PlaneSortie) => <option key={ps.name} value={ps.name}>{ps.name}</option>)}
           </select>
         </span>
@@ -160,7 +163,15 @@ function EventSequenceView(props: EventSequence) {
         addEvent({variables: {esId: props.uuid, description: result}});
     };
 
-    console.log(props);
+    console.log("props inside eventsequence view is %o", props);
+
+    var planeSortieValue;
+    
+    if (props.planeSortie === null) {
+        planeSortieValue = undefined;
+    } else {
+        planeSortieValue = props.planeSortie.name;
+    }
     
     return (
         <div>
@@ -169,7 +180,7 @@ function EventSequenceView(props: EventSequence) {
           <p>Name: {props.name}</p>
           
           <div>Referred-to PlaneSortie:
-            <PlaneSortieSelector value={props.planeSortie.name}
+            <PlaneSortieSelector value={planeSortieValue}
                                  onChange={handlePlaneSortieChange}/>
           </div>
 
@@ -179,24 +190,38 @@ function EventSequenceView(props: EventSequence) {
             {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange} onDelete={handleDelete}/>)}
           </div>
 
-          <button onClick={(e) => handleAdd()}>Add</button>
+          <button onClick={(e) => handleAdd()}>Add event</button>
         </div>
     );
 }
 
 
 function AllSequencesView() {
-    const [currentId, setCurrentId] = useState("00000000-0000-4000-8000-000000000000");
+    const [currentId, setCurrentId] = useState(undefined as string | undefined);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
+    
+    useEffect(
+        () => {
+            if (!loading) {
+                const val = data['EventSequence'][0].uuid;
+                setCurrentId(val);
+            } else {
+                console.log("effect called before loading completed");
+            }
+        }, [loading, data]
+    );
+
+    
     const [addSequence, addSequenceResult] = useMutation(
         ADD_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
+
+    console.log("Value of currentId is %o", currentId);
     
 
-    
     if (loading) return <p>Loading...</p>;
     if (error) {
-        console.log(error.message);
+        console.log("An error happened: %o", error.message);
         return <p>Error! {error.message} {JSON.stringify(error.graphQLErrors)} {JSON.stringify(error.networkError)}</p>;
     }
 
@@ -211,21 +236,25 @@ function AllSequencesView() {
     if (sequences.length === 0) {
         return <div>
           Zero sequences :(
-          <button onClick={(e) => handleAdd()}>Add sequence</button>
+          <button onClick={(e) => handleAdd()}>Add event sequence</button>
         </div>;
     } else {
-        const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
-        console.log(sequences);
-        
-        return (
-            <div>
-              <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
-                {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
-              </select>
+        if (currentId) {
+            const thisSequence = sequences.find((x: EventSequence) => x.uuid === currentId);
+            console.log(sequences);
+            
+            return (
+                <div>
+                  <select onChange={e => setCurrentId(e.target.value)} value={currentId}>
+                    {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
+                  </select>
 
-              <EventSequenceView {...thisSequence}/>
-            </div>
-        );
+                  <EventSequenceView {...thisSequence}/>
+                </div>
+            );
+        } else {
+            return <div>Still not enough info to choose a sequence...</div>;
+        }
     }
 }
 
