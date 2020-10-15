@@ -23,6 +23,13 @@ export function arrayMove<T>(arr: T[], fromIndex: number, toIndex: number): void
     }
     
     const element = arr[fromIndex];
+    console.log("element is %o", element);
+    
+
+    console.log("array is %o", arr);
+    console.log("fromIndex is %o", fromIndex);
+    console.log("toIndex is %o", toIndex);
+    
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);
 }

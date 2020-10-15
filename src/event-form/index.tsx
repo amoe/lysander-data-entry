@@ -9,10 +9,11 @@ import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE
 } from './graphql-operations';
+import {strictFindIndex, arrayMove} from '../utility';
 
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-
+import {cloneDeep} from 'lodash';
 import './event-form.css'
 
 const client = new ApolloClient({
@@ -60,18 +61,18 @@ function PlaneSortieSelector(props: {value: string, onChange: (x: string) => voi
     )
 }
 
-function EventView(props: Event) {
+function EventView(props: {value: Event, onRearrange: (sourceId: string, targetId: string) => void}) {
     const [setEventDescription, {data}] = useMutation(
         SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
     
 
     const onChange = (value: string) => {
-        setEventDescription({variables: {uuid: props.uuid, description: value}});
+        setEventDescription({variables: {uuid: props.value.uuid, description: value}});
     };
 
     const dragSpec = {
-        item: {type: DraggableType.LIST_ITEM, id: props.uuid},
+        item: {type: DraggableType.LIST_ITEM, id: props.value.uuid},
         collect: (monitor: DragSourceMonitor) => ({
             isDragging: !!monitor.isDragging()
         })
@@ -84,8 +85,9 @@ function EventView(props: Event) {
         drop: (item: DragObject, monitor: any) => {
             // target is this id, item.id is source
             console.log("accepting a drop");
-            console.log("target uuid is %o", props.uuid);
+            console.log("target uuid is %o", props.value.uuid);
             console.log("source uuid is %o", item.id);
+            props.onRearrange(item.id, props.value.uuid);
         },
         hover: (item: DragObject, monitor: DropTargetMonitor) => {
             //            console.log("testing droppability: %o", monitor.canDrop());
@@ -97,13 +99,13 @@ function EventView(props: Event) {
         <div ref={dropTargetRef} className="event-drop-target">
           <div ref={dragSourceRef} className="event-drag-source">
             <input type="text"
-                   value={props.description}
+                   value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
           </div>
         </div>
     )
 }
-
+//
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
@@ -113,6 +115,16 @@ function EventSequenceView(props: EventSequence) {
 
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
+    };
+
+    const handleRearrange = (sourceId: string, targetId: string) => {
+        console.log("handling rearrange");
+        // The problem should actually reduce to issue the modification in the backend.
+        const sourceIndex = strictFindIndex(props.content, e => e.uuid === sourceId);
+        const targetIndex = strictFindIndex(props.content, e => e.uuid === targetId);
+
+        const foo = cloneDeep(props.content);
+        arrayMove(foo, sourceIndex, targetIndex);
     };
     
     return (
@@ -129,7 +141,7 @@ function EventSequenceView(props: EventSequence) {
           <p>Total items in event sequence: {props.content.length}</p>
           
           <div className="event-list">
-            {props.content.map(e => <EventView key={e.uuid} {...e}/>)}
+            {props.content.map(e => <EventView key={e.uuid} value={e} onRearrange={handleRearrange}/>)}
           </div>
         </div>
     );
