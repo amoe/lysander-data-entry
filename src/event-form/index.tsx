@@ -5,16 +5,16 @@ import {
 import {
     useQuery, useMutation
 } from '@apollo/client';
+import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+import {cloneDeep} from 'lodash';
+
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
     ADD_EVENT, ADD_SEQUENCE
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
-
-import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
-import {cloneDeep} from 'lodash';
 import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 
@@ -148,7 +148,7 @@ function EventSequenceView(props: EventSequence) {
     };
 
     const handleRearrange = (sourceId: string, targetId: string) => {
-        console.log("handling rearrange");
+        console.log("handling rearrange: sourceId is %o, targetId is %o", sourceId, targetId);
         moveEvent({variables: {esId: props.uuid, sourceEvent: sourceId, targetEvent: targetId}});
     };
 
@@ -187,7 +187,9 @@ function EventSequenceView(props: EventSequence) {
           <p>Total items in event sequence: {props.events.length}</p>
           
           <div className="event-list">
-            {props.events.map(({Event}) => <EventView key={Event.uuid} value={Event} onRearrange={handleRearrange} onDelete={handleDelete}/>)}
+            {props.events.map(({Event}) => <EventView key={Event.uuid}
+                                                      value={Event}
+                                                      onRearrange={handleRearrange} onDelete={handleDelete}/>)}
           </div>
 
           <button onClick={(e) => handleAdd()}>Add event</button>
