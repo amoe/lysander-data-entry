@@ -1,13 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {
-    ApolloClient, InMemoryCache, ApolloProvider
-} from '@apollo/client';
-import {
-    useQuery, useMutation
-} from '@apollo/client';
+import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
+import {Modal, Button} from 'antd';
 
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
@@ -143,6 +140,8 @@ function EventSequenceView(props: EventSequence) {
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
+    const [modalVisibility, setModalVisibility] = useState(false);
+
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
@@ -159,8 +158,9 @@ function EventSequenceView(props: EventSequence) {
 
     const handleAdd = () => {
         console.log("handling add");
-        const result = window.prompt('Event description');
-        addEvent({variables: {esId: props.uuid, description: result}});
+        setModalVisibility(true);
+//        const result = window.prompt('Event description');
+//        addEvent({variables: {esId: props.uuid, description: result}});
     };
 
     console.log("props inside eventsequence view is %o", props);
@@ -172,6 +172,16 @@ function EventSequenceView(props: EventSequence) {
     } else {
         planeSortieValue = props.planeSortie.name;
     }
+
+
+    const handleOk = (close: React.MouseEvent<HTMLElement>) => {
+        console.log("value of close is %o", close);
+        setModalVisibility(false);
+        addEvent({variables: {esId: props.uuid, description: eventDescription}});
+        setEventDescription("");
+    }
+
+    const [eventDescription, setEventDescription] = useState("");
     
     return (
         <div className="event-sequence">
@@ -193,6 +203,9 @@ function EventSequenceView(props: EventSequence) {
           </div>
 
           <button onClick={(e) => handleAdd()}>Add event</button>
+          <Modal visible={modalVisibility} onOk={handleOk}>
+            <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/>
+          </Modal>
         </div>
     );
 }
