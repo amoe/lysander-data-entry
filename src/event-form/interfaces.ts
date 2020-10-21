@@ -11,7 +11,7 @@ export interface AnemicPartialDate {
 export interface Event {
     uuid: string;
     description: string;
-    event: AnemicPartialDate;
+    date: AnemicPartialDate;
 }
 
 export interface PlaneSortie {

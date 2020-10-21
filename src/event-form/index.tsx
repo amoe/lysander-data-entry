@@ -17,7 +17,7 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
-    DragObject, EventInputDetails
+    DragObject, EventInputDetails, AnemicPartialDate
 } from './interfaces';
 
 // Need to get this deploy data specifically
@@ -43,6 +43,16 @@ function PlaneSortieSelector(
           </select>
         </span>
     )
+}
+
+function AnemicPartialDateDisplay(props: {value: AnemicPartialDate}) {
+    return (
+        <div>
+          <p>Year: {props.value.year}</p>
+          <p>Month: {props.value.month}</p>
+          <p>Day: {props.value.day}</p>
+        </div>
+    );
 }
 
 function EventView(
@@ -91,7 +101,7 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
-            <PartialDateDisplay value={props.value.date}/>
+            <AnemicPartialDateDisplay value={props.value.date}/>
 
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
