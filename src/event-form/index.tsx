@@ -91,6 +91,8 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
+            <PartialDateDisplay value={props.value.date}/>
+
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
         </div>
