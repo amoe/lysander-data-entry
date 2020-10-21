@@ -39,6 +39,7 @@ export interface DragObject {
     id: string
 }
 
+// React-side...
 export interface EventInputDetails {
     description: string;
     date: DateInputs;

@@ -69,8 +69,8 @@ export const DELETE_EVENT = gql`
 `;
 
 export const ADD_EVENT = gql`
-    mutation AddEvent($esId: ID!, $description: String!) {
-        addEvent(esId: $esId, description: $description) {
+    mutation AddEvent($esId: ID!, $event: EventInput!) {
+        addEventPrime(esId: $esId, event: $event) {
             uuid
         }
     }

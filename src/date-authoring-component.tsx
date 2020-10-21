@@ -26,11 +26,7 @@ function OptionalNumber(props: {
 }) {
     const [isEnabled, setEnabled] = useState(true);
 
-    console.log("enabled value is %o", isEnabled);
-
     const onCheckboxChange = (e: any) => {
-        console.log("checkbox changed");
-
         const newEnabledValue = e.target.checked;
 
         setEnabled(newEnabledValue);

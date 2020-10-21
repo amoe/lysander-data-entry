@@ -19,6 +19,10 @@ import {
     Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
     DragObject, EventInputDetails, AnemicPartialDate
 } from './interfaces';
+// abstraction violation
+import {
+    DateInputs
+} from '../date-authoring-component';
 
 // Need to get this deploy data specifically
 const client = new ApolloClient({
@@ -173,11 +177,27 @@ function EventSequenceView(props: EventSequence) {
         setModalVisibility(false);
         setEventDetails(makeInitialState());
     }
+
+    // Disgusting code but blah
+    const convertDateToGraphql = (date: DateInputs): AnemicPartialDate => {
+        const result: any = cloneDeep(date);
+        const copyMonth = result.monthIndex;
+        delete result.monthIndex;
+        result.month = copyMonth;
+        return result;
+    }
         
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         console.log("value of close is %o", close);
         setModalVisibility(false);
-        addEvent({variables: {esId: props.uuid, description: eventDetails.description}});
+        console.log("event details are %o", eventDetails);
+
+        const payload = cloneDeep(eventDetails);
+        payload.date = convertDateToGraphql(payload.date);
+
+        console.log("I will send payload %o", payload);
+        
+        addEvent({variables: {esId: props.uuid, event: payload}});
         setEventDetails(makeInitialState());
     }
 
@@ -204,7 +224,8 @@ function EventSequenceView(props: EventSequence) {
           <div className="event-list">
             {props.events.map(({Event}) => <EventView key={Event.uuid}
                                                       value={Event}
-                                                      onRearrange={handleRearrange} onDelete={handleDelete}/>)}
+                                                      onRearrange={handleRearrange}
+                                                      onDelete={handleDelete}/>)}
           </div>
 
           <button onClick={(e) => handleAdd()}>Add event</button>
