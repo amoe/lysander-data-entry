@@ -1,3 +1,5 @@
+import {DateInputs} from '../date-authoring-component';
+
 export interface Event {
     uuid: string;
     description: string;
@@ -30,4 +32,5 @@ export interface DragObject {
 
 export interface EventInputDetails {
     description: string;
+    date: DateInputs;
 }

@@ -149,15 +149,24 @@ function EventSequenceView(props: EventSequence) {
         planeSortieValue = props.planeSortie.name;
     }
 
-    const [eventDetails, setEventDetails] = useState(
-        {description: ""} as EventInputDetails
+    const makeInitialState = (): EventInputDetails => (
+        {description: "", date: {year: 1940}}
     );
 
+    
+    const [eventDetails, setEventDetails] = useState(makeInitialState());
+
+
+    const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
+        setModalVisibility(false);
+        setEventDetails(makeInitialState());
+    }
+        
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         console.log("value of close is %o", close);
         setModalVisibility(false);
         addEvent({variables: {esId: props.uuid, description: eventDetails.description}});
-        setEventDetails({description: ""});
+        setEventDetails(makeInitialState());
     }
 
 
@@ -187,7 +196,7 @@ function EventSequenceView(props: EventSequence) {
           </div>
 
           <button onClick={(e) => handleAdd()}>Add event</button>
-          <Modal visible={modalVisibility} onOk={handleOk}>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
             <EventInputForm onChange={handleChange} value={eventDetails}/>
           </Modal>
         </div>
