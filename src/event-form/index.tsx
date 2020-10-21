@@ -5,6 +5,7 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
+import {EventInputForm} from './event-input-form';
 
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
@@ -14,41 +15,16 @@ import {
 import {strictFindIndex, arrayMove} from '../utility';
 import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
+import {
+    Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
+    DragObject, EventInputDetails
+} from './interfaces';
 
 // Need to get this deploy data specifically
 const client = new ApolloClient({
     uri: GRAPHQL_URL, cache: new InMemoryCache()
 });
 
-interface Event {
-    uuid: string;
-    description: string;
-}
-
-interface PlaneSortie {
-    name: string;
-}
-
-interface InSequenceRelationship {
-    position: number;
-    Event: Event;
-}
-
-interface EventSequence {
-    name: string;
-    uuid: string;
-    events: InSequenceRelationship[];
-    planeSortie: PlaneSortie
-}
-
-enum DraggableType {
-    LIST_ITEM = 'listItem',
-}
-
-export interface DragObject {
-    type: DraggableType,
-    id: string
-}
 
 function PlaneSortieSelector(
     props: {value: string | undefined, onChange: (x: string) => void}
@@ -173,15 +149,23 @@ function EventSequenceView(props: EventSequence) {
         planeSortieValue = props.planeSortie.name;
     }
 
+    const [eventDetails, setEventDetails] = useState(
+        {description: ""} as EventInputDetails
+    );
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         console.log("value of close is %o", close);
         setModalVisibility(false);
-        addEvent({variables: {esId: props.uuid, description: eventDescription}});
-        setEventDescription("");
+        addEvent({variables: {esId: props.uuid, description: eventDetails.description}});
+        setEventDetails({description: ""});
     }
 
-    const [eventDescription, setEventDescription] = useState("");
+
+    const handleChange = (newValues: EventInputDetails) => {
+        console.log("Parent: New values are %o", newValues);
+        setEventDetails(newValues);
+    };
+
     
     return (
         <div className="event-sequence">
@@ -204,7 +188,7 @@ function EventSequenceView(props: EventSequence) {
 
           <button onClick={(e) => handleAdd()}>Add event</button>
           <Modal visible={modalVisibility} onOk={handleOk}>
-            <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)}/>
+            <EventInputForm onChange={handleChange} value={eventDetails}/>
           </Modal>
         </div>
     );
