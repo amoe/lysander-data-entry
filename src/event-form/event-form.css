@@ -32,3 +32,8 @@
     border: 1px solid #decbe4;
     padding: 1em 0.5em;
 }
+
+.anemic-partial-date-display span {
+    margin-right: 0.4em;
+    
+}

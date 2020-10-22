@@ -6,7 +6,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
 import {EventInputForm} from './event-input-form';
-
+//
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
@@ -51,10 +51,10 @@ function PlaneSortieSelector(
 
 function AnemicPartialDateDisplay(props: {value: AnemicPartialDate}) {
     return (
-        <div>
-          <p>Year: {props.value.year}</p>
-          <p>Month: {props.value.month}</p>
-          <p>Day: {props.value.day}</p>
+        <div className="anemic-partial-date-display">
+          <span>Year: {props.value.year}</span>
+          <span>Month: {props.value.month}</span>
+          <span>Day: {props.value.day}</span>
         </div>
     );
 }
@@ -297,12 +297,10 @@ function AllSequencesView() {
             return (
                 <div>
                   <select onChange={e => handleSwitch(e.target.value)} value={currentId}>
-                    {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.uuid}</option>)}
+                    {sequences.map((es: EventSequence) => <option key={es.uuid} value={es.uuid}>{es.name}</option>)}
                   </select>
-
+                  <button onClick={(e) => handleAdd()}>Create new event sequence</button>
                   <EventSequenceView {...thisSequence}/>
-
-                  <button onClick={(e) => handleAdd()}>Add event sequence</button>
                 </div>
             );
         } else {
