@@ -112,7 +112,69 @@ function EventView(
         </div>
     )
 }
-//
+
+// XXX: Not totally clear that we should present the button here as well, but
+// it works and avoids multiplying props, so whaddya gonna do?
+function AddEventStuff(props: {eventSequenceId: string}) {
+    const [addEvent, addEventResult] = useMutation(
+        ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
+    const [modalVisibility, setModalVisibility] = useState(false);
+
+    const handleShowModal = () => {
+        setModalVisibility(true);
+    };
+
+
+    const makeInitialState = (): EventInputDetails => (
+        {description: "", date: {year: 1940}}
+    );
+    const [eventDetails, setEventDetails] = useState(makeInitialState());
+
+    const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
+        setModalVisibility(false);
+        setEventDetails(makeInitialState());
+    }
+
+    // Disgusting code but blah
+    const convertDateToGraphql = (date: DateInputs): AnemicPartialDate => {
+        const result: any = cloneDeep(date);
+        const copyMonth = result.monthIndex;
+        delete result.monthIndex;
+        result.month = copyMonth;
+        return result;
+    }
+    
+    const handleOk = (close: React.MouseEvent<HTMLElement>) => {
+        console.log("value of close is %o", close);
+        setModalVisibility(false);
+        console.log("event details are %o", eventDetails);
+
+        const payload = cloneDeep(eventDetails);
+        payload.date = convertDateToGraphql(payload.date);
+
+        console.log("I will send payload %o", payload);
+        
+        addEvent({variables: {esId: props.eventSequenceId, event: payload}});
+        setEventDetails(makeInitialState());
+    }
+
+
+    const handleChange = (newValues: EventInputDetails) => {
+        console.log("Parent: New values are %o", newValues);
+        setEventDetails(newValues);
+    };
+    
+    return (
+        <div>
+          <button onClick={(e) => handleShowModal()}>Add event</button>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
+            <EventInputForm onChange={handleChange} value={eventDetails}/>
+          </Modal>
+        </div>
+    );
+}
+
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
@@ -128,12 +190,6 @@ function EventSequenceView(props: EventSequence) {
         DELETE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
 
-    const [addEvent, addEventResult] = useMutation(
-        ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
-    );
-
-    const [modalVisibility, setModalVisibility] = useState(false);
-
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
     };
@@ -148,64 +204,12 @@ function EventSequenceView(props: EventSequence) {
         deleteEvent({variables: {esId: props.uuid, eventId}});
     };
 
-    const handleAdd = () => {
-        console.log("handling add");
-        setModalVisibility(true);
-//        const result = window.prompt('Event description');
-//        addEvent({variables: {esId: props.uuid, description: result}});
-    };
-
-    console.log("props inside eventsequence view is %o", props);
-
     var planeSortieValue;
-    
     if (props.planeSortie === null) {
         planeSortieValue = undefined;
     } else {
         planeSortieValue = props.planeSortie.name;
     }
-
-    const makeInitialState = (): EventInputDetails => (
-        {description: "", date: {year: 1940}}
-    );
-
-    
-    const [eventDetails, setEventDetails] = useState(makeInitialState());
-
-
-    const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
-        setModalVisibility(false);
-        setEventDetails(makeInitialState());
-    }
-
-    // Disgusting code but blah
-    const convertDateToGraphql = (date: DateInputs): AnemicPartialDate => {
-        const result: any = cloneDeep(date);
-        const copyMonth = result.monthIndex;
-        delete result.monthIndex;
-        result.month = copyMonth;
-        return result;
-    }
-        
-    const handleOk = (close: React.MouseEvent<HTMLElement>) => {
-        console.log("value of close is %o", close);
-        setModalVisibility(false);
-        console.log("event details are %o", eventDetails);
-
-        const payload = cloneDeep(eventDetails);
-        payload.date = convertDateToGraphql(payload.date);
-
-        console.log("I will send payload %o", payload);
-        
-        addEvent({variables: {esId: props.uuid, event: payload}});
-        setEventDetails(makeInitialState());
-    }
-
-
-    const handleChange = (newValues: EventInputDetails) => {
-        console.log("Parent: New values are %o", newValues);
-        setEventDetails(newValues);
-    };
 
     
     return (
@@ -227,11 +231,7 @@ function EventSequenceView(props: EventSequence) {
                                                       onRearrange={handleRearrange}
                                                       onDelete={handleDelete}/>)}
           </div>
-
-          <button onClick={(e) => handleAdd()}>Add event</button>
-          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
-            <EventInputForm onChange={handleChange} value={eventDetails}/>
-          </Modal>
+          <AddEventStuff eventSequenceId={props.uuid}/>
         </div>
     );
 }
