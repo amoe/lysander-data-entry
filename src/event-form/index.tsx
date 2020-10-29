@@ -17,7 +17,7 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
-    DragObject, EventInputDetails, AnemicPartialDate
+    DragObject, EventInputDetails
 } from './interfaces';
 // abstraction violation
 import {
@@ -47,16 +47,6 @@ function PlaneSortieSelector(
           </select>
         </span>
     )
-}
-
-function AnemicPartialDateDisplay(props: {value: AnemicPartialDate}) {
-    return (
-        <div className="anemic-partial-date-display">
-          <span>Year: {props.value.year}</span>
-          <span>Month: {props.value.month}</span>
-          <span>Day: {props.value.day}</span>
-        </div>
-    );
 }
 
 function EventView(
@@ -105,14 +95,14 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
-            <AnemicPartialDateDisplay value={props.value.date}/>
+            {props.value.time.hour} {props.value.time.minute}
 
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
         </div>
     )
 }
-
+//
 // XXX: Not totally clear that we should present the button here as well, but
 // it works and avoids multiplying props, so whaddya gonna do?
 function AddEventStuff(props: {eventSequenceId: string}) {
@@ -127,22 +117,13 @@ function AddEventStuff(props: {eventSequenceId: string}) {
 
 
     const makeInitialState = (): EventInputDetails => (
-        {description: "", date: {year: 1940}}
+        {description: "", hour: 0, minute: 0}
     );
     const [eventDetails, setEventDetails] = useState(makeInitialState());
 
     const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(false);
         setEventDetails(makeInitialState());
-    }
-
-    // Disgusting code but blah
-    const convertDateToGraphql = (date: DateInputs): AnemicPartialDate => {
-        const result: any = cloneDeep(date);
-        const copyMonth = result.monthIndex;
-        delete result.monthIndex;
-        result.month = copyMonth;
-        return result;
     }
     
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
@@ -151,8 +132,6 @@ function AddEventStuff(props: {eventSequenceId: string}) {
         console.log("event details are %o", eventDetails);
 
         const payload = cloneDeep(eventDetails);
-        payload.date = convertDateToGraphql(payload.date);
-
         console.log("I will send payload %o", payload);
         
         addEvent({variables: {esId: props.eventSequenceId, event: payload}});

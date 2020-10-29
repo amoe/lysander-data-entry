@@ -1,17 +1,12 @@
-import {DateInputs} from '../date-authoring-component';
-
-// Anemic because it's not the full PartialDate, which is a class with
-// methods on it rather than a JS object.
-export interface AnemicPartialDate {
-    year: number;
-    month: number;
-    day: number;
+interface PartialTime {
+    hour: number;
+    minute: number;
 }
 
 export interface Event {
     uuid: string;
     description: string;
-    date: AnemicPartialDate;
+    time: PartialTime;
 }
 
 export interface PlaneSortie {
@@ -42,5 +37,6 @@ export interface DragObject {
 // React-side...
 export interface EventInputDetails {
     description: string;
-    date: DateInputs;
+    hour: number;
+    minute: number;
 }

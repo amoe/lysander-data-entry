@@ -7,15 +7,6 @@ export function EventInputForm(
         value: EventInputDetails,
         onChange: (v: EventInputDetails) => void
     }) {
-    // FIXME lift state up
-    // const [dates, setDates] = useState([] as DateInputs[]);
-    // const [dateInputs, setDateInputs] = useState({year: 1940} as DateInputs);
-
-    function handleDateChange(x: DateInputs) {
-        props.onChange({...props.value, date: x});
-//        setDateInputs(x);
-    }
-    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const target = e.currentTarget;
         const value = target.value;
@@ -29,10 +20,6 @@ export function EventInputForm(
                  name="description"
                  value={props.value.description}
                  onChange={handleChange}/>
-
-          
-          <DateAuthoringComponent value={props.value.date}
-                                  onChange={handleDateChange}/>
         </div>
     );
 }

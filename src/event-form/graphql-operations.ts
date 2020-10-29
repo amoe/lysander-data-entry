@@ -23,10 +23,9 @@ export const EVENT_SEQUENCE_QUERY = gql`
       Event {
         uuid 
         description
-        date {
-          year
-          month
-          day
+        time {
+           hour
+           minute
         }
       }
     }
