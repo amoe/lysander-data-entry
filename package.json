@@ -36,6 +36,7 @@
     "kepler.gl": "^1.1.9",
     "lodash": "^4.17.15",
     "loglevel": "^1.6.4",
+    "moment": "^2.29.1",
     "neo4j-driver": "^1.7.6",
     "neovis.js": "^1.2.1",
     "react": "^16.11.0",
