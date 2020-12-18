@@ -5,7 +5,7 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
-import {parseISO} from 'date-fns';
+import {parseISO, format} from 'date-fns';
 
 //import {EventInputForm} from './event-input-form';
 import {EventInputForm} from './event-input-form-2';
@@ -27,7 +27,11 @@ import {
     DateInputs
 } from '../date-authoring-component';
 import {constructLink} from './construct-link';
-import {convertMinuteOffsetToUserFacing, UserFacingTimeOffset} from '../core/time-offset';
+import {
+    convertMinuteOffsetToUserFacing,
+    convertUserFacingToMinuteOffset,
+    UserFacingTimeOffset
+} from '../core/time-offset';
 
 
 
@@ -70,7 +74,7 @@ function TimeOffsetDisplay(props: {value: UserFacingTimeOffset}) {
 function EventView(
     props: {
         value: Event,
-        nightOf: string,
+        nightOf: Date,
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
     }
@@ -107,7 +111,7 @@ function EventView(
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
 
-    console.log(parseISO(props.nightOf));
+    const formattedDate = format(props.nightOf, 'yyyy-MM-dd');
 
     return (
         <div ref={dropTargetRef} className="event-drop-target">
@@ -116,10 +120,10 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
-            <p>Night of: {props.nightOf}</p>
+            <p>Night of: {formattedDate}</p>
 
             <TimeOffsetDisplay
-                value={convertMinuteOffsetToUserFacing(parseISO(props.nightOf), props.value.offset)}/>
+                value={convertMinuteOffsetToUserFacing(props.nightOf, props.value.offset)}/>
 
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
@@ -129,7 +133,7 @@ function EventView(
 
 // XXX: Not totally clear that we should present the button here as well, but
 // it works and avoids multiplying props, so whaddya gonna do?
-function AddEventStuff(props: {eventSequenceId: string}) {
+function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     const [addEvent, addEventResult] = useMutation(
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
@@ -158,11 +162,18 @@ function AddEventStuff(props: {eventSequenceId: string}) {
         setModalVisibility(false);
         console.log("event details are %o", eventDetails);
 
-        const payload = cloneDeep(eventDetails);
+        const payload = {
+            description: eventDetails.description,
+            offset: convertUserFacingToMinuteOffset(props.nightOf, eventDetails.timeOffset)
+        };
 
         console.log("I will send payload %o", payload);
         
-        addEvent({variables: {esId: props.eventSequenceId, event: payload}});
+        addEvent(
+            {variables: {
+                esId: props.eventSequenceId,
+                event: payload
+            }});
         setEventDetails(makeInitialState());
     }
 
@@ -218,7 +229,7 @@ function EventSequenceView(props: EventSequence) {
         planeSortieValue = props.planeSortie.name;
     }
 
-    
+    const nightOf = parseISO(props.planeSortie.sortie.nightOf);
     return (
         <div className="event-sequence">
           <h1>Event Sequence</h1>
@@ -235,11 +246,11 @@ function EventSequenceView(props: EventSequence) {
           <div className="event-list">
             {props.events.map(({Event}) => <EventView key={Event.uuid}
                                                       value={Event}
-                                                      nightOf={props.planeSortie.sortie.nightOf}
+                                                      nightOf={nightOf}
                                                       onRearrange={handleRearrange}
                                                       onDelete={handleDelete}/>)}
           </div>
-          <AddEventStuff eventSequenceId={props.uuid}/>
+          <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>
         </div>
     );
 }
