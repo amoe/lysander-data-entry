@@ -28,6 +28,9 @@ export const EVENT_SEQUENCE_QUERY = gql`
     }
     planeSortie {
       name
+      sortie {
+        nightOf
+      }
     }
   }
 }

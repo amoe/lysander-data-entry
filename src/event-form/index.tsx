@@ -5,6 +5,8 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
+import {parseISO} from 'date-fns';
+
 //import {EventInputForm} from './event-input-form';
 import {EventInputForm} from './event-input-form-2';
 //
@@ -18,17 +20,19 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
-    DragObject, EventInputDetails, AnemicPartialDate
+    DragObject, EventInputDetails
 } from './interfaces';
 // abstraction violation
 import {
     DateInputs
 } from '../date-authoring-component';
 import {constructLink} from './construct-link';
+import {convertMinuteOffsetToUserFacing, UserFacingTimeOffset} from '../core/time-offset';
 
 
-// Need to get this deploy data specifically
-const client = new ApolloClient({
+
+    // Need to get this deploy data specifically
+    const client = new ApolloClient({
     link: constructLink(GRAPHQL_URL),
     cache: new InMemoryCache()
 });
@@ -53,12 +57,12 @@ function PlaneSortieSelector(
     )
 }
 
-function AnemicPartialDateDisplay(props: {value: AnemicPartialDate}) {
+function TimeOffsetDisplay(props: {value: UserFacingTimeOffset}) {
     return (
-        <div className="anemic-partial-date-display">
-          <span>Year: {props.value.year}</span>
-          <span>Month: {props.value.month}</span>
-          <span>Day: {props.value.day}</span>
+        <div className="user-facing-time-offset">
+          <span>Day ordinal: {props.value.dayOrdinal}</span>
+          <span>Hour: {props.value.hour}</span>
+          <span>Minute: {props.value.minute}</span>
         </div>
     );
 }
@@ -66,6 +70,7 @@ function AnemicPartialDateDisplay(props: {value: AnemicPartialDate}) {
 function EventView(
     props: {
         value: Event,
+        nightOf: string,
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
     }
@@ -102,6 +107,8 @@ function EventView(
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
 
+    console.log(parseISO(props.nightOf));
+
     return (
         <div ref={dropTargetRef} className="event-drop-target">
           <div ref={dragSourceRef} className="event-drag-source">
@@ -109,7 +116,10 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
-            <AnemicPartialDateDisplay value={props.value.date}/>
+            <p>Night of: {props.nightOf}</p>
+
+            <TimeOffsetDisplay
+                value={convertMinuteOffsetToUserFacing(parseISO(props.nightOf), props.value.offset)}/>
 
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
@@ -143,22 +153,12 @@ function AddEventStuff(props: {eventSequenceId: string}) {
         setEventDetails(makeInitialState());
     }
 
-    // Disgusting code but blah
-    const convertDateToGraphql = (date: DateInputs): AnemicPartialDate => {
-        const result: any = cloneDeep(date);
-        const copyMonth = result.monthIndex;
-        delete result.monthIndex;
-        result.month = copyMonth;
-        return result;
-    }
-    
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         console.log("value of close is %o", close);
         setModalVisibility(false);
         console.log("event details are %o", eventDetails);
 
         const payload = cloneDeep(eventDetails);
-//        payload.date = convertDateToGraphql(payload.date);
 
         console.log("I will send payload %o", payload);
         
@@ -235,6 +235,7 @@ function EventSequenceView(props: EventSequence) {
           <div className="event-list">
             {props.events.map(({Event}) => <EventView key={Event.uuid}
                                                       value={Event}
+                                                      nightOf={props.planeSortie.sortie.nightOf}
                                                       onRearrange={handleRearrange}
                                                       onDelete={handleDelete}/>)}
           </div>
