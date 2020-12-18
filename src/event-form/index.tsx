@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import {ApolloClient,HttpLink, InMemoryCache, ApolloProvider, ApolloLink} from '@apollo/client';
 import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
-import {EventInputForm} from './event-input-form';
+//import {EventInputForm} from './event-input-form';
+import {EventInputForm} from './event-input-form-2';
 //
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
@@ -23,13 +24,27 @@ import {
 import {
     DateInputs
 } from '../date-authoring-component';
+import { onError } from "@apollo/client/link/error";
+
+
+
+const link2 = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+        graphQLErrors.map(({ message, locations, path }) =>
+            console.log(
+                `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            )
+        );
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 // Need to get this deploy data specifically
 const client = new ApolloClient({
-    uri: GRAPHQL_URL, cache: new InMemoryCache()
+    link: ApolloLink.from([link2, new HttpLink({uri: GRAPHQL_URL})]),
+    cache: new InMemoryCache()
 });
 
-
+//
 function PlaneSortieSelector(
     props: {value: string | undefined, onChange: (x: string) => void}
 ) {
@@ -127,7 +142,10 @@ function AddEventStuff(props: {eventSequenceId: string}) {
 
 
     const makeInitialState = (): EventInputDetails => (
-        {description: "", date: {year: 1940}}
+        {
+            description: "",
+            timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
+        }
     );
     const [eventDetails, setEventDetails] = useState(makeInitialState());
 
@@ -151,7 +169,7 @@ function AddEventStuff(props: {eventSequenceId: string}) {
         console.log("event details are %o", eventDetails);
 
         const payload = cloneDeep(eventDetails);
-        payload.date = convertDateToGraphql(payload.date);
+//        payload.date = convertDateToGraphql(payload.date);
 
         console.log("I will send payload %o", payload);
         
