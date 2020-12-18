@@ -25,8 +25,23 @@ export function EventInputForm(
         );
     };
 
-    const g = (time: moment.Moment | null, timeString: string) => {
+    const g = (chosenTime: moment.Moment | null, timeString: string) => {
+        if (chosenTime === null) throw new Error("cannot unset time");
+        
         console.log("setting value");
+        console.log("chosen time is %o");
+
+        props.onChange(
+            {
+                ...props.value,
+                timeOffset: {
+                    ...props.value.timeOffset,
+                    hour: chosenTime.hour(),
+                    minute: chosenTime.minute()
+                }
+            }
+                 
+        );
     };
 
     function toMoment(offset: UserFacingTimeOffset) {
