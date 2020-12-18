@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {EventInputDetails} from './interfaces';
+import {UserFacingTimeOffset} from '../core/time-offset';
 import {InputNumber, TimePicker} from 'antd';
 import moment from 'moment';
 
@@ -24,6 +25,14 @@ export function EventInputForm(
         );
     };
 
+    const g = (time: moment.Moment | null, timeString: string) => {
+        console.log("setting value");
+    };
+
+    function toMoment(offset: UserFacingTimeOffset) {
+        return moment({hour: offset.hour, minute: offset.minute});
+    }
+
     const format = 'HH:mm';
 
     const defaultValue = moment('12:08', format);
@@ -38,7 +47,10 @@ export function EventInputForm(
           <InputNumber value={props.value.timeOffset.dayOrdinal}
                        onChange={f}/>
 
-          <TimePicker defaultValue={defaultValue} format={format} />
+          <TimePicker defaultValue={defaultValue}
+                      format={format}
+                      value={toMoment(props.value.timeOffset)}
+                      onChange={g}/>
         </div>
     );
 }
