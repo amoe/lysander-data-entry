@@ -24,13 +24,23 @@ import {
 import {
     DateInputs
 } from '../date-authoring-component';
-import { createHttpLink } from "apollo-link-http";
+import { onError } from "@apollo/client/link/error";
 
-const link = createHttpLink({ uri: GRAPHQL_URL });
+
+
+const link2 = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+        graphQLErrors.map(({ message, locations, path }) =>
+            console.log(
+                `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            )
+        );
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 // Need to get this deploy data specifically
 const client = new ApolloClient({
-    link: ApolloLink.from([new HttpLink({uri: GRAPHQL_URL})]),
+    link: ApolloLink.from([link2, new HttpLink({uri: GRAPHQL_URL})]),
     cache: new InMemoryCache()
 });
 
