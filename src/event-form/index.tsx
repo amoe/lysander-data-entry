@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import {ApolloClient,HttpLink, InMemoryCache, ApolloProvider, ApolloLink} from '@apollo/client';
 import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
@@ -24,10 +24,14 @@ import {
 import {
     DateInputs
 } from '../date-authoring-component';
+import { createHttpLink } from "apollo-link-http";
+
+const link = createHttpLink({ uri: GRAPHQL_URL });
 
 // Need to get this deploy data specifically
 const client = new ApolloClient({
-    uri: GRAPHQL_URL, cache: new InMemoryCache()
+    link: ApolloLink.from([new HttpLink({uri: GRAPHQL_URL})]),
+    cache: new InMemoryCache()
 });
 
 //

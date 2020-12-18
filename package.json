@@ -25,6 +25,7 @@
     "@types/uuid": "^3.4.5",
     "@types/webpack-env": "^1.15.1",
     "antd": "^4.2.2",
+    "apollo-link-http": "^1.5.17",
     "axios": "^0.19.0",
     "date-fns": "^2.13.0",
     "formik": "^2.0.3",
