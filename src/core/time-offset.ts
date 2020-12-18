@@ -1,6 +1,6 @@
 import {addDays, setHours, setMinutes, differenceInMinutes, addMinutes, differenceInDays} from 'date-fns';
 
-interface UserFacingTimeOffset {
+export interface UserFacingTimeOffset {
     dayOrdinal: number;    // 1-based
     hour: number;
     minute: number;

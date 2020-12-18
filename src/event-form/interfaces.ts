@@ -1,4 +1,5 @@
 import {DateInputs} from '../date-authoring-component';
+import {UserFacingTimeOffset} from '../core/time-offset';
 
 // Anemic because it's not the full PartialDate, which is a class with
 // methods on it rather than a JS object.
@@ -42,5 +43,6 @@ export interface DragObject {
 // React-side...
 export interface EventInputDetails {
     description: string;
-    date: DateInputs;
+    timeOffset: UserFacingTimeOffset;
 }
+

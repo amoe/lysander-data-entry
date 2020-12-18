@@ -5,7 +5,8 @@ import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} fro
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
-import {EventInputForm} from './event-input-form';
+//import {EventInputForm} from './event-input-form';
+import {EventInputForm} from './event-input-form-2';
 //
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
@@ -29,7 +30,7 @@ const client = new ApolloClient({
     uri: GRAPHQL_URL, cache: new InMemoryCache()
 });
 
-
+//
 function PlaneSortieSelector(
     props: {value: string | undefined, onChange: (x: string) => void}
 ) {
@@ -127,7 +128,10 @@ function AddEventStuff(props: {eventSequenceId: string}) {
 
 
     const makeInitialState = (): EventInputDetails => (
-        {description: "", date: {year: 1940}}
+        {
+            description: "",
+            timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
+        }
     );
     const [eventDetails, setEventDetails] = useState(makeInitialState());
 
@@ -151,7 +155,7 @@ function AddEventStuff(props: {eventSequenceId: string}) {
         console.log("event details are %o", eventDetails);
 
         const payload = cloneDeep(eventDetails);
-        payload.date = convertDateToGraphql(payload.date);
+//        payload.date = convertDateToGraphql(payload.date);
 
         console.log("I will send payload %o", payload);
         
