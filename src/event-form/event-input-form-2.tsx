@@ -39,14 +39,20 @@ export function EventInputForm(
     
     return (
         <div>
+          <span>Description</span>
+          
           <input type="text"
                  name="description"
                  value={props.value.description}
                  onChange={handleChange}/>
 
+          <span>Day</span>
+          
           <InputNumber value={props.value.timeOffset.dayOrdinal}
                        onChange={f}/>
 
+
+          <span>Time</span>
           <TimePicker defaultValue={defaultValue}
                       format={format}
                       value={toMoment(props.value.timeOffset)}
