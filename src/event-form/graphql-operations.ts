@@ -38,7 +38,7 @@ export const EVENT_SEQUENCE_QUERY = gql`
 
 export const SET_EVENT_DESCRIPTION = gql`
     mutation SetEventDescription($uuid: ID!, $description: String!) {
-        UpdateEvent(uuid: $uuid, description: $description) {
+        updateEvent(uuid: $uuid, description: $description) {
             uuid
             description
         }

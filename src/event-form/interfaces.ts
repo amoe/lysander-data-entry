@@ -25,7 +25,7 @@ export interface EventSequence {
     name: string;
     uuid: string;
     events: InSequenceRelationship[];
-    planeSortie: PlaneSortie
+    planeSortie: PlaneSortie | null;
 }
 
 export enum DraggableType {

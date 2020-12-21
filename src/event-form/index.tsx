@@ -61,6 +61,14 @@ function PlaneSortieSelector(
     )
 }
 
+function TimeOffsetConversionWrapper(props: {nightOf: Date | undefined, offset: number}) {
+    if (props.nightOf === undefined) {
+        return <div>NO!</div>
+    } else {
+        return <TimeOffsetDisplay value={convertMinuteOffsetToUserFacing(props.nightOf, props.offset)}/>
+    }
+};
+
 function TimeOffsetDisplay(props: {value: UserFacingTimeOffset}) {
     return (
         <div className="user-facing-time-offset">
@@ -71,10 +79,18 @@ function TimeOffsetDisplay(props: {value: UserFacingTimeOffset}) {
     );
 }
 
+function NightOfDisplay(props: {nightOf: Date | undefined}) {
+    if (props.nightOf === undefined) {
+        return (<p>Night of: (not set)</p>);
+    } else {
+        return (<p>Night of: {format(props.nightOf, 'yyyy-MM-dd')}</p>);
+    }
+}
+
 function EventView(
     props: {
         value: Event,
-        nightOf: Date,
+        nightOf: Date | undefined,
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
     }
@@ -111,8 +127,6 @@ function EventView(
     };
     const [dropProps, dropTargetRef] = useDrop(dropSpec);
 
-    const formattedDate = format(props.nightOf, 'yyyy-MM-dd');
-
     return (
         <div ref={dropTargetRef} className="event-drop-target">
           <div ref={dragSourceRef} className="event-drag-source">
@@ -120,11 +134,10 @@ function EventView(
                    value={props.value.description}
                    onChange={(e) => onChange(e.target.value)}/>
 
-            <p>Night of: {formattedDate}</p>
 
-            <TimeOffsetDisplay
-                value={convertMinuteOffsetToUserFacing(props.nightOf, props.value.offset)}/>
-
+            <TimeOffsetConversionWrapper nightOf={props.nightOf}
+                                         offset={props.value.offset}/>
+            
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
           </div>
         </div>
@@ -223,13 +236,17 @@ function EventSequenceView(props: EventSequence) {
     };
 
     var planeSortieValue;
+    var nightOf: Date | undefined;
     if (props.planeSortie === null) {
         planeSortieValue = undefined;
+        nightOf = undefined;
     } else {
         planeSortieValue = props.planeSortie.name;
+        nightOf = parseISO(props.planeSortie.sortie.nightOf);
     }
 
-    const nightOf = parseISO(props.planeSortie.sortie.nightOf);
+
+    
     return (
         <div className="event-sequence">
           <h1>Event Sequence</h1>
@@ -241,6 +258,8 @@ function EventSequenceView(props: EventSequence) {
                                  onChange={handlePlaneSortieChange}/>
           </div>
 
+          <NightOfDisplay nightOf={nightOf}/>
+
           <p>Total items in event sequence: {props.events.length}</p>
           
           <div className="event-list">
@@ -250,7 +269,9 @@ function EventSequenceView(props: EventSequence) {
                                                       onRearrange={handleRearrange}
                                                       onDelete={handleDelete}/>)}
           </div>
-          <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>
+
+
+          {nightOf !== undefined && <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>}
         </div>
     );
 }
@@ -263,12 +284,18 @@ function AllSequencesView() {
 
     useEffect(
         () => {
+            
             if (!loading) {
-                const sequences = data['EventSequence']
-                if (sequences.length > 0 && !isManuallySelected) {
-                    setCurrentId(sequences[0].uuid);
+                // This is probably a network error
+                if (data === undefined) {
+                    throw new Error("something bad happened");
                 } else {
-                    // There's actually zero sequences defined, perhaps a blank DB
+                    const sequences = data['EventSequence']
+                    if (sequences.length > 0 && !isManuallySelected) {
+                        setCurrentId(sequences[0].uuid);
+                    } else {
+                        // There's actually zero sequences defined, perhaps a blank DB
+                    }
                 }
             } else {
                 console.log("effect called before loading completed");
