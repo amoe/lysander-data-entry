@@ -160,6 +160,9 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     const makeInitialState = (): EventInputDetails => (
         {
             description: "",
+            reference: "",
+            quotation: "",
+            notes: "",
             timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
         }
     );
@@ -177,16 +180,20 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
 
         const payload = {
             description: eventDetails.description,
+            reference: eventDetails.reference,
+            quotation: eventDetails.quotation,
+            notes: eventDetails.notes,
             offset: convertUserFacingToMinuteOffset(props.nightOf, eventDetails.timeOffset)
         };
 
         console.log("I will send payload %o", payload);
+
+        const variables = {
+            esId: props.eventSequenceId,
+            event: payload
+        };
         
-        addEvent(
-            {variables: {
-                esId: props.eventSequenceId,
-                event: payload
-            }});
+        addEvent({variables});
         setEventDetails(makeInitialState());
     }
 

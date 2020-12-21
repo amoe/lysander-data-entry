@@ -41,5 +41,8 @@ export interface DragObject {
 export interface EventInputDetails {
     description: string;
     timeOffset: UserFacingTimeOffset;
+    reference: string;
+    quotation: string;
+    notes: string;
 }
 
