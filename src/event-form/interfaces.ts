@@ -1,10 +1,20 @@
 import {DateInputs} from '../date-authoring-component';
 import {UserFacingTimeOffset} from '../core/time-offset';
 
+
+export interface Location {
+    id: string;
+    codename: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+}
+
 export interface Event {
     uuid: string;
     description: string;
     offset: number;
+    location: Location | null;
 }
 
 export interface Sortie {

@@ -139,6 +139,10 @@ function EventView(
                                          offset={props.value.offset}/>
             
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
+
+            <div>
+              Location: {props.value.location!.id}
+            </div>
           </div>
         </div>
     )

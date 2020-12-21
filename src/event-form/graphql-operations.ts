@@ -24,6 +24,13 @@ export const EVENT_SEQUENCE_QUERY = gql`
         uuid 
         description
         offset
+        location {
+          id
+          codename
+          description
+          latitude
+          longitude
+        }
       }
     }
     planeSortie {
