@@ -19,7 +19,7 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, EventSequence, DraggableType,
-    DragObject, EventInputDetails, RelativePosition, CardinalPoint
+    DragObject, EventInputDetails, CardinalPoint
 } from './interfaces';
 import {constructLink} from './construct-link';
 import {
@@ -140,7 +140,7 @@ function EventView(
               Location: {props.value.position.location!.id}
             </div>
 
-            <PositionView value={props.value.position}/>
+            {props.value.position.location && <PositionView value={props.value.position}/>}
           </div>
         </div>
     )
@@ -203,9 +203,9 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
         console.log("event details are %o", eventDetails);
 
         // xxx: notify user, this still somehow does not prevent form submission
-        if (!eventDetails.locationId) {
-            throw new Error("location is required");
-        }
+        // if (!eventDetails.locationId) {
+        //     throw new Error("location is required");
+        // }
         
         const payload = {
             description: eventDetails.description,
