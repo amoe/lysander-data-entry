@@ -7,36 +7,31 @@ import {cloneDeep} from 'lodash';
 import {Modal, Button} from 'antd';
 import {parseISO, format} from 'date-fns';
 
-//import {EventInputForm} from './event-input-form';
 import {EventInputForm} from './event-input-form-2';
-//
+
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
-    ADD_EVENT, ADD_SEQUENCE
+    ADD_EVENT, ADD_SEQUENCE, ALL_LOCATIONS_QUERY
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
-    Event, PlaneSortie, InSequenceRelationship, EventSequence, DraggableType,
-    DragObject, EventInputDetails
+    Event, PlaneSortie, EventSequence, DraggableType,
+    DragObject, EventInputDetails, RelativePosition, CardinalPoint
 } from './interfaces';
-// abstraction violation
-import {
-    DateInputs
-} from '../date-authoring-component';
 import {constructLink} from './construct-link';
 import {
     convertMinuteOffsetToUserFacing,
     convertUserFacingToMinuteOffset,
     UserFacingTimeOffset
 } from '../core/time-offset';
+import {PositionView} from './position-view';
 
 
-
-    // Need to get this deploy data specifically
-    const client = new ApolloClient({
+// Need to get this deploy data specifically
+const client = new ApolloClient({
     link: constructLink(GRAPHQL_URL),
     cache: new InMemoryCache()
 });
@@ -86,6 +81,7 @@ function NightOfDisplay(props: {nightOf: Date | undefined}) {
         return (<p>Night of: {format(props.nightOf, 'yyyy-MM-dd')}</p>);
     }
 }
+
 
 function EventView(
     props: {
@@ -143,6 +139,8 @@ function EventView(
             <div>
               Location: {props.value.position.location!.id}
             </div>
+
+            <PositionView value={props.value.position}/>
           </div>
         </div>
     )
@@ -156,21 +154,43 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     );
     const [modalVisibility, setModalVisibility] = useState(false);
 
-    const handleShowModal = () => {
-        setModalVisibility(true);
-    };
-
-
     const makeInitialState = (): EventInputDetails => (
         {
             description: "",
             reference: "",
             quotation: "",
             notes: "",
+            relativeDistance: 0,
+            relativeCardinal: CardinalPoint.NORTH,
+            relativeHeight: 0,
+            locationId: undefined,
             timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
         }
     );
     const [eventDetails, setEventDetails] = useState(makeInitialState());
+    const locationsResult = useQuery(ALL_LOCATIONS_QUERY);
+
+    if (locationsResult.loading) {
+        return <div>Loading.</div>;
+    }
+
+    if (locationsResult.error) {
+        return <div>Error.</div>;
+    }
+    
+   
+    
+
+    const allLocations = locationsResult.data['Location'];
+
+    console.log("all locations are %o", allLocations);
+
+
+    const handleShowModal = () => {
+        setModalVisibility(true);
+    };
+
+
 
     const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(false);
@@ -182,12 +202,23 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
         setModalVisibility(false);
         console.log("event details are %o", eventDetails);
 
+        // xxx: notify user, this still somehow does not prevent form submission
+        if (!eventDetails.locationId) {
+            throw new Error("location is required");
+        }
+        
         const payload = {
             description: eventDetails.description,
             reference: eventDetails.reference,
             quotation: eventDetails.quotation,
             notes: eventDetails.notes,
-            offset: convertUserFacingToMinuteOffset(props.nightOf, eventDetails.timeOffset)
+            offset: convertUserFacingToMinuteOffset(
+                props.nightOf, eventDetails.timeOffset
+            ),
+            locationId: eventDetails.locationId,
+            relativeDistance: eventDetails.relativeDistance,
+            relativeCardinal: eventDetails.relativeCardinal,
+            relativeHeight: eventDetails.relativeHeight
         };
 
         console.log("I will send payload %o", payload);
@@ -211,12 +242,13 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
         <div>
           <button onClick={(e) => handleShowModal()}>Add event</button>
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
-            <EventInputForm onChange={handleChange} value={eventDetails}/>
+            <EventInputForm onChange={handleChange}
+                            value={eventDetails}
+                            availableLocations={allLocations}/>
           </Modal>
         </div>
     );
 }
-
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {

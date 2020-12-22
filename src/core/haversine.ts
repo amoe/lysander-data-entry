@@ -14,7 +14,11 @@ function radiansToDegrees(x: number) {
 }
 
 // Distance is specified in metres.
-export function destinationPoint(point: SpatialPoint, bearing: number, distance: number) {
+export function destinationPoint(point: SpatialPoint, bearing: number, distance: number): SpatialPoint {
+    console.log("point is %o", point);
+    console.log("bearing is %o", bearing);
+    console.log("distance is %o", distance);
+
     distance = distance / (6371 * 1000);
     bearing = degreesToRadians(bearing);
 
@@ -32,7 +36,7 @@ export function destinationPoint(point: SpatialPoint, bearing: number, distance:
     );
 
     if (isNaN(lat2) || isNaN(lon2))
-        return null;
+        throw new Error("nan value encountered");
 
     return {
         latitude: radiansToDegrees(lat2),

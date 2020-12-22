@@ -1,13 +1,22 @@
 import React, {useState} from 'react';
-import {EventInputDetails} from './interfaces';
+import {
+    EventInputDetails, Location, CardinalPoint, RelativePosition
+} from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
-import {InputNumber, TimePicker, Input} from 'antd';
+import {
+    InputNumber, TimePicker, Input, Select
+} from 'antd';
 import moment from 'moment';
+import {PositionView} from './position-view';
+import {strictFind} from '../utility';
+
+
 
 export function EventInputForm(
     props: {
         value: EventInputDetails,
-        onChange: (v: EventInputDetails) => void
+        onChange: (v: EventInputDetails) => void,
+        availableLocations: Location[]
     }) {
     const handleChange = (e: React.ChangeEvent<any>) => {
         const target = e.currentTarget;
@@ -44,6 +53,22 @@ export function EventInputForm(
         );
     };
 
+    // We only care about the first value
+    function handleLocationChange(locationId: string) {
+        props.onChange(
+            {...props.value, locationId}
+        );
+    }
+
+    // TS hack to convert cardinals
+    function handleCardinalChange(x: string) {
+        props.onChange(
+            {...props.value,
+             relativeCardinal: CardinalPoint[x as keyof typeof CardinalPoint]}
+        );
+    }
+
+
     function toMoment(offset: UserFacingTimeOffset) {
         return moment({hour: offset.hour, minute: offset.minute});
     }
@@ -51,9 +76,67 @@ export function EventInputForm(
     const format = 'HH:mm';
 
     const defaultValue = moment('12:08', format);
+
+    console.log("available locations are %o", props.availableLocations);
+
+
+    function makeNumericHandler(fieldName: string) {
+        return (val: string | number | undefined) => {
+            props.onChange({...props.value, [fieldName]: val});
+        };
+    }
+
+    function getRelativePosition(): RelativePosition | undefined {
+        if (props.value.locationId === undefined) {
+            return undefined;
+        } else {
+            return {
+                height: props.value.relativeHeight,
+                distance: props.value.relativeDistance,
+                cardinal: props.value.relativeCardinal,
+                location: strictFind(
+                    props.availableLocations,
+                    x => x.id === props.value.locationId
+                )
+            };
+        }
+    }
+
+    const rp = getRelativePosition();
     
     return (
         <div>
+          <div>
+            <span>Distance:</span>
+            <Select onChange={handleLocationChange} style={{width: 120}}>
+              {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
+            </Select>
+          </div>
+
+          <div>
+            <span>Cardinal point:</span>
+            <Select onChange={handleCardinalChange} style={{width: 120}}>
+              <Select.Option value="NORTH">North</Select.Option>
+              <Select.Option value="EAST">East</Select.Option>
+              <Select.Option value="SOUTH">South</Select.Option>
+              <Select.Option value="WEST">West</Select.Option>
+            </Select>
+          </div>
+
+          <div>
+            <span>Relative height:</span>
+            <InputNumber value={props.value.relativeHeight}
+                         onChange={makeNumericHandler('relativeHeight')}/>
+          </div>
+
+          <div>
+            <span>Relative distance:</span>
+            <InputNumber value={props.value.relativeDistance}
+                         onChange={makeNumericHandler('relativeDistance')}/>
+          </div>
+
+          
+          
           <div>
             <span>Description:</span>
             <input type="text"
@@ -100,6 +183,8 @@ export function EventInputForm(
                             value={props.value.notes}
                             onChange={handleChange}/>
           </div>
+
+          {rp !== undefined && <PositionView value={rp}/>}
         </div>
     );
 }

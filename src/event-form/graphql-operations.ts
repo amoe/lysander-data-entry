@@ -1,5 +1,17 @@
 import { gql } from '@apollo/client';
 
+export const ALL_LOCATIONS_QUERY = gql`
+{
+  Location {
+    id
+    codename
+    description
+    latitude
+    longitude
+  }
+}
+`;
+
 export const ALL_PLANESORTIES_QUERY = gql`
     query {
         PlaneSortie {

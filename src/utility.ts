@@ -12,6 +12,17 @@ export function strictFindIndex<T>(sequence: T[], predicate: (value: T) => boole
     return result;
 }
 
+export function strictFind<T>(sequence: T[], predicate: (value: T) => boolean): T {
+    const result = sequence.find(predicate);
+
+    if (result === undefined) {
+        throw new Error('item not found');
+    }
+
+    return result;
+}
+
+
 // MUTATES ITS ARGUMENT
 export function arrayMove<T>(arr: T[], fromIndex: number, toIndex: number): void {
     if (typeof arr[fromIndex] === 'undefined') {

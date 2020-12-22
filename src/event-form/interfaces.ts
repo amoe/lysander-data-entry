@@ -3,10 +3,10 @@ import {UserFacingTimeOffset} from '../core/time-offset';
 
 
 export enum CardinalPoint {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
+    NORTH = 'NORTH',
+    EAST = 'EAST',
+    SOUTH = 'SOUTH',
+    WEST = 'WEST'
 }
 
 export interface Location {
@@ -68,5 +68,9 @@ export interface EventInputDetails {
     reference: string;
     quotation: string;
     notes: string;
+    relativeDistance: number;
+    relativeCardinal: CardinalPoint
+    relativeHeight: number;
+    locationId: string | undefined;    // location must start off undefined
 }
 
