@@ -24,12 +24,17 @@ export const EVENT_SEQUENCE_QUERY = gql`
         uuid 
         description
         offset
-        location {
-          id
-          codename
-          description
-          latitude
-          longitude
+        position {
+          location {
+            id
+            codename
+            description
+            latitude
+            longitude
+          }
+          distance
+          cardinal
+          height
         }
       }
     }

@@ -2,6 +2,13 @@ import {DateInputs} from '../date-authoring-component';
 import {UserFacingTimeOffset} from '../core/time-offset';
 
 
+export enum CardinalPoint {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+}
+
 export interface Location {
     id: string;
     codename: string;
@@ -10,11 +17,18 @@ export interface Location {
     longitude: number;
 }
 
+export interface RelativePosition {
+    height: number;
+    distance: number;
+    cardinal: CardinalPoint;
+    location: Location;
+}
+
 export interface Event {
     uuid: string;
     description: string;
-    offset: number;
-    location: Location | null;
+    offset: number;   // time offset -- should probably be renamed
+    position: RelativePosition;
 }
 
 export interface Sortie {

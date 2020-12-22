@@ -141,7 +141,7 @@ function EventView(
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
 
             <div>
-              Location: {props.value.location!.id}
+              Location: {props.value.position.location!.id}
             </div>
           </div>
         </div>
