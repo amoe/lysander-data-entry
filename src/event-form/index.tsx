@@ -252,6 +252,8 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
+    const [modalVisibility, setModalVisibility] = useState(false);
+
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
@@ -278,6 +280,21 @@ function EventSequenceView(props: EventSequence) {
         deleteEvent({variables: {esId: props.uuid, eventId}});
     };
 
+    const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
+        setModalVisibility(false);
+        // Reset the state
+    };
+
+    const handleOk = (close: React.MouseEvent<HTMLElement>) => {
+        setModalVisibility(false);
+        // Reset the location state
+    }
+    
+
+    const handleAddLocation = () => {
+        setModalVisibility(true);
+    };
+
     var planeSortieValue;
     var nightOf: Date | undefined;
     if (props.planeSortie === null) {
@@ -288,13 +305,16 @@ function EventSequenceView(props: EventSequence) {
         nightOf = parseISO(props.planeSortie.sortie.nightOf);
     }
 
-
-    
     return (
         <div className="event-sequence">
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
+
+          <button onClick={handleAddLocation}>Add location</button>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
+            <p>U mad bro?</p>
+          </Modal>
           
           <div>Referred-to PlaneSortie:
             <PlaneSortieSelector value={planeSortieValue}
@@ -324,10 +344,10 @@ function AllSequencesView() {
     const [currentId, setCurrentId] = useState(undefined as string | undefined);
     const [isManuallySelected, setManuallySelected] = useState(false);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
+    const [modalVisibility, setModalVisibility] = useState(false);
 
     useEffect(
         () => {
-            
             if (!loading) {
                 // This is probably a network error
                 if (data === undefined) {
