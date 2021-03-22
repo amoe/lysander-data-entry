@@ -19,7 +19,7 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, EventSequence, DraggableType,
-    DragObject, EventInputDetails, CardinalPoint
+    DragObject, EventInputDetails, CardinalPoint, Location
 } from './interfaces';
 import {constructLink} from './construct-link';
 import {
@@ -28,6 +28,8 @@ import {
     UserFacingTimeOffset
 } from '../core/time-offset';
 import {PositionView} from './position-view';
+import {LocationInputForm} from './location-input-form';
+import uuidv4 from 'uuid/v4';
 
 
 // Need to get this deploy data specifically
@@ -250,9 +252,22 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     );
 }
 
+function makeBlankLocation(): Location {
+    return {
+        id: uuidv4(),
+        codename: "",
+        description: "",
+        latitude: 0,
+        longitude: 0
+    };
+}
+
+
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
     const [modalVisibility, setModalVisibility] = useState(false);
+    const [location, setLocation] = useState(makeBlankLocation());
+
 
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
@@ -286,6 +301,7 @@ function EventSequenceView(props: EventSequence) {
     };
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
+        console.log("value of lat was %o", location.latitude);
         setModalVisibility(false);
         // Reset the location state
     }
@@ -311,9 +327,10 @@ function EventSequenceView(props: EventSequence) {
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
 
+
           <button onClick={handleAddLocation}>Add location</button>
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
-            <p>U mad bro?</p>
+            <LocationInputForm value={location} onChange={setLocation}/>
           </Modal>
           
           <div>Referred-to PlaneSortie:
