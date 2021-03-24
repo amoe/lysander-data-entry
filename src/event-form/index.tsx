@@ -12,14 +12,14 @@ import {EventInputForm} from './event-input-form-2';
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
-    ADD_EVENT, ADD_SEQUENCE, ALL_LOCATIONS_QUERY
+    ADD_EVENT, ADD_SEQUENCE, ALL_LOCATIONS_QUERY, ADD_LOCATION
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, EventSequence, DraggableType,
-    DragObject, EventInputDetails, CardinalPoint
+    DragObject, EventInputDetails, CardinalPoint, Location
 } from './interfaces';
 import {constructLink} from './construct-link';
 import {
@@ -28,6 +28,8 @@ import {
     UserFacingTimeOffset
 } from '../core/time-offset';
 import {PositionView} from './position-view';
+import {LocationInputForm} from './location-input-form';
+import uuidv4 from 'uuid/v4';
 
 
 // Need to get this deploy data specifically
@@ -250,8 +252,24 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     );
 }
 
+function makeBlankLocation(): Location {
+    return {
+        id: uuidv4(),
+        codename: "",
+        description: "",
+        latitude: 0,
+        longitude: 0
+    };
+}
+
+
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
+    const [modalVisibility, setModalVisibility] = useState(false);
+    const [location, setLocation] = useState(makeBlankLocation());
+
+    const [addLocation, addLocationResult] = useMutation(ADD_LOCATION, {});
+
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
@@ -278,6 +296,25 @@ function EventSequenceView(props: EventSequence) {
         deleteEvent({variables: {esId: props.uuid, eventId}});
     };
 
+    const handleCancel = (close: React.MouseEvent<HTMLElement>) => {
+        setModalVisibility(false);
+        // Reset the state
+    };
+
+    const handleOk = (close: React.MouseEvent<HTMLElement>) => {
+        const variables = {location};
+        addLocation({variables});
+
+        // Reset the location state
+        setModalVisibility(false);
+        setLocation(makeBlankLocation());
+    }
+    
+
+    const handleAddLocation = () => {
+        setModalVisibility(true);
+    };
+
     var planeSortieValue;
     var nightOf: Date | undefined;
     if (props.planeSortie === null) {
@@ -288,13 +325,17 @@ function EventSequenceView(props: EventSequence) {
         nightOf = parseISO(props.planeSortie.sortie.nightOf);
     }
 
-
-    
     return (
         <div className="event-sequence">
           <h1>Event Sequence</h1>
           <p>UUID: {props.uuid}</p>
           <p>Name: {props.name}</p>
+
+
+          <button onClick={handleAddLocation}>Add location</button>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
+            <LocationInputForm value={location} onChange={setLocation}/>
+          </Modal>
           
           <div>Referred-to PlaneSortie:
             <PlaneSortieSelector value={planeSortieValue}
@@ -324,10 +365,10 @@ function AllSequencesView() {
     const [currentId, setCurrentId] = useState(undefined as string | undefined);
     const [isManuallySelected, setManuallySelected] = useState(false);
     const {loading, error, data} = useQuery(EVENT_SEQUENCE_QUERY);
+    const [modalVisibility, setModalVisibility] = useState(false);
 
     useEffect(
         () => {
-            
             if (!loading) {
                 // This is probably a network error
                 if (data === undefined) {
