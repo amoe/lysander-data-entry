@@ -10,5 +10,5 @@ export function PositionView(props: {value: RelativePosition}) {
     
     const result = destinationPoint(location, cardinalToBearing(cardinal), distance);
     
-    return <div>Position: {result.latitude}, {result.longitude}</div>;
+    return <div>Position: {result.latitude.toFixed(6)}, {result.longitude.toFixed(6)}</div>;
 }
