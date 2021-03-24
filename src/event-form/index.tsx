@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {ApolloClient,HttpLink, InMemoryCache, ApolloProvider, ApolloLink} from '@apollo/client';
+import {FetchResult} from 'apollo-link';
 import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep} from 'lodash';
-import {Modal, Button} from 'antd';
+import {Modal, Button, notification} from 'antd';
 import {parseISO, format} from 'date-fns';
-
 import {EventInputForm} from './event-input-form-2';
 
 import {
@@ -268,7 +268,11 @@ function EventSequenceView(props: EventSequence) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [location, setLocation] = useState(makeBlankLocation());
 
-    const [addLocation, addLocationResult] = useMutation(ADD_LOCATION, {});
+    const [addLocation, addLocationResult] = useMutation(
+        ADD_LOCATION, {
+            refetchQueries: [{query: ALL_LOCATIONS_QUERY}],
+        }
+    );
 
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
@@ -303,7 +307,16 @@ function EventSequenceView(props: EventSequence) {
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         const variables = {location};
-        addLocation({variables});
+        addLocation({variables}).then((foo: FetchResult) =>  {
+            // no idea if this is the correct way to check for failure
+            if (!foo.errors) {
+                notification.success({
+                    message: 'Success',
+                    description: 'Location added successfully'
+                });
+            }
+        });
+
 
         // Reset the location state
         setModalVisibility(false);
