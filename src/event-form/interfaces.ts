@@ -1,12 +1,23 @@
 import {DateInputs} from '../date-authoring-component';
 import {UserFacingTimeOffset} from '../core/time-offset';
 
-
 export enum CardinalPoint {
     NORTH = 'NORTH',
+    NORTH_NORTH_EAST = 'NORTH_NORTH_EAST',
+    NORTH_EAST = 'NORTH_EAST',
+    EAST_NORTH_EAST = 'EAST_NORTH_EAST',
     EAST = 'EAST',
+    EAST_SOUTH_EAST = 'EAST_SOUTH_EAST',
+    SOUTH_EAST = 'SOUTH_EAST',
+    SOUTH_SOUTH_EAST = 'SOUTH_SOUTH_EAST',
     SOUTH = 'SOUTH',
-    WEST = 'WEST'
+    SOUTH_SOUTH_WEST = 'SOUTH_SOUTH_WEST',
+    SOUTH_WEST = 'SOUTH_WEST',
+    WEST_SOUTH_WEST = 'WEST_SOUTH_WEST',
+    WEST = 'WEST',
+    WEST_NORTH_WEST = 'WEST_NORTH_WEST',
+    NORTH_WEST = 'NORTH_WEST',
+    NORTH_NORTH_WEST = 'NORTH_NORTH_WEST',
 }
 
 export interface Location {

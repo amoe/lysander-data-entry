@@ -10,6 +10,29 @@ import moment from 'moment';
 import {PositionView} from './position-view';
 import {strictFind} from '../utility';
 
+interface CompassAliasMap {
+    [key: string]: string;
+}
+
+const SHORT_COMPASS_ALIAS: CompassAliasMap = {
+    [CardinalPoint.NORTH]: 'N',
+    [CardinalPoint.NORTH_NORTH_EAST]: 'NNE',
+    [CardinalPoint.NORTH_EAST]: 'NE',
+    [CardinalPoint.EAST_NORTH_EAST]: 'ENE',
+    [CardinalPoint.EAST]: 'E',
+    [CardinalPoint.EAST_SOUTH_EAST]: 'ESE',
+    [CardinalPoint.SOUTH_EAST]: 'SE',
+    [CardinalPoint.SOUTH_SOUTH_EAST]: 'SSE',
+    [CardinalPoint.SOUTH]: 'S',
+    [CardinalPoint.SOUTH_SOUTH_WEST]: 'SSW',
+    [CardinalPoint.SOUTH_WEST]: 'SW',
+    [CardinalPoint.WEST_SOUTH_WEST]: 'WSW',
+    [CardinalPoint.WEST]: 'W',
+    [CardinalPoint.WEST_NORTH_WEST]: 'WNW',
+    [CardinalPoint.NORTH_WEST]: 'NW',
+    [CardinalPoint.NORTH_NORTH_WEST]: 'NNW'
+};
+
 
 
 export function EventInputForm(
@@ -116,10 +139,7 @@ export function EventInputForm(
           <div>
             <span>Cardinal point:</span>
             <Select onChange={handleCardinalChange} style={{width: 120}}>
-              <Select.Option value="NORTH">North</Select.Option>
-              <Select.Option value="EAST">East</Select.Option>
-              <Select.Option value="SOUTH">South</Select.Option>
-              <Select.Option value="WEST">West</Select.Option>
+              {Object.keys(CardinalPoint).map(x => <Select.Option value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
             </Select>
           </div>
 
