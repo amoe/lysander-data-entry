@@ -1,5 +1,13 @@
 import { gql } from '@apollo/client';
 
+export const ADD_LOCATION = gql`
+    mutation AddLocation($location: LocationInput!) {
+        addLocation(location: $location) {
+            id
+        }
+    }
+`;
+
 export const ALL_LOCATIONS_QUERY = gql`
 {
   Location {

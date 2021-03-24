@@ -12,7 +12,7 @@ import {EventInputForm} from './event-input-form-2';
 import {
     EVENT_SEQUENCE_QUERY, ALL_PLANESORTIES_QUERY, SET_EVENT_DESCRIPTION,
     REDIRECT_EVENT_SEQUENCE, MOVE_EVENT, DELETE_EVENT,
-    ADD_EVENT, ADD_SEQUENCE, ALL_LOCATIONS_QUERY
+    ADD_EVENT, ADD_SEQUENCE, ALL_LOCATIONS_QUERY, ADD_LOCATION
 } from './graphql-operations';
 import {strictFindIndex, arrayMove} from '../utility';
 import './event-form.css'
@@ -268,6 +268,7 @@ function EventSequenceView(props: EventSequence) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [location, setLocation] = useState(makeBlankLocation());
 
+    const [addLocation, addLocationResult] = useMutation(ADD_LOCATION, {});
 
     const [redirectEventSequence, _] = useMutation(
         REDIRECT_EVENT_SEQUENCE, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
@@ -301,9 +302,12 @@ function EventSequenceView(props: EventSequence) {
     };
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
-        console.log("value of lat was %o", location.latitude);
-        setModalVisibility(false);
+        const variables = {location};
+        addLocation({variables});
+
         // Reset the location state
+        setModalVisibility(false);
+        setLocation(makeBlankLocation());
     }
     
 
