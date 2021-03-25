@@ -132,6 +132,33 @@ export function EventInputForm(
     return (
         <div>
           <div>
+
+            <div>
+              <span>Description:</span>
+              <input type="text"
+                     name="description"
+                     value={props.value.description}
+                     onChange={handleChange}/>
+            </div>
+
+            
+            <div>
+              <span>Day:</span>
+              <InputNumber value={props.value.timeOffset.dayOrdinal}
+                           min={1}
+                           onChange={f}/>
+            </div>
+
+
+            <div>
+              <span>Time:</span>
+              <TimePicker defaultValue={defaultValue}
+                          format={format}
+                          value={toMoment(props.value.timeOffset)}
+                          onChange={g}/>
+            </div>
+
+            
             <span>Location:</span>
             <Select onChange={handleLocationChange} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
               {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
@@ -148,39 +175,19 @@ export function EventInputForm(
           <div>
             <span>Relative height:</span>
             <InputNumber value={props.value.relativeHeight}
+                         min={0}
                          onChange={makeNumericHandler('relativeHeight')}/>
           </div>
 
           <div>
             <span>Relative distance:</span>
             <InputNumber value={props.value.relativeDistance}
+                         min={0}
                          onChange={makeNumericHandler('relativeDistance')}/>
           </div>
 
           
           
-          <div>
-            <span>Description:</span>
-            <input type="text"
-                   name="description"
-                   value={props.value.description}
-                   onChange={handleChange}/>
-          </div>
-
-          <div>
-            <span>Day:</span>
-            <InputNumber value={props.value.timeOffset.dayOrdinal}
-                         onChange={f}/>
-          </div>
-
-
-          <div>
-            <span>Time:</span>
-            <TimePicker defaultValue={defaultValue}
-                        format={format}
-                        value={toMoment(props.value.timeOffset)}
-                        onChange={g}/>
-          </div>
 
           <div>
             <span>Reference:</span>
@@ -199,7 +206,7 @@ export function EventInputForm(
           </div>
 
           <div>
-            <span>Quotation:</span>
+            <span>Notes:</span>
             <Input.TextArea name="notes"
                             maxLength={256}
                             value={props.value.notes}
