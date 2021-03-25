@@ -38,8 +38,8 @@ export interface RelativePosition {
 export interface Event {
     uuid: string;
     description: string;
-    offset: number;   // time offset -- should probably be renamed
-    position: RelativePosition;
+    offset: number | null;
+    position: RelativePosition | null;
 }
 
 export interface Sortie {

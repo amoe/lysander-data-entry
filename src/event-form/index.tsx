@@ -58,9 +58,9 @@ function PlaneSortieSelector(
     )
 }
 
-function TimeOffsetConversionWrapper(props: {nightOf: Date | undefined, offset: number}) {
-    if (props.nightOf === undefined) {
-        return <div>NO!</div>
+function TimeOffsetConversionWrapper(props: {nightOf: Date | undefined, offset: number | null}) {
+    if (props.nightOf === undefined || props.offset === null) {
+        return <i>Unknown/undefined chronological information</i>
     } else {
         return <TimeOffsetDisplay value={convertMinuteOffsetToUserFacing(props.nightOf, props.offset)}/>
     }
@@ -138,14 +138,23 @@ function EventView(
             
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
 
-            <div>
-              Location: {props.value.position.location!.id}
-            </div>
-
-            {props.value.position.location && <PositionView value={props.value.position}/>}
+            <LocationView value={props.value}/>
           </div>
         </div>
     )
+}
+
+function LocationView(props: {value: Event}) {
+    if (props.value.position === null) {
+        return (<i>No position defined</i>);
+    } else {
+        return (
+            <div>
+              Location: {props.value.position.location.id}
+              <PositionView value={props.value.position}/>
+            </div>
+        );
+    }
 }
 
 // XXX: Not totally clear that we should present the button here as well, but
