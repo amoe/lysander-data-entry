@@ -377,7 +377,7 @@ function EventSequenceView(props: EventSequence) {
           </div>
 
 
-          {nightOf !== undefined && <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>}
+          {nightOf === undefined ? (<i>Please set the associated PlaneSortie before adding events</i>) :  <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>}
         </div>
     );
 }
