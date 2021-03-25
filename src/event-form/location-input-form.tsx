@@ -1,9 +1,10 @@
 import React from 'react';
-import {Location} from './interfaces';
+import {LocationInput} from './interfaces';
 import {Input} from 'antd';
 
-export function LocationInputForm(props: {value: Location,
-                                          onChange: (v: Location) => void,}) {
+export function LocationInputForm(
+    props: {value: LocationInput, onChange: (v: LocationInput) => void}
+) {
     const location = props.value;
 
     const handleChange = (e: React.ChangeEvent<any>) => {
@@ -43,4 +44,4 @@ export function LocationInputForm(props: {value: Location,
       </div>
     </div>);
 };
-    
+   

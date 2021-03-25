@@ -19,7 +19,7 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, EventSequence, DraggableType,
-    DragObject, EventInputDetails, CardinalPoint, Location
+    DragObject, EventInputDetails, CardinalPoint, LocationInput
 } from './interfaces';
 import {constructLink} from './construct-link';
 import {
@@ -261,7 +261,7 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
     );
 }
 
-function makeBlankLocation(): Location {
+function makeBlankLocation(): LocationInput {
     return {
         id: uuidv4(),
         codename: "",
@@ -275,7 +275,7 @@ function makeBlankLocation(): Location {
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [location, setLocation] = useState(makeBlankLocation());
+    const [locationInput, setLocationInput] = useState(makeBlankLocation());
 
     const [addLocation, addLocationResult] = useMutation(
         ADD_LOCATION, {
@@ -315,7 +315,7 @@ function EventSequenceView(props: EventSequence) {
     };
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
-        const variables = {location};
+        const variables = {location: locationInput};
         addLocation({variables}).then((foo: FetchResult) =>  {
             // no idea if this is the correct way to check for failure
             if (!foo.errors) {
@@ -329,7 +329,7 @@ function EventSequenceView(props: EventSequence) {
 
         // Reset the location state
         setModalVisibility(false);
-        setLocation(makeBlankLocation());
+        setLocationInput(makeBlankLocation());
     }
     
 
@@ -356,7 +356,7 @@ function EventSequenceView(props: EventSequence) {
 
           <button onClick={handleAddLocation}>Add location</button>
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
-            <LocationInputForm value={location} onChange={setLocation}/>
+            <LocationInputForm value={locationInput} onChange={setLocationInput}/>
           </Modal>
           
           <div>Referred-to PlaneSortie:

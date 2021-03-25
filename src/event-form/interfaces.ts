@@ -22,6 +22,20 @@ export enum CardinalPoint {
 
 export interface Location {
     id: string;
+    
+    // Entirely valid for no codename to be provided, this is the case with many
+    // locations from the `lzs_name_code_id_geoloc.xlsx`.
+    codename: string | null;
+    description: string;
+
+    // And possible for a locaiton to have no latitude and longitude (sadly).
+    // This is the case with inexfiltration events.
+    latitude: number | null;
+    longitude: number | null;
+}
+
+export interface LocationInput {
+    id: string;
     codename: string;
     description: string;
     latitude: number;
