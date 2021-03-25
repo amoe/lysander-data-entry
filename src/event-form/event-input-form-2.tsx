@@ -132,11 +132,8 @@ export function EventInputForm(
 
     function handleSearch(value: string) {
         function isMatch(l: Location) {
-            if (l.codename === null) {
-                return l.id.indexOf(value) !== -1;
-            } else {
-                return l.codename.indexOf(value) !== -1;
-            }
+            const compareValue = l.codename === null ? l.id : l.codename;
+            return compareValue.toLowerCase().indexOf(value.toLowerCase()) !== -1;
         }
         
         setNarrowedLocations(availableLocations.filter(isMatch));
