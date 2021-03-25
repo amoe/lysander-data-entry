@@ -48,32 +48,47 @@ export function EventInputForm(
         props.onChange({...props.value, [target.name]: value});
     };
 
-    const f = (val: string | number | undefined) => {
+    const handleDayChange = (val: string | number | undefined) => {
         if (typeof val === 'string') throw new Error("string");
         if (val === undefined) throw new Error("undefined");
-        
-        props.onChange(
-            {...props.value, timeOffset: {...props.value.timeOffset, dayOrdinal: val}}
-        );
+
+        const existingTimeOffset = props.value.timeOffset;
+
+        if (existingTimeOffset === undefined) {
+            props.onChange(
+                {...props.value, timeOffset: {dayOrdinal: val, hour: 0, minute: 0}}
+            );
+        } else {
+            props.onChange(
+                {...props.value, timeOffset: {...existingTimeOffset, dayOrdinal: val}}
+            );
+        }
     };
 
-    const g = (chosenTime: moment.Moment | null, timeString: string) => {
+    const handleTimeChange = (chosenTime: moment.Moment | null, timeString: string) => {
         if (chosenTime === null) throw new Error("cannot unset time");
         
         console.log("setting value");
         console.log("chosen time is %o");
 
-        props.onChange(
-            {
-                ...props.value,
-                timeOffset: {
-                    ...props.value.timeOffset,
-                    hour: chosenTime.hour(),
-                    minute: chosenTime.minute()
+        const existingTimeOffset = props.value.timeOffset;
+        if (existingTimeOffset === undefined) {
+            props.onChange(
+                {
+                    ...props.value,
+                    timeOffset: {
+                        dayOrdinal: 1,
+                        hour: chosenTime.hour(),
+                        minute: chosenTime.minute()
+                    }
                 }
-            }
-                 
-        );
+                
+            );
+        } else {
+            props.onChange(
+                {...props.value, timeOffset: {...existingTimeOffset, hour: chosenTime.hour(), minute: chosenTime.minute()}}
+            );
+        }
     };
 
     // We only care about the first value
@@ -114,6 +129,11 @@ export function EventInputForm(
             return undefined;
         } else {
             console.log("locationid is %o", props.value.locationId);
+
+            // Yuck
+            if (props.value.relativeCardinal === undefined) throw new Error("can't happen");
+            if (props.value.relativeDistance === undefined) throw new Error("can't happen");
+            if (props.value.relativeHeight === undefined) throw new Error("can't happen");
             
             return {
                 height: props.value.relativeHeight,
@@ -141,12 +161,13 @@ export function EventInputForm(
                      onChange={handleChange}/>
             </div>
 
-            
+
+            {props.value.timeOffset !== undefined && (<div>
             <div>
               <span>Day:</span>
               <InputNumber value={props.value.timeOffset.dayOrdinal}
                            min={1}
-                           onChange={f}/>
+                           onChange={handleDayChange}/>
             </div>
 
 
@@ -155,8 +176,10 @@ export function EventInputForm(
               <TimePicker defaultValue={defaultValue}
                           format={format}
                           value={toMoment(props.value.timeOffset)}
-                          onChange={g}/>
+                          onChange={handleTimeChange}/>
             </div>
+            </div>)}
+               
 
             
             <span>Location:</span>
