@@ -168,7 +168,7 @@ export function EventInputForm(
           <div>
             <span>Cardinal point:</span>
             <Select onChange={handleCardinalChange} style={{width: 120}}>
-              {Object.keys(CardinalPoint).map(x => <Select.Option value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
+              {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
             </Select>
           </div>
 
@@ -195,17 +195,11 @@ export function EventInputForm(
                             maxLength={256}
                             value={props.value.reference}
                             onChange={handleChange}/>
-          </div>
-
-          <div>
             <span>Quotation:</span>
             <Input.TextArea name="quotation"
                             maxLength={256}
                             value={props.value.quotation}
                             onChange={handleChange}/>
-          </div>
-
-          <div>
             <span>Notes:</span>
             <Input.TextArea name="notes"
                             maxLength={256}
