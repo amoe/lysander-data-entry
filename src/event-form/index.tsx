@@ -84,6 +84,71 @@ function NightOfDisplay(props: {nightOf: Date | undefined}) {
     }
 }
 
+function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
+    var locationId, relativeDistance, relativeCardinal, relativeHeight;
+    
+    if (event.position === null) {
+        locationId = undefined;
+        relativeDistance = undefined;
+        relativeCardinal = undefined;
+        relativeHeight = undefined;
+    } else {
+        locationId = event.position.location.id;
+    }
+
+    var timeOffset;
+    if (event.offset === null) {
+        timeOffset = undefined;
+    } else {
+        timeOffset = convertMinuteOffsetToUserFacing(nightOf, event.offset);
+    }
+    
+    const result: EventInputDetails = {
+        description: event.description,
+        reference: event.reference,
+        quotation: event.quotation,
+        notes: event.notes,
+        locationId,
+        relativeDistance,
+        relativeCardinal,
+        relativeHeight,
+        timeOffset
+    };
+
+    return result;
+}
+
+function EventEditButton(props: {value: Event}) {
+    const [modalVisibility, setModalVisibility] = useState(false);
+    const [eventDetails, setEventDetails] = useState(undefined as EventInputDetails | undefined);
+    
+    function handleClick() {
+        console.log("I would edit this event");
+        setEventDetails(eventInputFromEvent(props.value))
+    }
+
+    function handleOk() {
+    }
+    
+    function handleCancel() {
+    }
+
+    function handleChange() {
+    }
+
+    return (
+        <div>
+          <button onClick={handleClick}>Edit event</button>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
+            <EventInputForm onChange={handleChange}
+                            value={eventDetails}
+                            availableLocations={allLocations}/>
+          </Modal>
+          
+        </div>
+    );
+}
+
 
 function EventView(
     props: {
@@ -139,6 +204,8 @@ function EventView(
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
 
             <LocationView value={props.value}/>
+
+            <EventEditButton value={props.value}/>
           </div>
         </div>
     )

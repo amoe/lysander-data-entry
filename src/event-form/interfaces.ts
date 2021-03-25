@@ -52,8 +52,12 @@ export interface RelativePosition {
 export interface Event {
     uuid: string;
     description: string;
+    reference: string;
+    quotation: string;
+    notes: string;
     offset: number | null;
     position: RelativePosition | null;
+    
 }
 
 export interface Sortie {
@@ -89,13 +93,13 @@ export interface DragObject {
 // React-side...
 export interface EventInputDetails {
     description: string;
-    timeOffset: UserFacingTimeOffset;
+    timeOffset: UserFacingTimeOffset | undefined;
     reference: string;
     quotation: string;
     notes: string;
-    relativeDistance: number;
-    relativeCardinal: CardinalPoint
-    relativeHeight: number;
+    relativeDistance: number | undefined;
+    relativeCardinal: CardinalPoint | undefined;
+    relativeHeight: number | undefined;
     locationId: string | undefined;    // location must start off undefined
 }
 
