@@ -4,7 +4,7 @@ import {
 } from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
 import {
-    InputNumber, TimePicker, Input, Select
+    InputNumber, TimePicker, Input, Select, AutoComplete
 } from 'antd';
 import moment from 'moment';
 import {PositionView} from './position-view';
@@ -110,6 +110,8 @@ export function EventInputForm(
     }
 
     function getRelativePosition(): RelativePosition | undefined {
+
+        console.log("props.value.locationId = %o", props.value.locationId);
         if (props.value.locationId === undefined) {
             return undefined;
         } else {
@@ -125,15 +127,31 @@ export function EventInputForm(
         }
     }
 
-    const rp = getRelativePosition();
+    const {availableLocations} = props;
+    const [narrowedLocations, setNarrowedLocations] = useState(availableLocations);
+
+    function handleSearch(value: string) {
+        function isMatch(l: Location) {
+            if (l.codename === null) {
+                return l.id.indexOf(value) !== -1;
+            } else {
+                return l.codename.indexOf(value) !== -1;
+            }
+        }
+        
+        setNarrowedLocations(availableLocations.filter(isMatch));
+    }
+
+    const rp = undefined;
+    //getRelativePosition();
     
     return (
         <div>
           <div>
             <span>Location:</span>
-            <Select onChange={handleLocationChange} style={{width: 120}}>
-              {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
-            </Select>
+            <AutoComplete onSearch={handleSearch} style={{width: 120}}>
+              {narrowedLocations.map(x => <AutoComplete.Option key={x.id} value={x.id}>{x.codename}</AutoComplete.Option>)}
+            </AutoComplete>
           </div>
 
           <div>
@@ -204,6 +222,7 @@ export function EventInputForm(
                             onChange={handleChange}/>
           </div>
 
+          {props.value.locationId}
           {rp !== undefined && <PositionView value={rp}/>}
         </div>
     );
