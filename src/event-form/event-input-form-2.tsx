@@ -113,6 +113,8 @@ export function EventInputForm(
         if (props.value.locationId === undefined) {
             return undefined;
         } else {
+            console.log("locationid is %o", props.value.locationId);
+            
             return {
                 height: props.value.relativeHeight,
                 distance: props.value.relativeDistance,
@@ -131,7 +133,7 @@ export function EventInputForm(
         <div>
           <div>
             <span>Location:</span>
-            <Select onChange={handleLocationChange} style={{width: 120}}>
+            <Select onChange={handleLocationChange} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
               {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
             </Select>
           </div>
