@@ -4,7 +4,7 @@ import {
 } from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
 import {
-    InputNumber, TimePicker, Input, Select
+    InputNumber, TimePicker, Input, Select, Row, Col
 } from 'antd';
 import moment from 'moment';
 import {PositionView} from './position-view';
@@ -189,23 +189,30 @@ export function EventInputForm(
           
           
 
-          <div>
+          <Row>
+            <Col span={8}>
             <span>Reference:</span>
             <Input.TextArea name="reference"
                             maxLength={256}
                             value={props.value.reference}
                             onChange={handleChange}/>
+            </Col>
+
+            <Col span={8}>
             <span>Quotation:</span>
             <Input.TextArea name="quotation"
                             maxLength={256}
                             value={props.value.quotation}
                             onChange={handleChange}/>
+            </Col>
+            <Col span={8}>
             <span>Notes:</span>
             <Input.TextArea name="notes"
                             maxLength={256}
                             value={props.value.notes}
                             onChange={handleChange}/>
-          </div>
+            </Col>
+          </Row>
 
           {rp !== undefined && <PositionView value={rp}/>}
         </div>
