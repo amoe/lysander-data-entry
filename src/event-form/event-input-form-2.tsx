@@ -4,7 +4,7 @@ import {
 } from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
 import {
-    InputNumber, TimePicker, Input, Select, AutoComplete
+    InputNumber, TimePicker, Input, Select
 } from 'antd';
 import moment from 'moment';
 import {PositionView} from './position-view';
@@ -110,8 +110,6 @@ export function EventInputForm(
     }
 
     function getRelativePosition(): RelativePosition | undefined {
-
-        console.log("props.value.locationId = %o", props.value.locationId);
         if (props.value.locationId === undefined) {
             return undefined;
         } else {
@@ -127,28 +125,15 @@ export function EventInputForm(
         }
     }
 
-    const {availableLocations} = props;
-    const [narrowedLocations, setNarrowedLocations] = useState(availableLocations);
-
-    function handleSearch(value: string) {
-        function isMatch(l: Location) {
-            const compareValue = l.codename === null ? l.id : l.codename;
-            return compareValue.toLowerCase().indexOf(value.toLowerCase()) !== -1;
-        }
-        
-        setNarrowedLocations(availableLocations.filter(isMatch));
-    }
-
-    const rp = undefined;
-    //getRelativePosition();
+    const rp = getRelativePosition();
     
     return (
         <div>
           <div>
             <span>Location:</span>
-            <AutoComplete onSearch={handleSearch} style={{width: 120}}>
-              {narrowedLocations.map(x => <AutoComplete.Option key={x.id} value={x.id}>{x.codename}</AutoComplete.Option>)}
-            </AutoComplete>
+            <Select onChange={handleLocationChange} style={{width: 120}}>
+              {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
+            </Select>
           </div>
 
           <div>
@@ -219,7 +204,6 @@ export function EventInputForm(
                             onChange={handleChange}/>
           </div>
 
-          {props.value.locationId}
           {rp !== undefined && <PositionView value={rp}/>}
         </div>
     );
