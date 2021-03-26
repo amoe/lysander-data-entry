@@ -1,6 +1,6 @@
 import React from 'react';
 import {LocationInput} from './interfaces';
-import {Input} from 'antd';
+import {Input, InputNumber} from 'antd';
 
 export function LocationInputForm(
     props: {value: LocationInput, onChange: (v: LocationInput) => void}
@@ -13,6 +13,13 @@ export function LocationInputForm(
         console.log("child: propagating change with value %o", value);
         props.onChange({...props.value, [target.name]: value});
     };
+
+    // InputNumber has a different signature
+    function makeNumericHandler(fieldName: string) {
+        return (val: string | number | undefined) => {
+            props.onChange({...props.value, [fieldName]: val});
+        };
+    }
 
 
     // XXX numeric input fields needed for numeric stuff
@@ -35,12 +42,18 @@ export function LocationInputForm(
 
       <div>
         <span>Latitude:</span>
-        <Input value={location.latitude} name="latitude" onChange={handleChange}/>
+        <InputNumber value={location.latitude}
+                     name="latitude"
+                     step={0.01}
+                     onChange={makeNumericHandler('latitude')}/>
       </div>
 
       <div>
         <span>Longitude:</span>
-        <Input value={location.longitude} name="longitude" onChange={handleChange}/>
+        <InputNumber value={location.longitude}
+                     name="longitude"
+                     step={0.01}
+                     onChange={makeNumericHandler('longitude')}/>
       </div>
     </div>);
 };
