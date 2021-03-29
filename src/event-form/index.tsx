@@ -4,7 +4,7 @@ import {FetchResult} from 'apollo-link';
 import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, throttle} from 'lodash';
 import {Modal, Button, notification} from 'antd';
 import {parseISO, format} from 'date-fns';
 import {EventInputForm} from './event-input-form-2';
@@ -64,7 +64,7 @@ function PlaneSortieSelector(
 
 function TimeOffsetConversionWrapper(props: {nightOf: Date | undefined, offset: number | null}) {
     if (props.nightOf === undefined || props.offset === null) {
-        return <i>Unknown/undefined chronological information</i>
+        return <div><i>Unknown/undefined chronological information</i></div>
     } else {
         return <TimeOffsetDisplay value={convertMinuteOffsetToUserFacing(props.nightOf, props.offset)}/>
     }
@@ -188,10 +188,13 @@ function EventView(
     const [setEventDescription, {data}] = useMutation(
         SET_EVENT_DESCRIPTION, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
-    
-    const onChange = (value: string) => {
-        setEventDescription({variables: {uuid: props.value.uuid, description: value}});
-    };
+
+    // prevent excessive firing causing jerkiness
+    const onChange = throttle(
+        (value: string) => {
+            setEventDescription({variables: {uuid: props.value.uuid, description: value}});
+        }, 100
+    );
 
     const dragSpec = {
         item: {type: DraggableType.LIST_ITEM, id: props.value.uuid},
@@ -228,10 +231,10 @@ function EventView(
             <TimeOffsetConversionWrapper nightOf={props.nightOf}
                                          offset={props.value.offset}/>
             
-            <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
 
             <LocationView value={props.value}/>
 
+            <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
             <CloneAsNewEventButton nightOf={props.nightOf}
                                    value={props.value}
                                    allLocations={props.allLocations}
@@ -248,7 +251,7 @@ function EventView(
 
 function LocationView(props: {value: Event}) {
     if (props.value.position === null) {
-        return (<i>No position defined</i>);
+        return (<div><i>No position defined</i></div>);
     } else {
         return (
             <div>
