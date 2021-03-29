@@ -57,7 +57,6 @@ export interface Event {
     notes: string;
     offset: number | null;
     position: RelativePosition | null;
-    
 }
 
 export interface Sortie {
