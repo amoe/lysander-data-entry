@@ -33,6 +33,9 @@ import {LocationInputForm} from './location-input-form';
 import uuidv4 from 'uuid/v4';
 
 
+import {variablesFromEventDetails} from './add-event';
+
+
 // Need to get this deploy data specifically
 const client = new ApolloClient({
     link: constructLink(GRAPHQL_URL),
@@ -119,21 +122,32 @@ function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
     return result;
 }
 //
-function EventEditButton(
-    props: {nightOf: Date, value: Event, allLocations: Location[]}
+function CloneAsNewEventButton(
+    props: {nightOf: Date, value: Event, allLocations: Location[], eventSequenceId: string}
 ) {
+    const [addEvent, addEventResult] = useMutation(
+        ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
+    );
     const [modalVisibility, setModalVisibility] = useState(false);
     const [eventDetails, setEventDetails] = useState(undefined as EventInputDetails | undefined);
     
     function handleClick() {
         console.log("I would edit this event");
         setEventDetails(eventInputFromEvent(props.nightOf, props.value));
+        setModalVisibility(true);
     }
 
     function handleOk() {
+        if (eventDetails === undefined)
+            throw new Error("can't happen");
+        
+        setModalVisibility(false);
+        addEvent(variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId));
+        setModalVisibility(false);
     }
     
     function handleCancel() {
+        setModalVisibility(false);
     }
 
     function handleChange() {
@@ -141,7 +155,7 @@ function EventEditButton(
 
     return (
         <div>
-          <button onClick={handleClick}>Edit event</button>
+          <button onClick={handleClick}>Clone as new event</button>
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
             <EventInputForm onChange={handleChange}
                             value={eventDetails!}
@@ -157,6 +171,7 @@ function EventView(
     props: {
         value: Event,
         nightOf: Date,
+        eventSequenceId: string,
         allLocations: Location[],
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
@@ -209,7 +224,7 @@ function EventView(
 
             <LocationView value={props.value}/>
 
-            <EventEditButton nightOf={props.nightOf} value={props.value} allLocations={props.allLocations}/>
+            <CloneAsNewEventButton nightOf={props.nightOf} value={props.value} allLocations={props.allLocations} eventSequenceId={props.eventSequenceId}/>
 
             <div className="bodytext"><span className="bodytext-title">Reference</span> {props.value.reference}</div>
             <div className="bodytext"><span className="bodytext-title">Quotation</span> {props.value.quotation}</div>
@@ -268,46 +283,8 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date, allLocati
     }
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
-        console.log("value of close is %o", close);
         setModalVisibility(false);
-        console.log("event details are %o", eventDetails);
-
-        // xxx: notify user, this still somehow does not prevent form submission
-        // if (!eventDetails.locationId) {
-        //     throw new Error("location is required");
-        // }
-
-        const timeOffset = eventDetails.timeOffset;
-        var offset;
-        if (timeOffset === undefined) {
-            offset = null;
-        } else {
-            offset = convertUserFacingToMinuteOffset(
-                props.nightOf, timeOffset
-            );
-        }
-        
-        
-        const payload = {
-            description: eventDetails.description,
-            reference: eventDetails.reference,
-            quotation: eventDetails.quotation,
-            notes: eventDetails.notes,
-            offset,
-            locationId: eventDetails.locationId,
-            relativeDistance: eventDetails.relativeDistance,
-            relativeCardinal: eventDetails.relativeCardinal,
-            relativeHeight: eventDetails.relativeHeight
-        };
-
-        console.log("I will send payload %o", payload);
-
-        const variables = {
-            esId: props.eventSequenceId,
-            event: payload
-        };
-        
-        addEvent({variables});
+        addEvent(variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId));
         setEventDetails(makeInitialState());
     }
 
@@ -464,6 +441,7 @@ function EventSequenceView(props: EventSequence) {
                                                       nightOf={ensureValid(nightOf)}
                                                       onRearrange={handleRearrange}
                                                       allLocations={allLocations}
+                                                      eventSequenceId={props.uuid}
                                                       onDelete={handleDelete}/>)}
           </div>
 
