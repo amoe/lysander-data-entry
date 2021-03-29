@@ -136,6 +136,7 @@ function ChronologicalInformationInputGroup(props: {
 
 function LocationInputGroup(props: {value: EventInputDetails,
                                     onChange: (v: EventInputDetails) => void,
+                                    planeSortieLocationId: string,
                                     availableLocations: Location[]}) {
 
     // If switching from off-to-on, just choose the first location in the list.
@@ -191,6 +192,10 @@ function LocationInputGroup(props: {value: EventInputDetails,
             console.log("after toggle %o", props.value);
         }
     }
+
+    function switchLocation() {
+        props.onChange({...props.value, locationId: props.planeSortieLocationId});
+    }
     
 
     return (
@@ -204,6 +209,8 @@ function LocationInputGroup(props: {value: EventInputDetails,
                    <Select onChange={handleLocationChange} value={props.value.locationId} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
                      {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
                    </Select>
+
+                   <button onClick={switchLocation}>Set to planesortie value</button>
                  </div>
 
                  <div>
@@ -235,6 +242,7 @@ export function EventInputForm(
     props: {
         value: EventInputDetails,
         onChange: (v: EventInputDetails) => void,
+        planeSortieLocationId: string,
         availableLocations: Location[]
     }) {
     
@@ -292,6 +300,7 @@ export function EventInputForm(
           <ChronologicalInformationInputGroup value={props.value} onChange={props.onChange}/>
           <LocationInputGroup value={props.value}
                               onChange={props.onChange}
+                              planeSortieLocationId={props.planeSortieLocationId}
                               availableLocations={props.availableLocations}/>
           
           <Row>

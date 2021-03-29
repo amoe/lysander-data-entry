@@ -62,6 +62,7 @@ export interface Event {
 
 export interface Sortie {
     nightOf: string;
+    location: Location;
 }
 
 export interface PlaneSortie {

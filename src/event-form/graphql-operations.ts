@@ -65,6 +65,13 @@ export const EVENT_SEQUENCE_QUERY = gql`
       name
       sortie {
         nightOf
+        location {
+          id
+          codename
+          description
+          longitude
+          latitude
+        }
       }
     }
   }

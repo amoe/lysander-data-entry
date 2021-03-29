@@ -123,7 +123,10 @@ function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
 }
 //
 function CloneAsNewEventButton(
-    props: {nightOf: Date, value: Event, allLocations: Location[], eventSequenceId: string}
+    props: {
+        nightOf: Date, value: Event, allLocations: Location[], eventSequenceId: string,
+        planeSortieLocationId: string
+    }
 ) {
     const [addEvent, addEventResult] = useMutation(
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
@@ -162,6 +165,7 @@ function CloneAsNewEventButton(
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
             <EventInputForm onChange={handleChange}
                             value={eventDetails!}
+                            planeSortieLocationId={props.planeSortieLocationId}
                             availableLocations={props.allLocations}/>
           </Modal>
           
@@ -176,6 +180,7 @@ function EventView(
         nightOf: Date,
         eventSequenceId: string,
         allLocations: Location[],
+        planeSortieLocationId: string,
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
     }
@@ -227,7 +232,11 @@ function EventView(
 
             <LocationView value={props.value}/>
 
-            <CloneAsNewEventButton nightOf={props.nightOf} value={props.value} allLocations={props.allLocations} eventSequenceId={props.eventSequenceId}/>
+            <CloneAsNewEventButton nightOf={props.nightOf}
+                                   value={props.value}
+                                   allLocations={props.allLocations}
+                                   planeSortieLocationId={props.planeSortieLocationId}
+                                   eventSequenceId={props.eventSequenceId}/>
 
             <div className="bodytext"><span className="bodytext-title">Reference</span> {props.value.reference}</div>
             <div className="bodytext"><span className="bodytext-title">Quotation</span> {props.value.quotation}</div>
@@ -252,7 +261,10 @@ function LocationView(props: {value: Event}) {
 
 // XXX: Not totally clear that we should present the button here as well, but
 // it works and avoids multiplying props, so whaddya gonna do?
-function AddEventStuff(props: {eventSequenceId: string, nightOf: Date, allLocations: Location[]}) {
+function AddEventStuff(props: {
+    eventSequenceId: string, nightOf: Date, allLocations: Location[],
+    planeSortieLocationId: string
+}) {
     const [addEvent, addEventResult] = useMutation(
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
@@ -303,6 +315,7 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date, allLocati
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
             <EventInputForm onChange={handleChange}
                             value={eventDetails}
+                            planeSortieLocationId={props.planeSortieLocationId}
                             availableLocations={props.allLocations}/>
           </Modal>
         </div>
@@ -409,13 +422,15 @@ function EventSequenceView(props: EventSequence) {
         nightOf = parseISO(props.planeSortie.sortie.nightOf);
     }
 
-    function ensureValid(nightOf: Date | undefined): Date {
+    function ensureValid(value: Date | undefined): Date {
         if (nightOf === undefined) {
             throw new Error("somehow got undefined nightof when displaying event, bad sign");
         }
 
         return nightOf;
     }
+
+    const planeSortieLocationId = props.planeSortie!.sortie.location.id;
 
     return (
         <div className="event-sequence">
@@ -444,12 +459,13 @@ function EventSequenceView(props: EventSequence) {
                                                       nightOf={ensureValid(nightOf)}
                                                       onRearrange={handleRearrange}
                                                       allLocations={allLocations}
+                                                      planeSortieLocationId={planeSortieLocationId}
                                                       eventSequenceId={props.uuid}
                                                       onDelete={handleDelete}/>)}
           </div>
 
 
-          {nightOf === undefined ? (<i>Please set the associated PlaneSortie before adding events</i>) :  <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf} allLocations={allLocations}/>}
+          {nightOf === undefined ? (<i>Please set the associated PlaneSortie before adding events</i>) :  <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf} allLocations={allLocations} planeSortieLocationId={planeSortieLocationId}/>}
         </div>
     );
 }
