@@ -208,7 +208,7 @@ function LocationInputGroup(props: {value: EventInputDetails,
 
                  <div>
                    <span>Cardinal point:</span>
-                   <Select onChange={handleCardinalChange} style={{width: 120}}>
+                   <Select onChange={handleCardinalChange} value={props.value.relativeCardinal} style={{width: 120}}>
                      {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
                    </Select>
                  </div>
