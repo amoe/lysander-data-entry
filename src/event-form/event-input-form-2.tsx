@@ -4,7 +4,7 @@ import {
 } from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
 import {
-    InputNumber, TimePicker, Input, Select, Row, Col
+    InputNumber, TimePicker, Input, Select, Row, Col, Checkbox
 } from 'antd';
 import moment from 'moment';
 import {PositionView} from './position-view';
@@ -33,21 +33,23 @@ const SHORT_COMPASS_ALIAS: CompassAliasMap = {
     [CardinalPoint.NORTH_NORTH_WEST]: 'NNW'
 };
 
+function ChronologicalInformationInputGroup(props: {
+    value: EventInputDetails, onChange: (v: EventInputDetails) => void,
+}) {
+    // XXX needs refactoring, fundamentally it needs to handle case where time is currently unset
+    // and initialize other fields apppropriately
 
+    const DEFAULT_DAY_ORDINAL = 1;
+    const DEFAULT_HOUR = 0;
+    const DEFAULT_MINUTE = 0;
 
-export function EventInputForm(
-    props: {
-        value: EventInputDetails,
-        onChange: (v: EventInputDetails) => void,
-        availableLocations: Location[]
-    }) {
-    const handleChange = (e: React.ChangeEvent<any>) => {
-        const target = e.currentTarget;
-        const value = target.value;
-        console.log("child: propagating change with value %o", value);
-        props.onChange({...props.value, [target.name]: value});
-    };
+    function toMoment(offset: UserFacingTimeOffset) {
+        return moment({hour: offset.hour, minute: offset.minute});
+    }
 
+    const format = 'HH:mm';
+    const defaultValue = moment('12:08', format);
+    
     const handleDayChange = (val: string | number | undefined) => {
         if (typeof val === 'string') throw new Error("string");
         if (val === undefined) throw new Error("undefined");
@@ -56,7 +58,7 @@ export function EventInputForm(
 
         if (existingTimeOffset === undefined) {
             props.onChange(
-                {...props.value, timeOffset: {dayOrdinal: val, hour: 0, minute: 0}}
+                {...props.value, timeOffset: {dayOrdinal: val, hour: DEFAULT_HOUR, minute: DEFAULT_MINUTE}}
             );
         } else {
             props.onChange(
@@ -74,15 +76,13 @@ export function EventInputForm(
         const existingTimeOffset = props.value.timeOffset;
         if (existingTimeOffset === undefined) {
             props.onChange(
-                {
-                    ...props.value,
+                {...props.value,
                     timeOffset: {
-                        dayOrdinal: 1,
+                        dayOrdinal: DEFAULT_DAY_ORDINAL,
                         hour: chosenTime.hour(),
                         minute: chosenTime.minute()
                     }
                 }
-                
             );
         } else {
             props.onChange(
@@ -90,6 +90,64 @@ export function EventInputForm(
             );
         }
     };
+
+    function isInfoSet() {
+        return props.value.timeOffset !== undefined;
+    }
+
+    function toggleInfo(e: any) {
+        const foo = e.target.value;
+
+        if (isInfoSet()) {
+            // Unset & clear everything
+            props.onChange({...props.value, timeOffset: undefined});
+        } else {
+            // not sure
+            props.onChange(
+                {...props.value,
+                 timeOffset: {dayOrdinal: DEFAULT_DAY_ORDINAL, hour: DEFAULT_HOUR, minute: DEFAULT_MINUTE}}
+            );
+        }
+    }
+    
+    return (
+        <div>
+        <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Chronological information specified</Checkbox>
+        {props.value.timeOffset !== undefined && (<div>
+          <div>
+            <span>Day:</span>
+            <InputNumber value={props.value.timeOffset.dayOrdinal}
+                         min={1}
+                         onChange={handleDayChange}/>
+          </div>
+
+
+          <div>
+            <span>Time:</span>
+            <TimePicker defaultValue={defaultValue}
+                        format={format}
+                        value={toMoment(props.value.timeOffset)}
+                        onChange={handleTimeChange}/>
+          </div>
+        </div>)}
+        </div>
+    );
+}
+
+function LocationInputGroup(props: {value: EventInputDetails,
+                                    onChange: (v: EventInputDetails) => void,
+                                    availableLocations: Location[]}) {
+
+    // If switching from off-to-on, just choose the first location in the list.
+    const defaultLocation = props.availableLocations[0].id;
+
+    console.log("default location set as %o", defaultLocation);
+    
+    function makeNumericHandler(fieldName: string) {
+        return (val: string | number | undefined) => {
+            props.onChange({...props.value, [fieldName]: val});
+        };
+    }
 
     // We only care about the first value
     function handleLocationChange(locationId: string) {
@@ -106,23 +164,92 @@ export function EventInputForm(
         );
     }
 
-
-    function toMoment(offset: UserFacingTimeOffset) {
-        return moment({hour: offset.hour, minute: offset.minute});
+    function isInfoSet() {
+        return props.value.locationId !== undefined;
     }
 
-    const format = 'HH:mm';
+    function toggleInfo(e: any) {
+        const foo = e.target.value;
 
-    const defaultValue = moment('12:08', format);
+        if (isInfoSet()) {
+            // Unset & clear everything
+            props.onChange({...props.value,
+                            locationId: undefined,
+                            relativeDistance: undefined,
+                            relativeCardinal: undefined,
+                            relativeHeight: undefined});
+        } else {
+            // not sure
+            props.onChange(
+                {...props.value,
+                 locationId: defaultLocation,
+                 relativeDistance: 0,
+                 relativeCardinal: CardinalPoint.NORTH,
+                 relativeHeight: 0}
+            );
+
+            console.log("after toggle %o", props.value);
+        }
+    }
+    
+
+    return (
+          <div>
+            <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Location info specified</Checkbox>
+
+            {isInfoSet() &&
+             <div>
+                 <div>
+                   <span>Location:</span>
+                   <Select onChange={handleLocationChange} value={props.value.locationId} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
+                     {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
+                   </Select>
+                 </div>
+
+                 <div>
+                   <span>Cardinal point:</span>
+                   <Select onChange={handleCardinalChange} value={props.value.relativeCardinal} style={{width: 120}}>
+                     {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
+                   </Select>
+                 </div>
+
+                 <div>
+                   <span>Relative height:</span>
+                   <InputNumber value={props.value.relativeHeight}
+                                min={0}
+                                onChange={makeNumericHandler('relativeHeight')}/>
+                 </div>
+
+                 <div>
+                   <span>Relative distance:</span>
+                   <InputNumber value={props.value.relativeDistance}
+                                min={0}
+                                onChange={makeNumericHandler('relativeDistance')}/>
+                 </div>
+          </div>}
+        </div>
+    );
+}
+
+export function EventInputForm(
+    props: {
+        value: EventInputDetails,
+        onChange: (v: EventInputDetails) => void,
+        availableLocations: Location[]
+    }) {
+    
+    const handleChange = (e: React.ChangeEvent<any>) => {
+        const target = e.currentTarget;
+        const value = target.value;
+        console.log("child: propagating change with value %o", value);
+        props.onChange({...props.value, [target.name]: value});
+    };
+
+
 
     console.log("available locations are %o", props.availableLocations);
 
-
-    function makeNumericHandler(fieldName: string) {
-        return (val: string | number | undefined) => {
-            props.onChange({...props.value, [fieldName]: val});
-        };
-    }
+    
 
     function getRelativePosition(): RelativePosition | undefined {
         if (props.value.locationId === undefined) {
@@ -152,88 +279,40 @@ export function EventInputForm(
     return (
         <div>
           <div>
-
-            <div>
-              <span>Description:</span>
-              <input type="text"
-                     name="description"
-                     value={props.value.description}
-                     onChange={handleChange}/>
-            </div>
-
-
-            {props.value.timeOffset !== undefined && (<div>
-            <div>
-              <span>Day:</span>
-              <InputNumber value={props.value.timeOffset.dayOrdinal}
-                           min={1}
-                           onChange={handleDayChange}/>
-            </div>
-
-
-            <div>
-              <span>Time:</span>
-              <TimePicker defaultValue={defaultValue}
-                          format={format}
-                          value={toMoment(props.value.timeOffset)}
-                          onChange={handleTimeChange}/>
-            </div>
-            </div>)}
-               
-
-            
-            <span>Location:</span>
-            <Select onChange={handleLocationChange} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
-              {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
-            </Select>
+            <span>Description:</span>
+            <input type="text"
+                   name="description"
+                   value={props.value.description}
+                   onChange={handleChange}/>
           </div>
 
-          <div>
-            <span>Cardinal point:</span>
-            <Select onChange={handleCardinalChange} style={{width: 120}}>
-              {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
-            </Select>
-          </div>
-
-          <div>
-            <span>Relative height:</span>
-            <InputNumber value={props.value.relativeHeight}
-                         min={0}
-                         onChange={makeNumericHandler('relativeHeight')}/>
-          </div>
-
-          <div>
-            <span>Relative distance:</span>
-            <InputNumber value={props.value.relativeDistance}
-                         min={0}
-                         onChange={makeNumericHandler('relativeDistance')}/>
-          </div>
-
+          <ChronologicalInformationInputGroup value={props.value} onChange={props.onChange}/>
+          <LocationInputGroup value={props.value}
+                              onChange={props.onChange}
+                              availableLocations={props.availableLocations}/>
           
-          
-
           <Row>
             <Col span={8}>
-            <span>Reference:</span>
-            <Input.TextArea name="reference"
-                            maxLength={256}
-                            value={props.value.reference}
-                            onChange={handleChange}/>
+              <span>Reference:</span>
+              <Input.TextArea name="reference"
+                              maxLength={256}
+                              value={props.value.reference}
+                              onChange={handleChange}/>
             </Col>
 
             <Col span={8}>
-            <span>Quotation:</span>
-            <Input.TextArea name="quotation"
-                            maxLength={256}
-                            value={props.value.quotation}
-                            onChange={handleChange}/>
+              <span>Quotation:</span>
+              <Input.TextArea name="quotation"
+                              maxLength={256}
+                              value={props.value.quotation}
+                              onChange={handleChange}/>
             </Col>
             <Col span={8}>
-            <span>Notes:</span>
-            <Input.TextArea name="notes"
-                            maxLength={256}
-                            value={props.value.notes}
-                            onChange={handleChange}/>
+              <span>Notes:</span>
+              <Input.TextArea name="notes"
+                              maxLength={256}
+                              value={props.value.notes}
+                              onChange={handleChange}/>
             </Col>
           </Row>
 
