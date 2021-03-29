@@ -43,6 +43,9 @@ export const EVENT_SEQUENCE_QUERY = gql`
       Event {
         uuid 
         description
+        reference
+        quotation
+        notes
         offset
         position {
           location {

@@ -19,7 +19,8 @@ import './event-form.css'
 import {GRAPHQL_URL} from '../configuration';
 import {
     Event, PlaneSortie, EventSequence, DraggableType,
-    DragObject, EventInputDetails, CardinalPoint, LocationInput
+    DragObject, EventInputDetails, CardinalPoint, LocationInput,
+    Location
 } from './interfaces';
 import {constructLink} from './construct-link';
 import {
@@ -84,11 +85,79 @@ function NightOfDisplay(props: {nightOf: Date | undefined}) {
     }
 }
 
+function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
+    var locationId, relativeDistance, relativeCardinal, relativeHeight;
+    
+    if (event.position === null) {
+        locationId = undefined;
+        relativeDistance = undefined;
+        relativeCardinal = undefined;
+        relativeHeight = undefined;
+    } else {
+        locationId = event.position.location.id;
+    }
+
+    var timeOffset;
+    if (event.offset === null) {
+        timeOffset = undefined;
+    } else {
+        timeOffset = convertMinuteOffsetToUserFacing(nightOf, event.offset);
+    }
+    
+    const result: EventInputDetails = {
+        description: event.description,
+        reference: event.reference,
+        quotation: event.quotation,
+        notes: event.notes,
+        locationId,
+        relativeDistance,
+        relativeCardinal,
+        relativeHeight,
+        timeOffset
+    };
+
+    return result;
+}
+//
+function EventEditButton(
+    props: {nightOf: Date, value: Event, allLocations: Location[]}
+) {
+    const [modalVisibility, setModalVisibility] = useState(false);
+    const [eventDetails, setEventDetails] = useState(undefined as EventInputDetails | undefined);
+    
+    function handleClick() {
+        console.log("I would edit this event");
+        setEventDetails(eventInputFromEvent(props.nightOf, props.value));
+    }
+
+    function handleOk() {
+    }
+    
+    function handleCancel() {
+    }
+
+    function handleChange() {
+    }
+
+    return (
+        <div>
+          <button onClick={handleClick}>Edit event</button>
+          <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
+            <EventInputForm onChange={handleChange}
+                            value={eventDetails!}
+                            availableLocations={props.allLocations}/>
+          </Modal>
+          
+        </div>
+    );
+}
+
 
 function EventView(
     props: {
         value: Event,
-        nightOf: Date | undefined,
+        nightOf: Date,
+        allLocations: Location[],
         onRearrange: (sourceId: string, targetId: string) => void,
         onDelete: (eventId: string) => void
     }
@@ -139,6 +208,8 @@ function EventView(
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
 
             <LocationView value={props.value}/>
+
+            <EventEditButton nightOf={props.nightOf} value={props.value} allLocations={props.allLocations}/>
           </div>
         </div>
     )
@@ -159,7 +230,7 @@ function LocationView(props: {value: Event}) {
 
 // XXX: Not totally clear that we should present the button here as well, but
 // it works and avoids multiplying props, so whaddya gonna do?
-function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
+function AddEventStuff(props: {eventSequenceId: string, nightOf: Date, allLocations: Location[]}) {
     const [addEvent, addEventResult] = useMutation(
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
@@ -179,22 +250,6 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
         }
     );
     const [eventDetails, setEventDetails] = useState(makeInitialState());
-    const locationsResult = useQuery(ALL_LOCATIONS_QUERY);
-
-    if (locationsResult.loading) {
-        return <div>Loading.</div>;
-    }
-
-    if (locationsResult.error) {
-        return <div>Error.</div>;
-    }
-    
-   
-    
-
-    const allLocations = locationsResult.data['Location'];
-
-    console.log("all locations are %o", allLocations);
 
 
     const handleShowModal = () => {
@@ -217,15 +272,24 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
         // if (!eventDetails.locationId) {
         //     throw new Error("location is required");
         // }
+
+        const timeOffset = eventDetails.timeOffset;
+        var offset;
+        if (timeOffset === undefined) {
+            offset = null;
+        } else {
+            offset = convertUserFacingToMinuteOffset(
+                props.nightOf, timeOffset
+            );
+        }
+        
         
         const payload = {
             description: eventDetails.description,
             reference: eventDetails.reference,
             quotation: eventDetails.quotation,
             notes: eventDetails.notes,
-            offset: convertUserFacingToMinuteOffset(
-                props.nightOf, eventDetails.timeOffset
-            ),
+            offset,
             locationId: eventDetails.locationId,
             relativeDistance: eventDetails.relativeDistance,
             relativeCardinal: eventDetails.relativeCardinal,
@@ -255,7 +319,7 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date}) {
           <Modal visible={modalVisibility} onOk={handleOk} onCancel={handleCancel}>
             <EventInputForm onChange={handleChange}
                             value={eventDetails}
-                            availableLocations={allLocations}/>
+                            availableLocations={props.allLocations}/>
           </Modal>
         </div>
     );
@@ -274,6 +338,9 @@ function makeBlankLocation(): LocationInput {
 
 // View for an individual event sequence.
 function EventSequenceView(props: EventSequence) {
+    const locationsResult = useQuery(ALL_LOCATIONS_QUERY);
+
+    
     const [modalVisibility, setModalVisibility] = useState(false);
     const [locationInput, setLocationInput] = useState(makeBlankLocation());
 
@@ -290,10 +357,19 @@ function EventSequenceView(props: EventSequence) {
     const [moveEvent, moveEventResult] = useMutation(
         MOVE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
-
+//
     const [deleteEvent, deleteEventResult] = useMutation(
         DELETE_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
+
+    if (locationsResult.loading) {
+        return <div>Loading.</div>;
+    }
+
+    if (locationsResult.error) {
+        return <div>Error.</div>;
+    }
+    const allLocations: Location[] = locationsResult.data['Location'];
 
     const handlePlaneSortieChange = (value: string) => {
         redirectEventSequence({variables: {esId: props.uuid, psName: value}});
@@ -337,6 +413,8 @@ function EventSequenceView(props: EventSequence) {
         setModalVisibility(true);
     };
 
+    // We have to do all sorts of machinations because an event sequence can exist in a state where
+    // it has no planesortie attached.    Really the list should be factored out
     var planeSortieValue;
     var nightOf: Date | undefined;
     if (props.planeSortie === null) {
@@ -345,6 +423,14 @@ function EventSequenceView(props: EventSequence) {
     } else {
         planeSortieValue = props.planeSortie.name;
         nightOf = parseISO(props.planeSortie.sortie.nightOf);
+    }
+
+    function ensureValid(nightOf: Date | undefined): Date {
+        if (nightOf === undefined) {
+            throw new Error("somehow got undefined nightof when displaying event, bad sign");
+        }
+
+        return nightOf;
     }
 
     return (
@@ -371,13 +457,14 @@ function EventSequenceView(props: EventSequence) {
           <div className="event-list">
             {props.events.map(({Event}) => <EventView key={Event.uuid}
                                                       value={Event}
-                                                      nightOf={nightOf}
+                                                      nightOf={ensureValid(nightOf)}
                                                       onRearrange={handleRearrange}
+                                                      allLocations={allLocations}
                                                       onDelete={handleDelete}/>)}
           </div>
 
 
-          {nightOf === undefined ? (<i>Please set the associated PlaneSortie before adding events</i>) :  <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf}/>}
+          {nightOf === undefined ? (<i>Please set the associated PlaneSortie before adding events</i>) :  <AddEventStuff eventSequenceId={props.uuid} nightOf={nightOf} allLocations={allLocations}/>}
         </div>
     );
 }

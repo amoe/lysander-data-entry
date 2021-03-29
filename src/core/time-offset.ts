@@ -6,7 +6,6 @@ export interface UserFacingTimeOffset {
     minute: number;
 }
 
-
 // Pretty simple algorithm -- take the base date, add N days, replace the hh:mm
 // with the values from the argument, now calculate minute difference from the base date.
 
