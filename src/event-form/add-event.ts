@@ -29,12 +29,12 @@ export function variablesFromEventDetails(
         relativeHeight: eventDetails.relativeHeight
     };
 
-    console.log("I will send payload %o", payload);
-
     const variables = {
         esId: eventSequenceId,
         event: payload
     };
+
+    console.log("variables = %o", variables);
     
     return variables;
 }

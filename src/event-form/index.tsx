@@ -142,7 +142,7 @@ function CloneAsNewEventButton(
             throw new Error("can't happen");
         
         setModalVisibility(false);
-        addEvent(variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId));
+        addEvent({variables: variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId)});
         setModalVisibility(false);
     }
     
@@ -150,8 +150,11 @@ function CloneAsNewEventButton(
         setModalVisibility(false);
     }
 
-    function handleChange() {
-    }
+    const handleChange = (newValues: EventInputDetails) => {
+        console.log("Parent: New values are %o", newValues);
+        setEventDetails(newValues);
+    };
+    
 
     return (
         <div>
@@ -284,7 +287,7 @@ function AddEventStuff(props: {eventSequenceId: string, nightOf: Date, allLocati
 
     const handleOk = (close: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(false);
-        addEvent(variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId));
+        addEvent({variables: variablesFromEventDetails(eventDetails, props.nightOf, props.eventSequenceId)});
         setEventDetails(makeInitialState());
     }
 
