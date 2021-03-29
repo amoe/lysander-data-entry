@@ -4,7 +4,7 @@ import {
 } from './interfaces';
 import {UserFacingTimeOffset} from '../core/time-offset';
 import {
-    InputNumber, TimePicker, Input, Select, Row, Col
+    InputNumber, TimePicker, Input, Select, Row, Col, Checkbox
 } from 'antd';
 import moment from 'moment';
 import {PositionView} from './position-view';
@@ -39,12 +39,15 @@ function ChronologicalInformationInputGroup(props: {
     // XXX needs refactoring, fundamentally it needs to handle case where time is currently unset
     // and initialize other fields apppropriately
 
+    const DEFAULT_DAY_ORDINAL = 1;
+    const DEFAULT_HOUR = 0;
+    const DEFAULT_MINUTE = 0;
+
     function toMoment(offset: UserFacingTimeOffset) {
         return moment({hour: offset.hour, minute: offset.minute});
     }
 
     const format = 'HH:mm';
-
     const defaultValue = moment('12:08', format);
     
     const handleDayChange = (val: string | number | undefined) => {
@@ -55,7 +58,7 @@ function ChronologicalInformationInputGroup(props: {
 
         if (existingTimeOffset === undefined) {
             props.onChange(
-                {...props.value, timeOffset: {dayOrdinal: val, hour: 0, minute: 0}}
+                {...props.value, timeOffset: {dayOrdinal: val, hour: DEFAULT_HOUR, minute: DEFAULT_MINUTE}}
             );
         } else {
             props.onChange(
@@ -75,12 +78,11 @@ function ChronologicalInformationInputGroup(props: {
             props.onChange(
                 {...props.value,
                     timeOffset: {
-                        dayOrdinal: 1,
+                        dayOrdinal: DEFAULT_DAY_ORDINAL,
                         hour: chosenTime.hour(),
                         minute: chosenTime.minute()
                     }
                 }
-                
             );
         } else {
             props.onChange(
@@ -88,9 +90,30 @@ function ChronologicalInformationInputGroup(props: {
             );
         }
     };
+
+    function isInfoSet() {
+        return props.value.timeOffset !== undefined;
+    }
+
+    function toggleInfo(e: any) {
+        const foo = e.target.value;
+
+        if (isInfoSet()) {
+            // Unset & clear everything
+            props.onChange({...props.value, timeOffset: undefined});
+        } else {
+            // not sure
+            props.onChange(
+                {...props.value,
+                 timeOffset: {dayOrdinal: DEFAULT_DAY_ORDINAL, hour: DEFAULT_HOUR, minute: DEFAULT_MINUTE}}
+            );
+        }
+    }
     
     return (
         <div>
+        <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Chronological information specified</Checkbox>
+        
         {props.value.timeOffset !== undefined && (<div>
           <div>
             <span>Day:</span>
