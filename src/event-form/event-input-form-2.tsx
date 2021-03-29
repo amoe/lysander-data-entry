@@ -33,21 +33,20 @@ const SHORT_COMPASS_ALIAS: CompassAliasMap = {
     [CardinalPoint.NORTH_NORTH_WEST]: 'NNW'
 };
 
+function ChronologicalInformationInputGroup(props: {
+    value: EventInputDetails, onChange: (v: EventInputDetails) => void,
+}) {
+    // XXX needs refactoring, fundamentally it needs to handle case where time is currently unset
+    // and initialize other fields apppropriately
 
+    function toMoment(offset: UserFacingTimeOffset) {
+        return moment({hour: offset.hour, minute: offset.minute});
+    }
 
-export function EventInputForm(
-    props: {
-        value: EventInputDetails,
-        onChange: (v: EventInputDetails) => void,
-        availableLocations: Location[]
-    }) {
-    const handleChange = (e: React.ChangeEvent<any>) => {
-        const target = e.currentTarget;
-        const value = target.value;
-        console.log("child: propagating change with value %o", value);
-        props.onChange({...props.value, [target.name]: value});
-    };
+    const format = 'HH:mm';
 
+    const defaultValue = moment('12:08', format);
+    
     const handleDayChange = (val: string | number | undefined) => {
         if (typeof val === 'string') throw new Error("string");
         if (val === undefined) throw new Error("undefined");
@@ -74,8 +73,7 @@ export function EventInputForm(
         const existingTimeOffset = props.value.timeOffset;
         if (existingTimeOffset === undefined) {
             props.onChange(
-                {
-                    ...props.value,
+                {...props.value,
                     timeOffset: {
                         dayOrdinal: 1,
                         hour: chosenTime.hour(),
@@ -90,6 +88,46 @@ export function EventInputForm(
             );
         }
     };
+    
+    return (
+        <div>
+        {props.value.timeOffset !== undefined && (<div>
+          <div>
+            <span>Day:</span>
+            <InputNumber value={props.value.timeOffset.dayOrdinal}
+                         min={1}
+                         onChange={handleDayChange}/>
+          </div>
+
+
+          <div>
+            <span>Time:</span>
+            <TimePicker defaultValue={defaultValue}
+                        format={format}
+                        value={toMoment(props.value.timeOffset)}
+                        onChange={handleTimeChange}/>
+          </div>
+        </div>)}
+        </div>
+    );
+}
+    
+
+
+
+export function EventInputForm(
+    props: {
+        value: EventInputDetails,
+        onChange: (v: EventInputDetails) => void,
+        availableLocations: Location[]
+    }) {
+    const handleChange = (e: React.ChangeEvent<any>) => {
+        const target = e.currentTarget;
+        const value = target.value;
+        console.log("child: propagating change with value %o", value);
+        props.onChange({...props.value, [target.name]: value});
+    };
+
 
     // We only care about the first value
     function handleLocationChange(locationId: string) {
@@ -107,13 +145,6 @@ export function EventInputForm(
     }
 
 
-    function toMoment(offset: UserFacingTimeOffset) {
-        return moment({hour: offset.hour, minute: offset.minute});
-    }
-
-    const format = 'HH:mm';
-
-    const defaultValue = moment('12:08', format);
 
     console.log("available locations are %o", props.availableLocations);
 
@@ -161,26 +192,7 @@ export function EventInputForm(
                      onChange={handleChange}/>
             </div>
 
-
-            {props.value.timeOffset !== undefined && (<div>
-            <div>
-              <span>Day:</span>
-              <InputNumber value={props.value.timeOffset.dayOrdinal}
-                           min={1}
-                           onChange={handleDayChange}/>
-            </div>
-
-
-            <div>
-              <span>Time:</span>
-              <TimePicker defaultValue={defaultValue}
-                          format={format}
-                          value={toMoment(props.value.timeOffset)}
-                          onChange={handleTimeChange}/>
-            </div>
-            </div>)}
-               
-
+            <ChronologicalInformationInputGroup value={props.value} onChange={props.onChange}/>
             
             <span>Location:</span>
             <Select onChange={handleLocationChange} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
