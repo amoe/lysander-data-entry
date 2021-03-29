@@ -275,6 +275,9 @@ export function EventInputForm(
     }
 
     const rp = getRelativePosition();
+
+    // pretty generous limit.  Always set a limit!!!
+    const MAX_TEXTAREA_LENGTH = 4096;
     
     return (
         <div>
@@ -295,7 +298,7 @@ export function EventInputForm(
             <Col span={8}>
               <span>Reference:</span>
               <Input.TextArea name="reference"
-                              maxLength={256}
+                              maxLength={MAX_TEXTAREA_LENGTH}
                               value={props.value.reference}
                               onChange={handleChange}/>
             </Col>
@@ -303,14 +306,14 @@ export function EventInputForm(
             <Col span={8}>
               <span>Quotation:</span>
               <Input.TextArea name="quotation"
-                              maxLength={256}
+                              maxLength={MAX_TEXTAREA_LENGTH}
                               value={props.value.quotation}
                               onChange={handleChange}/>
             </Col>
             <Col span={8}>
               <span>Notes:</span>
               <Input.TextArea name="notes"
-                              maxLength={256}
+                              maxLength={MAX_TEXTAREA_LENGTH}
                               value={props.value.notes}
                               onChange={handleChange}/>
             </Col>
