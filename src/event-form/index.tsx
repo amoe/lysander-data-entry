@@ -210,6 +210,10 @@ function EventView(
             <LocationView value={props.value}/>
 
             <EventEditButton nightOf={props.nightOf} value={props.value} allLocations={props.allLocations}/>
+
+            <div className="bodytext"><span className="bodytext-title">Reference</span> {props.value.reference}</div>
+            <div className="bodytext"><span className="bodytext-title">Quotation</span> {props.value.quotation}</div>
+            <div className="bodytext"><span className="bodytext-title">Notes</span> {props.value.notes}</div>
           </div>
         </div>
     )

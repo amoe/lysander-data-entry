@@ -37,3 +37,17 @@
     margin-right: 0.4em;
     
 }
+
+.bodytext {
+    background-color: #fed9a6;
+    border: 1px solid black;
+    padding: 1em 0.5em;
+    margin: 1em 0px;
+    font-size: small;
+}
+
+.bodytext-title {
+    font-weight: bold;
+    display: block;
+    font-size: medium;
+}
