@@ -44,6 +44,7 @@ export const EVENT_SEQUENCE_QUERY = gql`
         uuid 
         description
         reference
+        perspectives
         quotation
         notes
         offset

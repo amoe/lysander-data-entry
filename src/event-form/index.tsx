@@ -232,6 +232,13 @@ function EventView(
                                          offset={props.value.offset}/>
             
 
+            <div>
+              <span>Perspectives</span>
+              <ul>
+                {props.value.perspectives.map(p => <li key={p}>{p}</li>)}
+              </ul>
+            </div>
+            
             <LocationView value={props.value}/>
 
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>

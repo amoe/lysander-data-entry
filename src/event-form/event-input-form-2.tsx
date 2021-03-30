@@ -286,6 +286,8 @@ export function EventInputForm(
 
     // pretty generous limit.  Always set a limit!!!
     const MAX_TEXTAREA_LENGTH = 4096;
+
+    const perspectives = ['foo'];
     
     return (
         <div>
@@ -328,6 +330,16 @@ export function EventInputForm(
             </Col>
           </Row>
 
+          <hr/>
+          
+          <Select mode="multiple" style={{width: '100%'}} value={perspectives}>
+            <Select.Option value="foo">Foo</Select.Option>
+            <Select.Option value="bar">Bar</Select.Option>
+            <Select.Option value="baz">Baz</Select.Option>
+          </Select>
+
+          <hr/>
+          
           {rp !== undefined && <PositionView value={rp}/>}
         </div>
     );
