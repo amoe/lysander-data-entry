@@ -263,6 +263,7 @@ export function EventInputForm(
         if (props.value.locationId === undefined) {
             return undefined;
         } else {
+            console.log("value is %o", props.value);
             console.log("locationid is %o", props.value.locationId);
 
             // Yuck
