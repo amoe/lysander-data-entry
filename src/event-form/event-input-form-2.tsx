@@ -113,7 +113,7 @@ function ChronologicalInformationInputGroup(props: {
     
     return (
         <div>
-        <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Chronological information specified</Checkbox>
+        <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify date & time</Checkbox>
         {props.value.timeOffset !== undefined && (<div>
           <div>
             <span>Day:</span>
@@ -199,7 +199,7 @@ function LocationInputGroup(props: {value: EventInputDetails,
 
     return (
           <div>
-            <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Location info specified</Checkbox>
+            <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify location</Checkbox>
 
             {isInfoSet() &&
              <div>
@@ -209,7 +209,7 @@ function LocationInputGroup(props: {value: EventInputDetails,
                      {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
                    </Select>
 
-                   <button onClick={switchLocation}>Set to planesortie value</button>
+                   <button onClick={switchLocation}>Set to LZ</button>
                  </div>
 
                  <div>
@@ -220,14 +220,14 @@ function LocationInputGroup(props: {value: EventInputDetails,
                  </div>
 
                  <div>
-                   <span>Relative height:</span>
+                   <span>Height (100ft):</span>
                    <InputNumber value={props.value.relativeHeight}
                                 min={0}
                                 onChange={makeNumericHandler('relativeHeight')}/>
                  </div>
 
                  <div>
-                   <span>Relative distance:</span>
+                   <span>Distance (kms):</span>
                    <InputNumber value={props.value.relativeDistance}
                                 min={0}
                                 onChange={makeNumericHandler('relativeDistance')}/>
@@ -293,7 +293,7 @@ export function EventInputForm(
     return (
         <div>
           <div>
-            <span>Description:</span>
+            <span>Event name:</span>
             <input type="text"
                    name="description"
                    value={props.value.description}
@@ -331,8 +331,9 @@ export function EventInputForm(
             </Col>
           </Row>
 
-          <hr/>
-          
+
+          <div>
+            <span>Perspectives:</span>
           <Select mode="multiple" style={{width: '100%'}} value={props.value.perspectives} onChange={handlePerspectivesChange}>
             <Select.Option value="passengers_out">Passenger Out</Select.Option>
             <Select.Option value="passengers_back">Passenger Back</Select.Option>
@@ -342,8 +343,7 @@ export function EventInputForm(
             <Select.Option value="crew">Crew</Select.Option>
             <Select.Option value="crew_hudson">Crew (Hudson)</Select.Option>
           </Select>
-
-          <hr/>
+          </div>
           
           {rp !== undefined && <PositionView value={rp}/>}
         </div>
