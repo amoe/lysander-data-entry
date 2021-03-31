@@ -265,7 +265,7 @@ function LocationView(props: {value: Event}) {
     } else {
         return (
             <div>
-              Location: {props.value.position.location.id}
+              Location: {props.value.position.location.codename}
               <PositionView value={props.value.position}/>
             </div>
         );
