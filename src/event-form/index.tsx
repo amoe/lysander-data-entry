@@ -5,7 +5,7 @@ import {useQuery, useMutation} from '@apollo/client';
 import {DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {cloneDeep, throttle} from 'lodash';
-import {Modal, Button, notification} from 'antd';
+import {Modal, Button, notification, Row, Col} from 'antd';
 import {parseISO, format} from 'date-fns';
 import {EventInputForm} from './event-input-form-2';
 
@@ -251,9 +251,20 @@ function EventView(
                                    planeSortieLocationId={props.planeSortie.sortie.location.id}
                                    eventSequenceId={props.eventSequenceId}/>
 
-            <div className="bodytext"><span className="bodytext-title">Reference</span> {props.value.reference}</div>
-            <div className="bodytext"><span className="bodytext-title">Quotation</span> {props.value.quotation}</div>
-            <div className="bodytext"><span className="bodytext-title">Notes</span> {props.value.notes}</div>
+            <div className="text-fields">
+            <Row>
+              <Col span={8}>
+                <div className="bodytext"><span className="bodytext-title">Reference</span> {props.value.reference}</div>
+              </Col>
+
+              <Col span={8}>
+                <div className="bodytext"><span className="bodytext-title">Quotation</span> {props.value.quotation}</div>
+              </Col>
+              <Col span={8}>
+                <div className="bodytext"><span className="bodytext-title">Notes</span> {props.value.notes}</div>
+              </Col>
+            </Row>
+            </div>
           </div>
         </div>
     )

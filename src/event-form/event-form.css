@@ -40,10 +40,10 @@
 
 .bodytext {
     background-color: #fed9a6;
-    border: 1px solid black;
     padding: 1em 0.5em;
-    margin: 1em 0px;
+    margin: 1em 0.5em;
     font-size: small;
+    height: 100%;
 }
 
 .bodytext-title {
@@ -51,3 +51,5 @@
     display: block;
     font-size: medium;
 }
+
+.text-fields { margin-bottom: 1em; }
