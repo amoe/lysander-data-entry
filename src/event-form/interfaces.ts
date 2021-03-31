@@ -102,5 +102,6 @@ export interface EventInputDetails {
     relativeCardinal: CardinalPoint | undefined;
     relativeHeight: number | undefined;
     locationId: string | undefined;    // location must start off undefined
+    perspectives: string[];
 }
 

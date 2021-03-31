@@ -9,6 +9,7 @@ import {
 import moment from 'moment';
 import {PositionView} from './position-view';
 import {strictFind} from '../utility';
+import { OptionGroupData } from 'rc-select/lib/interface';
 
 interface CompassAliasMap {
     [key: string]: string;
@@ -170,8 +171,6 @@ function LocationInputGroup(props: {value: EventInputDetails,
     }
 
     function toggleInfo(e: any) {
-        const foo = e.target.value;
-
         if (isInfoSet()) {
             // Unset & clear everything
             props.onChange({...props.value,
@@ -254,6 +253,9 @@ export function EventInputForm(
     };
 
 
+    const handlePerspectivesChange = function(value: string[]) {
+        props.onChange({...props.value, perspectives: value});
+    };
 
     console.log("available locations are %o", props.availableLocations);
 
@@ -288,8 +290,6 @@ export function EventInputForm(
     // pretty generous limit.  Always set a limit!!!
     const MAX_TEXTAREA_LENGTH = 4096;
 
-    const perspectives = ['foo'];
-    
     return (
         <div>
           <div>
@@ -333,10 +333,14 @@ export function EventInputForm(
 
           <hr/>
           
-          <Select mode="multiple" style={{width: '100%'}} value={perspectives}>
-            <Select.Option value="foo">Foo</Select.Option>
-            <Select.Option value="bar">Bar</Select.Option>
-            <Select.Option value="baz">Baz</Select.Option>
+          <Select mode="multiple" style={{width: '100%'}} value={props.value.perspectives} onChange={handlePerspectivesChange}>
+            <Select.Option value="passengers_out">Passenger Out</Select.Option>
+            <Select.Option value="passengers_back">Passenger Back</Select.Option>
+            <Select.Option value="pilots">Pilot</Select.Option>
+            <Select.Option value="reception">Reception</Select.Option>
+            <Select.Option value="organizers">Organiser</Select.Option>    
+            <Select.Option value="crew">Crew</Select.Option>
+            <Select.Option value="crew_hudson">Crew (Hudson)</Select.Option>
           </Select>
 
           <hr/>

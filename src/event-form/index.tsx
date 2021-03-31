@@ -115,6 +115,7 @@ function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
         reference: event.reference,
         quotation: event.quotation,
         notes: event.notes,
+        perspectives: event.perspectives,
         locationId,
         relativeDistance,
         relativeCardinal,
@@ -304,6 +305,7 @@ function AddEventStuff(props: {
             relativeCardinal: CardinalPoint.NORTH,
             relativeHeight: 0,
             locationId: undefined,
+            perspectives: [],
             timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
         }
     );
