@@ -48,6 +48,7 @@ export const EVENT_SEQUENCE_QUERY = gql`
         quotation
         notes
         offset
+        height
         position {
           location {
             id
@@ -58,7 +59,6 @@ export const EVENT_SEQUENCE_QUERY = gql`
           }
           distance
           cardinal
-          height
         }
       }
     }

@@ -245,6 +245,11 @@ function EventView(
             
             <LocationView value={props.value}/>
 
+            <div>
+              <span>Height:</span>
+              {props.value.height === null ?  <i>No height defined</i> : props.value.height}
+            </div>
+
             <button onClick={(e) => props.onDelete(props.value.uuid)}>Delete</button>
             <CloneAsNewEventButton nightOf={props.nightOf}
                                    value={props.value}

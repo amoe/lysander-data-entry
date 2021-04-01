@@ -58,6 +58,7 @@ export interface Event {
     offset: number | null;
     position: RelativePosition | null;
     perspectives: string[];
+    height: number | null;
 }
 
 export interface Sortie {
