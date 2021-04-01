@@ -43,7 +43,7 @@ export interface LocationInput {
 }
 
 export interface RelativePosition {
-    height: number;
+    height: number | null;
     distance: number;
     cardinal: CardinalPoint;
     location: Location;
@@ -92,6 +92,12 @@ export interface DragObject {
 }
 
 // React-side...
+
+// XXX: The use of 'undefined' happens here because we are responsible for the
+// whole of the EventInputDetails type, because we are providing the data.
+//
+// The `Event` type uses null instead, because the GraphQL server sends us null
+// (which we have no control over).
 export interface EventInputDetails {
     description: string;
     timeOffset: UserFacingTimeOffset | undefined;
@@ -100,7 +106,11 @@ export interface EventInputDetails {
     notes: string;
     relativeDistance: number | undefined;
     relativeCardinal: CardinalPoint | undefined;
+
+    // relativeHeight is the exception in that it can be undefined while
+    // locationId is not undefined.
     relativeHeight: number | undefined;
+    
     locationId: string | undefined;    // location must start off undefined
     perspectives: string[];
 }

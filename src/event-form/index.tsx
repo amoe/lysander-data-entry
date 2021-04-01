@@ -100,7 +100,7 @@ function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
         locationId = event.position.location.id;
         relativeDistance = 0;
         relativeCardinal = CardinalPoint.NORTH;
-        relativeHeight = 0;
+        relativeHeight = undefined;
     }
 
     var timeOffset;

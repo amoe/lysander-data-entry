@@ -17,7 +17,8 @@ export function PositionView(props: {value: RelativePosition}) {
         );
         return <div>
           <div>Position: {result.latitude.toFixed(6)}, {result.longitude.toFixed(6)}</div>
-          <div>Relative height: {height}</div>
+
+          {height === null ? <div><i>Undefined relative height</i></div> : <div>Relative height: {height}</div>}
         </div>;
     }
 }
