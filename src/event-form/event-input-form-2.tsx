@@ -253,14 +253,14 @@ function LocationInputGroup(props: {value: EventInputDetails,
                </Select>
              </div>
 
-             <RelativeHeightInputBox value={props.value} onChange={props.onChange}/>
-
              <div>
                <span>Distance (kms):</span>
                <InputNumber value={props.value.relativeDistance}
                             min={0}
                             onChange={makeNumericHandler('relativeDistance')}/>
              </div>
+
+             <RelativeHeightInputBox value={props.value} onChange={props.onChange}/>
            </div>}
         </div>
     );
