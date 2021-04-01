@@ -34,6 +34,40 @@ const SHORT_COMPASS_ALIAS: CompassAliasMap = {
     [CardinalPoint.NORTH_NORTH_WEST]: 'NNW'
 };
 
+function RelativeHeightInputBox(props: {value: EventInputDetails, onChange: (v: EventInputDetails) => void}) {
+    function makeNumericHandler(fieldName: string) {
+        return (val: string | number | undefined) => {
+            props.onChange({...props.value, [fieldName]: val});
+        };
+    }
+
+    function isInfoSet(): boolean {
+        return props.value.relativeHeight !== undefined;
+    }
+
+    function toggleInfo(): void {
+        console.log("toggling info");
+        if (props.value.relativeHeight === undefined) {
+            props.onChange({...props.value, relativeHeight: 0});
+        } else {
+            props.onChange({...props.value, relativeHeight: undefined});
+        }
+    }
+
+    return (
+        <div>
+          <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify relative height</Checkbox>
+          {isInfoSet() && (<div>
+              <span>Height (100ft):</span>
+              <InputNumber value={props.value.relativeHeight}
+                           min={0}
+                           onChange={makeNumericHandler('relativeHeight')}/>
+            </div>)}
+        </div>
+    );
+              
+}
+
 function ChronologicalInformationInputGroup(props: {
     value: EventInputDetails, onChange: (v: EventInputDetails) => void,
 }) {
@@ -78,11 +112,11 @@ function ChronologicalInformationInputGroup(props: {
         if (existingTimeOffset === undefined) {
             props.onChange(
                 {...props.value,
-                    timeOffset: {
-                        dayOrdinal: DEFAULT_DAY_ORDINAL,
-                        hour: chosenTime.hour(),
-                        minute: chosenTime.minute()
-                    }
+                 timeOffset: {
+                     dayOrdinal: DEFAULT_DAY_ORDINAL,
+                     hour: chosenTime.hour(),
+                     minute: chosenTime.minute()
+                 }
                 }
             );
         } else {
@@ -113,24 +147,24 @@ function ChronologicalInformationInputGroup(props: {
     
     return (
         <div>
-        <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify date & time</Checkbox>
-        {props.value.timeOffset !== undefined && (<div>
-          <div>
-            <span>Day:</span>
-            <InputNumber value={props.value.timeOffset.dayOrdinal}
-                         min={1}
-                         onChange={handleDayChange}/>
-          </div>
+          <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify date & time</Checkbox>
+          {props.value.timeOffset !== undefined && (<div>
+            <div>
+              <span>Day:</span>
+              <InputNumber value={props.value.timeOffset.dayOrdinal}
+                           min={1}
+                           onChange={handleDayChange}/>
+            </div>
 
 
-          <div>
-            <span>Time:</span>
-            <TimePicker defaultValue={defaultValue}
-                        format={format}
-                        value={toMoment(props.value.timeOffset)}
-                        onChange={handleTimeChange}/>
-          </div>
-        </div>)}
+            <div>
+              <span>Time:</span>
+              <TimePicker defaultValue={defaultValue}
+                          format={format}
+                          value={toMoment(props.value.timeOffset)}
+                          onChange={handleTimeChange}/>
+            </div>
+          </div>)}
         </div>
     );
 }
@@ -185,7 +219,7 @@ function LocationInputGroup(props: {value: EventInputDetails,
                  locationId: defaultLocation,
                  relativeDistance: 0,
                  relativeCardinal: CardinalPoint.NORTH,
-                 relativeHeight: 0}
+                 relativeHeight: undefined}
             );
 
             console.log("after toggle %o", props.value);
@@ -198,41 +232,36 @@ function LocationInputGroup(props: {value: EventInputDetails,
     
 
     return (
-          <div>
-            <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify location</Checkbox>
+        <div>
+          <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify location</Checkbox>
 
-            {isInfoSet() &&
+          {isInfoSet() &&
+           <div>
              <div>
-                 <div>
-                   <span>Location:</span>
-                   <Select onChange={handleLocationChange} value={props.value.locationId} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
-                     {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
-                   </Select>
+               <span>Location:</span>
+               <Select onChange={handleLocationChange} value={props.value.locationId} showSearch={true} filterOption={true} optionFilterProp="children" style={{width: 120}}>
+                 {props.availableLocations.map(x => <Select.Option key={x.id} value={x.id}>{x.codename}</Select.Option>)}
+               </Select>
 
-                   <button onClick={switchLocation}>Set to LZ</button>
-                 </div>
+               <button onClick={switchLocation}>Set to LZ</button>
+             </div>
 
-                 <div>
-                   <span>Cardinal point:</span>
-                   <Select onChange={handleCardinalChange} value={props.value.relativeCardinal} style={{width: 120}}>
-                     {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
-                   </Select>
-                 </div>
+             <div>
+               <span>Cardinal point:</span>
+               <Select onChange={handleCardinalChange} value={props.value.relativeCardinal} style={{width: 120}}>
+                 {Object.keys(CardinalPoint).map(x => <Select.Option key={x} value={x}>{SHORT_COMPASS_ALIAS[x]}</Select.Option>)}
+               </Select>
+             </div>
 
-                 <div>
-                   <span>Height (100ft):</span>
-                   <InputNumber value={props.value.relativeHeight}
-                                min={0}
-                                onChange={makeNumericHandler('relativeHeight')}/>
-                 </div>
+             <RelativeHeightInputBox value={props.value} onChange={props.onChange}/>
 
-                 <div>
-                   <span>Distance (kms):</span>
-                   <InputNumber value={props.value.relativeDistance}
-                                min={0}
-                                onChange={makeNumericHandler('relativeDistance')}/>
-                 </div>
-          </div>}
+             <div>
+               <span>Distance (kms):</span>
+               <InputNumber value={props.value.relativeDistance}
+                            min={0}
+                            onChange={makeNumericHandler('relativeDistance')}/>
+             </div>
+           </div>}
         </div>
     );
 }
@@ -271,10 +300,11 @@ export function EventInputForm(
             // Yuck
             if (props.value.relativeCardinal === undefined) throw new Error("can't happen");
             if (props.value.relativeDistance === undefined) throw new Error("can't happen");
-            if (props.value.relativeHeight === undefined) throw new Error("can't happen");
+
+            
             
             return {
-                height: props.value.relativeHeight,
+                height: props.value.relativeHeight || null,
                 distance: props.value.relativeDistance,
                 cardinal: props.value.relativeCardinal,
                 location: strictFind(
