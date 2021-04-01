@@ -4,7 +4,7 @@ import {cardinalToBearing} from './functions';
 import {RelativePosition} from './interfaces';
 
 export function PositionView(props: {value: RelativePosition}) {
-    const {location, distance, cardinal, height} = props.value;
+    const {location, distance, cardinal} = props.value;
 
     if (location.latitude === null || location.longitude === null) {
         return <i>Invalid latitude/longitude for this location</i>

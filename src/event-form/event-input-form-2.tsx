@@ -42,15 +42,15 @@ function RelativeHeightInputBox(props: {value: EventInputDetails, onChange: (v: 
     }
 
     function isInfoSet(): boolean {
-        return props.value.relativeHeight !== undefined;
+        return props.value.height !== undefined;
     }
 
     function toggleInfo(): void {
         console.log("toggling info");
-        if (props.value.relativeHeight === undefined) {
-            props.onChange({...props.value, relativeHeight: 0});
+        if (props.value.height === undefined) {
+            props.onChange({...props.value, height: 0});
         } else {
-            props.onChange({...props.value, relativeHeight: undefined});
+            props.onChange({...props.value, height: undefined});
         }
     }
 
@@ -59,9 +59,9 @@ function RelativeHeightInputBox(props: {value: EventInputDetails, onChange: (v: 
           <Checkbox checked={isInfoSet()} onChange={toggleInfo}>Specify relative height</Checkbox>
           {isInfoSet() && (<div>
               <span>Height (100ft):</span>
-              <InputNumber value={props.value.relativeHeight}
+              <InputNumber value={props.value.height}
                            min={0}
-                           onChange={makeNumericHandler('relativeHeight')}/>
+                           onChange={makeNumericHandler('height')}/>
             </div>)}
         </div>
     );
@@ -210,16 +210,14 @@ function LocationInputGroup(props: {value: EventInputDetails,
             props.onChange({...props.value,
                             locationId: undefined,
                             relativeDistance: undefined,
-                            relativeCardinal: undefined,
-                            relativeHeight: undefined});
+                            relativeCardinal: undefined});
         } else {
             // not sure
             props.onChange(
                 {...props.value,
                  locationId: defaultLocation,
                  relativeDistance: 0,
-                 relativeCardinal: CardinalPoint.NORTH,
-                 relativeHeight: undefined}
+                 relativeCardinal: CardinalPoint.NORTH}
             );
 
             console.log("after toggle %o", props.value);
@@ -260,7 +258,6 @@ function LocationInputGroup(props: {value: EventInputDetails,
                             onChange={makeNumericHandler('relativeDistance')}/>
              </div>
 
-             <RelativeHeightInputBox value={props.value} onChange={props.onChange}/>
            </div>}
         </div>
     );
@@ -302,9 +299,8 @@ export function EventInputForm(
             if (props.value.relativeDistance === undefined) throw new Error("can't happen");
 
             
-            
+//            
             return {
-                height: props.value.relativeHeight || null,
                 distance: props.value.relativeDistance,
                 cardinal: props.value.relativeCardinal,
                 location: strictFind(
@@ -336,6 +332,9 @@ export function EventInputForm(
                               planeSortieLocationId={props.planeSortieLocationId}
                               availableLocations={props.availableLocations}/>
           
+          <RelativeHeightInputBox value={props.value} onChange={props.onChange}/>
+
+          
           <Row>
             <Col span={8}>
               <span>Reference:</span>
@@ -364,15 +363,15 @@ export function EventInputForm(
 
           <div>
             <span>Perspectives:</span>
-          <Select mode="multiple" style={{width: '100%'}} value={props.value.perspectives} onChange={handlePerspectivesChange}>
-            <Select.Option value="passengers_out">Passenger Out</Select.Option>
-            <Select.Option value="passengers_back">Passenger Back</Select.Option>
-            <Select.Option value="pilots">Pilot</Select.Option>
-            <Select.Option value="reception">Reception</Select.Option>
-            <Select.Option value="organizers">Organiser</Select.Option>    
-            <Select.Option value="crew">Crew</Select.Option>
-            <Select.Option value="crew_hudson">Crew (Hudson)</Select.Option>
-          </Select>
+            <Select mode="multiple" style={{width: '100%'}} value={props.value.perspectives} onChange={handlePerspectivesChange}>
+              <Select.Option value="passengers_out">Passenger Out</Select.Option>
+              <Select.Option value="passengers_back">Passenger Back</Select.Option>
+              <Select.Option value="pilots">Pilot</Select.Option>
+              <Select.Option value="reception">Reception</Select.Option>
+              <Select.Option value="organizers">Organiser</Select.Option>    
+              <Select.Option value="crew">Crew</Select.Option>
+              <Select.Option value="crew_hudson">Crew (Hudson)</Select.Option>
+            </Select>
           </div>
           
           {rp !== undefined && <PositionView value={rp}/>}

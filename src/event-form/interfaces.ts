@@ -43,7 +43,6 @@ export interface LocationInput {
 }
 
 export interface RelativePosition {
-    height: number | null;
     distance: number;
     cardinal: CardinalPoint;
     location: Location;
@@ -108,9 +107,7 @@ export interface EventInputDetails {
     relativeDistance: number | undefined;
     relativeCardinal: CardinalPoint | undefined;
 
-    // relativeHeight is the exception in that it can be undefined while
-    // locationId is not undefined.
-    relativeHeight: number | undefined;
+    height: number | undefined;
     
     locationId: string | undefined;    // location must start off undefined
     perspectives: string[];

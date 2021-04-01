@@ -26,7 +26,7 @@ export function variablesFromEventDetails(
         locationId: eventDetails.locationId,
         relativeDistance: eventDetails.relativeDistance,
         relativeCardinal: eventDetails.relativeCardinal,
-        relativeHeight: eventDetails.relativeHeight,
+        height: eventDetails.height,
         perspectives: eventDetails.perspectives
     };
 

@@ -89,20 +89,25 @@ function NightOfDisplay(props: {nightOf: Date | undefined}) {
 }
 
 function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
-    var locationId, relativeDistance, relativeCardinal, relativeHeight;
+    var locationId, relativeDistance, relativeCardinal;
     
     if (event.position === null) {
         locationId = undefined;
         relativeDistance = undefined;
         relativeCardinal = undefined;
-        relativeHeight = undefined;
     } else {
         locationId = event.position.location.id;
-        relativeDistance = 0;
-        relativeCardinal = CardinalPoint.NORTH;
-        relativeHeight = undefined;
+        relativeDistance = event.position.distance;
+        relativeCardinal = event.position.cardinal;
     }
 
+    var height;
+    if (event.height === null) {
+        height = undefined;
+    } else {
+        height = event.height;
+    }
+        
     var timeOffset;
     if (event.offset === null) {
         timeOffset = undefined;
@@ -116,10 +121,10 @@ function eventInputFromEvent(nightOf: Date, event: Event): EventInputDetails {
         quotation: event.quotation,
         notes: event.notes,
         perspectives: event.perspectives,
+        height,
         locationId,
         relativeDistance,
         relativeCardinal,
-        relativeHeight,
         timeOffset
     };
 
@@ -299,7 +304,7 @@ function AddEventStuff(props: {
         ADD_EVENT, {refetchQueries: [{query: EVENT_SEQUENCE_QUERY}]}
     );
     const [modalVisibility, setModalVisibility] = useState(false);
-
+//
     const makeInitialState = (): EventInputDetails => (
         {
             description: "",
@@ -308,7 +313,7 @@ function AddEventStuff(props: {
             notes: "",
             relativeDistance: 0,
             relativeCardinal: CardinalPoint.NORTH,
-            relativeHeight: 0,
+            height: undefined,
             locationId: undefined,
             perspectives: [],
             timeOffset: {dayOrdinal: 1, hour: 0, minute: 0}
